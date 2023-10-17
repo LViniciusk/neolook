@@ -1,0 +1,44 @@
+Este projeto tem como objetivo simular o desempenho relativo das políticas de escalonamento FCFS (First Come, First Served) e SJF (Shortest Job First) em um sistema distribuído chamado NeoLook. 
+
+*1. Sistema Alvo (NeoLook):*
+
+O sistema NeoLook é uma plataforma distribuída para armazenamento e processamento de dados. É composto por N computadores interligados por uma rede de alta velocidade. Cada computador possui uma CPU e dois discos. Um processo executa inteiramente em um único computador, realizando operações na CPU, em um dos discos e na rede.
+
+*2. Execução de Operações de um Processo:*
+
+- Se o recurso (CPU, disco ou rede) estiver livre, o processo assume o recurso e executa por um intervalo de tempo específico.
+- Se o recurso não estiver livre, o processo entra na fila de espera para esse recurso.
+- Quando um processo finaliza a execução em um recurso, ele o libera e pode passar a executar em outro recurso.
+- Existe um escalonador que decide qual processo em espera deve ser selecionado para executar em um recurso.
+
+*3. Demandas de Recursos:*
+
+Cada processo possui demandas diferentes para a CPU, disco e rede. Essas demandas são representadas por Dp_cpu, Dp_disco e Dp_rede, respectivamente. Uma vez que um processo é direcionado para um computador, ele primeiro realiza processamento na CPU local (Dp_cpu), depois recupera dados de um dos discos locais (Dp_disco) e, por fim, transfere dados para a rede (Dp_rede).
+
+*4. Seleção Uniforme de Computadores e Discos:*
+
+A seleção de qual computador um processo executará e qual disco local acessará é feita de forma probabilística com distribuição uniforme. A função `drand48()` é usada para gerar números pseudoaleatórios entre 0 e 1, e esses números são usados para determinar qual computador e qual disco serão selecionados.
+
+*5. Implementação e Documentação:*
+
+A implementação deve ser feita em C++ e usar alocação dinâmica de memória. O programa deve ler um arquivo de trace que contém informações sobre os processos a serem simulados. As estatísticas de desempenho (tempo médio de execução, tempo médio de espera, taxa de processamento) devem ser calculadas e impressas na saída.
+
+*Passos Gerais da Implementação:*
+
+Aqui estão os passos gerais que você deve seguir para implementar o projeto:
+
+*a. Definição de Estruturas de Dados:* Crie estruturas de dados para representar computadores, discos, filas de espera e eventos.
+
+*b. Inicialização do Gerador de Números Pseudoaleatórios:* Use `srand48` para inicializar o gerador de números aleatórios.
+
+*c. Leitura do Arquivo de Trace:* Implemente a leitura do arquivo de trace e a criação de eventos com base nas informações lidas.
+
+*d. Simulação:* Implemente a simulação do sistema, incluindo a seleção uniforme de computadores e discos e o gerenciamento das filas de espera de acordo com a política de escalonamento.
+
+*e. Cálculo de Estatísticas:* Colete informações relevantes durante a simulação para calcular as estatísticas.
+
+*f. Impressão de Resultados:* Imprima as estatísticas de desempenho na tela.
+
+*Relatório:*
+
+Você deve criar um relatório que documente a estrutura geral do programa, estruturas de dados, algoritmos, e ordem de complexidade de todas as funções. Além disso, o relatório deve incluir uma discussão do desempenho relativo das duas políticas de escalonamento em termos das três métricas avaliadas.
