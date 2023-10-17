@@ -1,28 +1,95 @@
 #ifndef ORDEREDLIST_H
 #define ORDEREDLIST_H
-#include <vector>
 #include <string>
+#include <vector>
+
 #include "Node.h"
 
 /**
- * @brief Classe que implementa a logica de uma lista simplesmente encadeada
- * Essa lista possui um ponteiro m_head para o node sentinela, que marca o inicio da lista,
- * mas diferentemente do que foi feito em sala, nao possui um ponteiro m_tail para o ultimo elemento.
+ * @brief Classe que implementa a logica de uma lista duplamente encadeada
+ *
+ * @tparam Type
  */
+template <typename Type>
 class OrderedList {
-private:
+   private:
+    Node<Type>* m_head;  // ponteiro para o no sentinela
+    Node<Type>* m_tail;  // ponteiro para o ultimo no da lista
+    unsigned m_size{};
+
+   public:
     /**
-     * m_head: ponteiro para o inicio da lista.
-     * O ponteiro m_head sempre aponta para um no sentinela.
+     * @brief Construtor da classe OrderedList
+     *
      */
-    Node* m_head {}; 
+    OrderedList() {
+        m_head = new Node<Type>();  // cria o no sentinela
+        m_tail = m_head;            // inicializa o ponteiro para o ultimo no
+    }
+
     /**
-     * m_size: numero de elementos na lista 
+     * @brief Construtor de cópia da classe OrderedList
+     *
+     * @param lst lista a ser copiada
      */
-    unsigned m_size {};  
-    
-public:
-    // construtor: cria lista vazia
+    OrderedList(const OrderedList& lst) {
+        m_head = new Node<Type>();
+        m_tail = m_head;
+        Node<Type>* aux = lst.m_head->next;
+        while (aux != nullptr) {
+            push_back(aux->data);
+            aux = aux->next;
+        }
+    }
+
+    /**
+     * @brief Destrutor da classe OrderedList
+     *
+     */
+    ~OrderedList() {
+        Node<Type>* aux = m_head;
+        while (aux != nullptr) {
+            Node<Type>* aux2 = aux;
+            aux = aux->next;
+            delete aux2;
+        }
+    }
+
+    /**
+     * @brief Função que verifica se a lista está vazia
+     *
+     * @return true se a lista estiver vazia,
+     * @return false caso contrário
+     */
+    bool isEmpyt() const { return m_size == 0; }
+
+    /**
+     * @brief Função que retorna o tamanho atual da lista
+     *
+     * @return int tamanho da lista
+     */
+    int size() const { return m_size; }
+
+    /**
+     * @brief Função que deleta todos os elementos da lista, deixando-a vazia.
+     * Ao final da execução, os ponteiros m_head e m_tail devem apontar para si
+     * mesmos. Complexidade: O(n)
+     *
+     *
+     */
+    void clear() {
+        Node<Type>* aux = m_head->next;
+        while (aux != nullptr) {
+            Node<Type>* aux2 = aux;
+            aux = aux->next;
+            delete aux2;
+        }
+        m_head->next = nullptr;
+        m_tail = m_head;
+        m_size = 0;
+    }
+
+    /* // construtor: cria lista vazia
     OrderedList();
 
     // construtor de copia
@@ -42,7 +109,6 @@ public:
 
     // Imprime a lista no terminal
     void print() const;
-
 
     // --------------------------------------------------------- //
     // ----------- funcoes adicionais - parte 1 ---------------- //
@@ -69,7 +135,7 @@ public:
     // inclusive qualquer dos operadores sobrecarregados
     int& back();
     const int& back() const;
-    
+
     // insere um elemento no final da lista
     // Restricao: estar proibido usar funções auxiliares nesta questao,
     // inclusive qualquer dos operadores sobrecarregados
@@ -78,8 +144,7 @@ public:
     // deleta o ultimo elemento da lista
     // Restricao: estar proibido usar funções auxiliares nesta questao,
     // inclusive qualquer dos operadores sobrecarregados
-    void pop_back();
-
+    void pop_back(); */
 };
 
 #endif
