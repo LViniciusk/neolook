@@ -1,5 +1,4 @@
-# NeoLook System Simulator
-
+# NeoLook
 ![Project Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![GitHub License](https://img.shields.io/github/license/LViniciusk/neolook)
 
