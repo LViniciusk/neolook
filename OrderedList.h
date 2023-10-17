@@ -6,6 +6,76 @@
 #include "Node.h"
 
 /**
+ * @brief
+ *
+ */
+template <typename Type>
+class iterator {
+   private:
+    Node<Type>* m_ptr;  // ponteiro para o Node atual
+
+   public:
+    /**
+     * @brief Construtor da classe iterator
+     *
+     * @param ptr ponteiro para o Node atual
+     */
+    iterator(Node<Type>* ptr = nullptr) { m_ptr = ptr; }
+
+    /**
+     * @brief Sobrecarga do operador de desreferenciação
+     *
+     * @return Type& referencia para o dado armazenado no Node atual
+     */
+    Type& operator*() { return m_ptr->data; }
+
+    /**
+     * @brief Sobrecarga do operador de pré-incremento
+     *
+     * @return iterator& - referência para o próprio objeto
+     */
+    iterator& operator++() {
+        m_ptr = m_ptr->next;
+        return *this;
+    }
+
+    /**
+     * @brief Sobrecarga do operador de pós-incremento
+     *
+     * @return iterator - cópia do objeto antes de ser incrementado
+     */
+    iterator operator++(int) {
+        iterator temp = *this;
+        m_ptr = m_ptr->next;
+        return temp;
+    }
+
+    /**
+     * @brief Sobrecarga do operador de igualdade. Compara dois iterators, e
+     * verifica se eles apontam para o mesmo Node.
+     *
+     * @param other objeto a ser comparado
+     * @return true se os objetos forem iguais,
+     * @return false caso contrário
+     */
+    bool operator==(const iterator& other) const {
+        return m_ptr == other.m_ptr;
+    }
+
+    /**
+     * @brief Sobrecarga do operador de diferença. Compara dois iterators, e
+     * verifica se eles apontam para Nodes diferentes.
+     *
+     * @param other objeto a ser comparado
+     * @return true se os objetos forem diferentes,
+     * @return false caso contrário
+     */
+    bool operator!=(const iterator& other) const {
+        return m_ptr != other.m_ptr;
+    }
+};
+
+/**
  * @brief Classe que implementa a logica de uma lista duplamente encadeada
  *
  * @tparam Type
@@ -33,11 +103,11 @@ class OrderedList {
      * @param lst lista a ser copiada
      */
     OrderedList(const OrderedList& lst) {
-        m_head = new Node<Type>();
-        m_tail = m_head;
+        m_head = new Node<Type>();  // cria o no sentinela
+        m_tail = m_head;            // inicializa o ponteiro para o ultimo no
         Node<Type>* aux = lst.m_head->next;
         while (aux != nullptr) {
-            push_back(aux->data);
+            insert(aux->data);
             aux = aux->next;
         }
     }
@@ -87,6 +157,28 @@ class OrderedList {
         m_head->next = nullptr;
         m_tail = m_head;
         m_size = 0;
+    }
+
+    /**
+     * @brief Função que insere um elemento na lista, mantendo a ordem crescente
+     *
+     * @param val
+     */
+    void insert(const Type& val) {
+        Node<Type>* aux = m_head->next;  // auxiliar para percorrer a lista
+        Node<Type>* aux2 = m_head;       // auxiliar para guardar o anterior
+        while (aux != nullptr && aux->data < val) {  // procura a posicao
+            aux2 = aux;
+            aux = aux->next;
+        }
+        Node<Type>* novo = new Node<Type>(val, aux, aux2);  // cria o novo nó
+        aux2->next = novo;
+        if (aux != nullptr) {
+            aux->prev = novo;
+        } else {
+            m_tail = novo;
+        }
+        m_size++;
     }
 
     /* // construtor: cria lista vazia
