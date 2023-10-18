@@ -78,6 +78,7 @@ public:
     }
 
     void pop(){
+        if(m_size == 0) throw std::runtime_error (" empty queue ");
         Node<Type> *aux = m_head;
         m_head = aux->next;
         aux->next = nullptr;
