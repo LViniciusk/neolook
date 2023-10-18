@@ -2,29 +2,9 @@
 #define ORDEREDLIST_H
 #include <string>
 #include <vector>
+#include "Node.h"
 
-template <typename Type>
-struct Node {
-    Type data;   // dado armazenado no Node
-    Node* next;  // ponteiro para o proximo Node
 
-    /**
-     * @brief Construtor da classe Node
-     *
-     * @param data dado a ser armazenado no Node
-     * @param next ponteiro para o proximo Node
-     */
-    Node(Type data, Node* next) {
-        this->data = data;
-        this->next = next;
-    }
-
-    /**
-     * @brief Destroi o objeto Node
-     *
-     */
-    ~Node() { delete next; }
-};
 /**
  * @brief
  *
@@ -143,14 +123,14 @@ class OrderedList {
      * @return true se a lista estiver vazia,
      * @return false caso contrário
      */
-    bool isEmpyt() const { return m_size == 0; }
+    bool isEmpty() const { return m_size == 0; }
 
     /**
      * @brief Função que retorna o tamanho atual da lista
      *
      * @return int tamanho da lista
      */
-    int size() const { return m_size; }
+    unsigned int size() const { return m_size; }
 
     /**
      * @brief Função que deleta todos os elementos da lista, deixando-a vazia.
