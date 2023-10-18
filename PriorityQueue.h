@@ -1,5 +1,6 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
+#include "Node.H"
 
 /**
  * @brief Struct que implementa um nó da fila de prioridade.
@@ -7,28 +8,7 @@
  * Nesta implementação, quanto menor o valor do dado, maior a prioridade.
  *
  */
-template <typename Type>
-struct NodePQ {
-    Type data;
-    NodePQ* next;
 
-    /**
-     * @brief Construtor da classe NodePQ.
-     *
-     * @param data Valor a ser armazenado no nó
-     * @param next Ponteiro para o próximo nó
-     */
-    NodePQ(Type data, NodePQ* next) {
-        this->data = data;
-        this->next = next;
-    }
-
-    /**
-     * @brief Destrutor da classe NodePQ.
-     *
-     */
-    ~NodePQ() { delete next; }
-};
 
 /**
  * @brief Class que implementa a lógica de uma fila de prioridade.
@@ -40,7 +20,7 @@ struct NodePQ {
 template <typename Type>
 class iterator_priorityQueue {
    private:
-    NodePQ<Type>* m_ptr;  // ponteiro para o nó atual
+    Node<Type>* m_ptr;  // ponteiro para o nó atual
 
    public:
     /**
@@ -48,7 +28,7 @@ class iterator_priorityQueue {
      *
      * @param ptr Ponteiro para o nó atual
      */
-    iterator_priorityQueue(NodePQ<Type>* ptr) { m_ptr = ptr; }
+    iterator_priorityQueue(Node<Type>* ptr) { m_ptr = ptr; }
 
     /**
      * @brief Sobrecarga do operador de pré-incremento.
@@ -76,9 +56,9 @@ class iterator_priorityQueue {
 
     /**
      * @brief Sobrecarga do operador de indireção.
-     * Retorna o valor armazenado no NodePQ apontado pelo iterador.
+     * Retorna o valor armazenado no Node apontado pelo iterador.
      *
-     * @return Type& retorna uma referencia para o dado armazenado no NodePQ
+     * @return Type& retorna uma referencia para o dado armazenado no Node
      */
     Type& operator*() { return m_ptr->data; }
 
@@ -108,8 +88,8 @@ class iterator_priorityQueue {
 template <typename Type>
 class PriorityQueue {
    private:
-    NodePQ<Type>* m_head{};  // ponteiro para o primeiro nó da fila
-    NodePQ<Type>* m_tail{};  // ponteiro para o último nó da fila
+    Node<Type>* m_head{};  // ponteiro para o primeiro nó da fila
+    Node<Type>* m_tail{};  // ponteiro para o último nó da fila
     int m_size{};            // tamanho da fila
 
    public:
@@ -151,12 +131,12 @@ class PriorityQueue {
     void push(const Type& data) {
         if (m_size == 0) {
             // Se não possuir elementos, insere no início
-            m_head = new NodePQ<Type>(data, nullptr);
+            m_head = new Node<Type>(data, nullptr);
             m_tail = m_head;
         } else {
             // Se possuir elementos, insere ordenado
-            NodePQ<Type>* aux = m_head;
-            NodePQ<Type>* prev = nullptr;
+            Node<Type>* aux = m_head;
+            Node<Type>* prev = nullptr;
             // percorre a fila até encontrar um elemento de menor prioridade
             while (aux != nullptr && aux->data < data) {
                 prev = aux;
@@ -164,10 +144,10 @@ class PriorityQueue {
             }
             if (prev == nullptr) {
                 // insere no início
-                m_head = new NodePQ<Type>(data, m_head);
+                m_head = new Node<Type>(data, m_head);
             } else {
                 // o anterior aponta para o novo nó, que aponta para o próximo
-                prev->next = new NodePQ<Type>(data, aux);
+                prev->next = new Node<Type>(data, aux);
             }
         }
         m_size++;
@@ -188,7 +168,7 @@ class PriorityQueue {
             m_tail = nullptr;
         } else {
             // Se possuir mais de um elemento, remove o primeiro
-            NodePQ<Type>* aux = m_head;
+            Node<Type>* aux = m_head;
             m_head = m_head->next;
             aux->next = nullptr;
             delete aux;

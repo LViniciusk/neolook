@@ -12,7 +12,8 @@ int main() {
     }
 
     for (int i = 0; i < 10; i++) {
-        cout << pq.top() << endl;
+        cout << pq.top() << " ";
         pq.pop();
     }
+    cout << endl;
 }
