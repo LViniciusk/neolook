@@ -188,46 +188,45 @@ class Queue {
             delete aux;
             m_size--;
         }
+    }
 
-        /**
-         * @brief Função que retorna uma referencia para o último elemento da
-         * fila
-         *
-         * @return int&
-         */
-        int& back() {
-            if (m_size == 0) throw std::runtime_error("empty queue");
-            return m_tail->data;
-        }
+    /**
+     * @brief Função que retorna uma referencia para o último elemento da
+     * fila
+     *
+     * @return int&
+     */
+    int& back() {
+        if (m_size == 0) throw std::runtime_error("empty queue");
+        return m_tail->data;
+    }
 
-        /**
-         * @brief Função que retorna uma referencia para o último elemento da
-         * fila
-         *
-         * @return const int&
-         */
-        const int& back() const {
-            if (m_size == 0) throw std::runtime_error("empty queue");
-            return m_tail->data;
-        }
+    /**
+     * @brief Função que retorna uma referencia para o último elemento da
+     * fila
+     *
+     * @return const int&
+     */
+    const int& back() const {
+        if (m_size == 0) throw std::runtime_error("empty queue");
+        return m_tail->data;
+    }
 
-        /**
-         * @brief Função que retorna um iterador que aponta para o primeiro
-         * elemento da fila
-         *
-         * @return iterator_queue<Type>
-         */
-        iterator_queue<Type> begin() { return iterator_queue<Type>(m_head); }
+    /**
+     * @brief Função que retorna um iterador que aponta para o primeiro
+     * elemento da fila
+     *
+     * @return iterator_queue<Type>
+     */
+    iterator_queue<Type> begin() { return iterator_queue<Type>(m_head); }
 
-        /**
-         * @brief Função que retorna um iterador que aponta para o primeiro bit
-         * após o último elemento da fila
-         *
-         * @return iterator_queue<Type>
-         */
-        iterator_queue<Type> end() {
-            return iterator_queue<Type>(m_tail->next);
-        }
-    };
+    /**
+     * @brief Função que retorna um iterador que aponta para o primeiro bit
+     * após o último elemento da fila
+     *
+     * @return iterator_queue<Type>
+     */
+    iterator_queue<Type> end() { return iterator_queue<Type>(m_tail->next); }
+};
 
 #endif
