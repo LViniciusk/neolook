@@ -2,20 +2,25 @@
 #define ORDEREDLIST_H
 #include <string>
 #include <vector>
+
 #include "Node.h"
 
-
 /**
- * @brief
+ * @brief Classe que implementa um iterador para a classe OrderedList
  *
  */
 template <typename Type>
 class iterator_orderedList {
    private:
-    Node<Type>* m_ptr;  // ponteiro para o no atual
+    Node<Type> *m_ptr;  // ponteiro para o no atual
 
    public:
-    iterator_orderedList(Node<Type>* ptr) { m_ptr = ptr; }
+    /**
+     * @brief Construtor da classe iterator_orderedList
+     *
+     * @param ptr
+     */
+    iterator_orderedList(Node<Type> *ptr) { m_ptr = ptr; }
 
     /**
      * @brief Sobrecarga do operador de pré-incremento.
@@ -23,7 +28,7 @@ class iterator_orderedList {
      *
      * @return iterator& retorna uma referencia para o iterador
      */
-    iterator_orderedList& operator++() {
+    iterator_orderedList &operator++() {
         m_ptr = m_ptr->next;
         return *this;
     }
@@ -46,7 +51,7 @@ class iterator_orderedList {
      *
      * @return Type& retorna uma referencia para o dado armazenado no Node
      */
-    Type& operator*() { return m_ptr->data; }
+    Type &operator*() { return m_ptr->data; }
 
     /**
      * @brief Sobrecarga do operador de igualdade.
@@ -55,7 +60,7 @@ class iterator_orderedList {
      * @return true se os iteradores apontam para o mesmo nó
      * @return false caso contrário
      */
-    bool operator==(const iterator_orderedList& other) {
+    bool operator==(const iterator_orderedList &other) {
         return m_ptr == other.m_ptr;
     }
 
@@ -66,7 +71,7 @@ class iterator_orderedList {
      * @return true se os iteradores apontam para nós diferentes
      * @return false caso contrário
      */
-    bool operator!=(const iterator_orderedList& other) {
+    bool operator!=(const iterator_orderedList &other) {
         return m_ptr != other.m_ptr;
     }
 };
@@ -79,8 +84,8 @@ class iterator_orderedList {
 template <typename Type>
 class OrderedList {
    private:
-    Node<Type>* m_head;  // ponteiro para o no sentinela
-    Node<Type>* m_tail;  // ponteiro para o ultimo no da lista
+    Node<Type> *m_head;  // ponteiro para o no sentinela
+    Node<Type> *m_tail;  // ponteiro para o ultimo no da lista
     unsigned m_size{};
 
    public:
@@ -99,10 +104,10 @@ class OrderedList {
      *
      * @param lst lista a ser copiada
      */
-    OrderedList(const OrderedList& lst) {
+    OrderedList(const OrderedList &lst) {
         m_head = new Node<Type>(Type(), nullptr);
         m_tail = m_head;
-        Node<Type>* aux = lst.m_head->next;
+        Node<Type> *aux = lst.m_head->next;
         while (aux != nullptr) {
             m_tail->next = new Node<Type>(aux->data, nullptr);
             aux = aux->next;
@@ -142,13 +147,14 @@ class OrderedList {
     void clear() { delete m_head; }
 
     /**
-     * @brief Função que insere um elemento na lista, mantendo a ordem crescente
+     * @brief Função que insere um elemento na lista, mantendo a ordem
+     * crescente
      *
      * @param val
      */
-    void insert(const Type& val) {
-        Node<Type>* new_node = new Node<Type>(val, nullptr);
-        Node<Type>* aux = m_head;
+    void insert(const Type &val) {
+        Node<Type> *new_node = new Node<Type>(val, nullptr);
+        Node<Type> *aux = m_head;
         while (aux->next != nullptr && aux->next->data < val) {
             aux = aux->next;
         }
@@ -157,6 +163,63 @@ class OrderedList {
         if (new_node->next == nullptr) m_tail = new_node;
         m_size++;
     }
+
+    /**
+     * @brief Função que remove o primeiro elemento da lista
+     *
+     */
+    void pop_front() {
+        Node<Type> *aux = m_head->next;
+        m_head->next = aux->next;
+        delete aux;
+        m_size--;
+    }
+
+    /**
+     * @brief Função que remove o último elemento da lista
+     *
+     */
+    void pop_back() {
+        Node<Type> *aux = m_head;
+        while (aux->next != m_tail) {
+            aux = aux->next;
+        }
+        delete m_tail;
+        m_tail = aux;
+        m_tail->next = nullptr;
+        m_size--;
+    }
+
+    /**
+     * @brief Função que retorna uma referencia para o primeiro elemento da
+     * lista
+     *
+     * @return Type&
+     */
+    Type &front() { return m_head->next->data; }
+
+    /**
+     * @brief Função const que retorna uma referencia para o primeiro elemento
+     * da lista
+     *
+     * @return const Type&
+     */
+    const Type &front() const { return m_head->next->data; }
+
+    /**
+     * @brief Função que retorna uma referencia para o ultimo elemento da lista
+     *
+     * @return Type&
+     */
+    Type &back() { return m_tail->data; }
+
+    /**
+     * @brief Função const que retorna uma referencia para o ultimo elemento da
+     * lista
+     *
+     * @return const Type&
+     */
+    const Type &back() const { return m_tail->data; }
 
     /**
      * @brief Função que retorna um iterador para o primeiro elemento da lista

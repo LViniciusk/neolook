@@ -24,7 +24,4 @@ struct Node {
     ~Node() { delete next; }
 };
 
-
-
-
 #endif
