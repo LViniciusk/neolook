@@ -135,7 +135,7 @@ class OrderedList {
      *
      * @return int tamanho da lista
      */
-    unsigned int size() const { return m_size; }
+    unsigned size() const { return m_size; }
 
     /**
      * @brief Função que deleta todos os elementos da lista, deixando-a vazia.
