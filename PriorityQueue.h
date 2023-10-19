@@ -1,200 +1,131 @@
+/**
+ * @file PriorityQueue.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br)
+ * @brief Tentativa de implementação de uma priority queue que use min heap
+ * @version 0.1
+ * @date 19-10-2023
+ *
+ *
+ */
+
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
-#include "Node.H"
 
-/**
- * @brief Struct que implementa um nó da fila de prioridade.
- * A prioridade é dada pelo valor do dado armazenado no nó.
- * Nesta implementação, quanto menor o valor do dado, maior a prioridade.
- *
- */
-
-
-/**
- * @brief Class que implementa a lógica de uma fila de prioridade.
- * A prioridade é dada pelo valor do dado armazenado no nó.
- * Nesta implementação, quanto menor o valor do dado, maior a prioridade.
- *
- * @tparam Type
- */
-template <typename Type>
-class iterator_priorityQueue {
-   private:
-    Node<Type>* m_ptr;  // ponteiro para o nó atual
-
-   public:
-    /**
-     * @brief Construtor da classe iterator_priorityQueue
-     *
-     * @param ptr Ponteiro para o nó atual
-     */
-    iterator_priorityQueue(Node<Type>* ptr) { m_ptr = ptr; }
-
-    /**
-     * @brief Sobrecarga do operador de pré-incremento.
-     * Faz o iterador apontar para o proximo elemento da fila.
-     *
-     * @return iterator_priorityQueue& retorna uma referencia para o iterador
-     */
-    iterator_priorityQueue& operator++() {
-        m_ptr = m_ptr->next;
-        return *this;
-    }
-
-    /**
-     * @brief Sobrecarga do operador de pós-incremento.
-     * Faz o iterador apontar para o proximo elemento da fila.
-     *
-     * @return iterator_priorityQueue retorna o iterador antes de ser
-     * incrementado
-     */
-    iterator_priorityQueue operator++(int) {
-        iterator_priorityQueue temp = *this;
-        m_ptr = m_ptr->next;
-        return temp;
-    }
-
-    /**
-     * @brief Sobrecarga do operador de indireção.
-     * Retorna o valor armazenado no Node apontado pelo iterador.
-     *
-     * @return Type& retorna uma referencia para o dado armazenado no Node
-     */
-    Type& operator*() { return m_ptr->data; }
-
-    /**
-     * @brief Sobrecarga do operador de igualdade.
-     *
-     * @param other iterador a ser comparado
-     * @return true se os iteradores apontam para o mesmo nó
-     * @return false caso contrário
-     */
-    bool operator==(const iterator_priorityQueue& other) {
-        return m_ptr == other.m_ptr;
-    }
-
-    /**
-     * @brief Sobrecarga do operador de desigualdade.
-     *
-     * @param other iterador a ser comparado
-     * @return true se os iteradores apontam para nós diferentes
-     * @return false caso contrário
-     */
-    bool operator!=(const iterator_priorityQueue& other) {
-        return m_ptr != other.m_ptr;
-    }
-};
-
-template <typename Type>
 class PriorityQueue {
    private:
-    Node<Type>* m_head{};  // ponteiro para o primeiro nó da fila
-    Node<Type>* m_tail{};  // ponteiro para o último nó da fila
-    int m_size{};            // tamanho da fila
+    int *m_heap;
+    unsigned m_size;
+    unsigned m_capacity;
+
+    /**
+     * @brief Função que retorna o índice do pai de um nó
+     *
+     * @param i
+     * @return int
+     */
+    int parent(unsigned i);
+
+    /**
+     * @brief Função que retorna o índice do filho esquerdo de um nó
+     *
+     * @param i
+     * @return int
+     */
+    int left(unsigned i);
+
+    /**
+     * @brief Função que retorna o índice do filho direito de um nó
+     *
+     * @param i
+     * @return int
+     */
+    int right(unsigned i);
+
+    /**
+     * @brief Função que troca o valor de dois nós
+     *
+     * @param a
+     * @param b
+     */
+    void swap(int *a, int *b);
+
+    /**
+     * @brief Função que corrige a heap
+     *
+     * @param i
+     */
+    void heapify(unsigned i);
+
+    /**
+     * @brief Função que aumenta a capacidade da fila. Se m_capacity >=
+     * new_capacity, a funcao faz nada. Caso contrario, a funcao aumenta a
+     * capacidade da fila para um valor maior ou igual a new_capacity.
+     *
+     * @param new_capacity nova capacidade da fila
+     */
+    void reserve(unsigned new_capacity);
 
    public:
     /**
-     * @brief Construtor default da classe PriorityQueue.
+     * @brief Construtor da classe PriorityQueue
      *
+     * @param capacity
      */
-    PriorityQueue() = default;
+    PriorityQueue(unsigned capacity);
 
     /**
-     * @brief Função que verifica se a fila está vazia.
+     * @brief Construtor default da classe PriorityQueue. É aloca um vetor de 50
+     * posições.
      *
-     * @return true se a fila está vazia,
-     * @return false caso contrário.
      */
-    bool empty() { return m_size == 0; }
+    PriorityQueue();
 
     /**
-     * @brief Função que retorna a quantidade de elementos na fila.
+     * @brief Destrutor da classe PriorityQueue
      *
-     * @return unsigned
      */
-    unsigned size() { return m_size; }
+    ~PriorityQueue();
 
     /**
-     * @brief Retorna uma referência const do elemento de maior prioridade na
-     * fila.
+     * @brief
      *
+     * @param key
      */
-    const Type& top() { return m_head->data; }
+    void insert(int key);
 
     /**
-     * @brief Função que insere um elemento na fila.
-     * O elemento é inserido de forma ordenada, de acordo com a
-     * prioridade/valor.
+     * @brief Função que remove o elemento de maior prioridade da fila
      *
-     * @param data
      */
-    void push(const Type& data) {
-        if (m_size == 0) {
-            // Se não possuir elementos, insere no início
-            m_head = new Node<Type>(data, nullptr);
-            m_tail = m_head;
-        } else {
-            // Se possuir elementos, insere ordenado
-            Node<Type>* aux = m_head;
-            Node<Type>* prev = nullptr;
-            // percorre a fila até encontrar um elemento de menor prioridade
-            while (aux != nullptr && aux->data < data) {
-                prev = aux;
-                aux = aux->next;
-            }
-            if (prev == nullptr) {
-                // insere no início
-                m_head = new Node<Type>(data, m_head);
-            } else {
-                // o anterior aponta para o novo nó, que aponta para o próximo
-                prev->next = new Node<Type>(data, aux);
-            }
-        }
-        m_size++;
-    }
+    void pop();
 
     /**
-     * @brief Função que remove o elemento de maior prioridade da fila.
+     * @brief Get the Min object
      *
+     * @return int
      */
-    void pop() {
-        if (m_size == 0) {
-            // Se não possuir elementos, não faz nada
-            return;
-        } else if (m_size == 1) {
-            // Se possuir apenas um elemento, remove o primeiro
-            delete m_head;
-            m_head = nullptr;
-            m_tail = nullptr;
-        } else {
-            // Se possuir mais de um elemento, remove o primeiro
-            Node<Type>* aux = m_head;
-            m_head = m_head->next;
-            aux->next = nullptr;
-            delete aux;
-        }
-        m_size--;
-    }
+    int front();
 
     /**
-     * @brief Função que retorna um iterador para o primeiro elemento da fila, o
-     * elemento de maior prioridade.
+     * @brief
      *
-     * @return iterator_priorityQueue<Type>
      */
-    iterator_priorityQueue<Type> begin() {
-        return iterator_priorityQueue<Type>(m_head);
-    }
+    void print();
 
     /**
-     * @brief Função que retorna um iterador para o primeiro bit após o último
-     * elemento da fila.
+     * @brief Função que retorna o tamanho da fila
      *
-     * @return iterator_priorityQueue<Type>
+     * @return int
      */
-    iterator_priorityQueue<Type> end() {
-        return iterator_priorityQueue<Type>(m_tail->next);
-    }
+    unsigned size() const;
+
+    /**
+     * @brief Função que verifica se a fila está vazia
+     *
+     * @return true
+     * @return false
+     */
+    bool empty() const;
 };
 
-#endif  // PRIORITYQUEUE_H
+#endif
