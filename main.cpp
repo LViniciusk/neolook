@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
 #include "OrderedList.h"
-#include "PriorityQueue.h"
-#include "Queue.h"
+#include "PriorityQueue.cpp"
+#include "Queue.cpp"
 
 int main() {
     PriorityQueue pq;

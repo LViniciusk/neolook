@@ -12,16 +12,13 @@ struct Node {
      * @param data dado a ser armazenado no Node
      * @param next ponteiro para o proximo Node
      */
-    Node(Type data, Node* next) {
-        this->data = data;
-        this->next = next;
-    }
+    Node(Type data, Node* next);
 
     /**
      * @brief Destroi o objeto Node
      *
      */
-    ~Node() { delete next; }
+    ~Node();
 };
 
 #endif
