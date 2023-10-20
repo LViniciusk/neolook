@@ -55,7 +55,7 @@ Queue<Type>::Queue(const Queue &lst)
 template <typename Type>
 Queue<Type>::~Queue() { delete m_head; }
 template <typename Type>
-bool Queue<Type>::empty() const { return m_head->next == nullptr; }
+bool Queue<Type>::empty() const { return m_size == 0; }
 template <typename Type>
 unsigned int Queue<Type>::size() const { return m_size; }
 template <typename Type>
