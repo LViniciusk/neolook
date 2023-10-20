@@ -1,7 +1,8 @@
 /**
  * @file PriorityQueue.h
  * @author Júnior Silva (junior.silva@alu.ufc.br)
- * @brief Tentativa de implementação de uma priority queue que use min heap
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br)
+ * @brief Implementação de uma Priority Queue baseada em min heap
  * @version 0.1
  * @date 19-10-2023
  *
@@ -11,6 +12,7 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
+template <typename Type>
 class PriorityQueue {
    private:
     int *m_heap;
@@ -91,7 +93,7 @@ class PriorityQueue {
      *
      * @param key
      */
-    void insert(int key);
+    void insert(Type key);
 
     /**
      * @brief Função que remove o elemento de maior prioridade da fila
@@ -100,11 +102,11 @@ class PriorityQueue {
     void pop();
 
     /**
-     * @brief Get the Min object
+     * @brief Função que retorna uma referência para o primeiro elemento da fila
      *
-     * @return int
+     * @return Type
      */
-    int front();
+    Type front();
 
     /**
      * @brief
@@ -128,4 +130,4 @@ class PriorityQueue {
     bool empty() const;
 };
 
-#endif
+#endif  // PRIORITYQUEUE_H

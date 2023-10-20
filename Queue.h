@@ -1,3 +1,14 @@
+/**
+ * @file Queue.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br)
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br)
+ * @brief Implementação de uma Queue para tipo genérico
+ * @version 0.1
+ * @date 20-10-2023
+ *
+ *
+ */
+
 #ifndef QUEUE_H
 #define QUEUE_H
 #include <stdexcept>
@@ -14,6 +25,7 @@ template <typename Type>
 class iterator_queue {
    private:
     Node<int> *m_ptr;  // ponteiro para o no atual
+
    public:
     /**
      * @brief Construtor da classe iterator_queue
@@ -175,4 +187,4 @@ class Queue {
     iterator_queue<Type> end();
 };
 
-#endif
+#endif  // QUEUE_H

@@ -1,3 +1,14 @@
+/**
+ * @file OrderedList.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br)
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br)
+ * @brief Implementação de uma OrderedList
+ * @version 0.1
+ * @date 20-10-2023
+ *
+ *
+ */
+
 #ifndef ORDEREDLIST_H
 #define ORDEREDLIST_H
 #include <string>
@@ -240,4 +251,4 @@ class OrderedList {
     }
 };
 
-#endif
+#endif  // ORDEREDLIST_H

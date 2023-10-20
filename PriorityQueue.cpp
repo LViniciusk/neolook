@@ -3,23 +3,30 @@
 #include <iostream>
 #include <stdexcept>
 
-int PriorityQueue::parent(unsigned i) { return (i - 1) / 2; }
+template <typename Type>
+int PriorityQueue<Type>::parent(unsigned i) {
+    return (i - 1) / 2;
+}
 
-int PriorityQueue::left(unsigned i) {
+template <typename Type>
+int PriorityQueue<Type>::left(unsigned i) {
     return (2 * i + 1) < m_size ? (2 * i + 1) : -1;
 }
 
-int PriorityQueue::right(unsigned i) {
+template <typename Type>
+int PriorityQueue<Type>::right(unsigned i) {
     return (2 * i + 2) < m_size ? (2 * i + 2) : -1;
 }
 
-void PriorityQueue::swap(int *a, int *b) {
+template <typename Type>
+void PriorityQueue<Type>::swap(int *a, int *b) {
     int aux = *a;
     *a = *b;
     *b = aux;
 }
 
-void PriorityQueue::heapify(unsigned i) {
+template <typename Type>
+void PriorityQueue<Type>::heapify(unsigned i) {
     int l = left(i);
     int r = right(i);
     unsigned smallest = i;
@@ -35,7 +42,8 @@ void PriorityQueue::heapify(unsigned i) {
     }
 }
 
-void PriorityQueue::reserve(unsigned new_capacity) {
+template <typename Type>
+void PriorityQueue<Type>::reserve(unsigned new_capacity) {
     if (m_capacity < new_capacity) {
         m_capacity = new_capacity;
         int *aux = new int[m_capacity];          // aloca um novo vetor
@@ -47,21 +55,27 @@ void PriorityQueue::reserve(unsigned new_capacity) {
     }
 }
 
-PriorityQueue::PriorityQueue(unsigned capacity) {
+template <typename Type>
+PriorityQueue<Type>::PriorityQueue(unsigned capacity) {
     m_capacity = capacity;
     m_size = 0;
     m_heap = new int[m_capacity];
 }
 
-PriorityQueue::PriorityQueue() {
+template <typename Type>
+PriorityQueue<Type>::PriorityQueue() {
     m_capacity = 50;
     m_size = 0;
     m_heap = new int[m_capacity];
 }
 
-PriorityQueue::~PriorityQueue() { delete[] m_heap; }
+template <typename Type>
+PriorityQueue<Type>::~PriorityQueue() {
+    delete[] m_heap;
+}
 
-void PriorityQueue::insert(int key) {
+template <typename Type>
+void PriorityQueue<Type>::insert(Type key) {
     // se a heap estiver cheia, aumenta a capacidade
     if (m_size == m_capacity) {
         reserve(2 * m_capacity);
@@ -77,7 +91,8 @@ void PriorityQueue::insert(int key) {
     }
 }
 
-void PriorityQueue::pop() {
+template <typename Type>
+void PriorityQueue<Type>::pop() {
     // se a heap estiver vazia, lança uma exceção
     if (m_size == 0) {
         throw std::runtime_error("Empty queue");
@@ -93,7 +108,8 @@ void PriorityQueue::pop() {
     heapify(0);                      // corrige a heap
 }
 
-int PriorityQueue::front() {
+template <typename Type>
+Type PriorityQueue<Type>::front() {
     // se a heap estiver vazia, lança uma exceção
     if (m_size == 0) {
         throw std::runtime_error("Empty queue");
@@ -101,13 +117,20 @@ int PriorityQueue::front() {
     return m_heap[0];  // retorna o elemento de maior prioridade
 }
 
-void PriorityQueue::print() {
+template <typename Type>
+void PriorityQueue<Type>::print() {
     for (unsigned i = 0; i < m_size; ++i) {
-        std::cout << m_heap[i] << " ";
+        std::cout << (Type)m_heap[i] << " ";
     }
     std::cout << std::endl;
 }
 
-unsigned PriorityQueue::size() const { return m_size; }
+template <typename Type>
+unsigned PriorityQueue<Type>::size() const {
+    return m_size;
+}
 
-bool PriorityQueue::empty() const { return m_size == 0; }
+template <typename Type>
+bool PriorityQueue<Type>::empty() const {
+    return m_size == 0;
+}

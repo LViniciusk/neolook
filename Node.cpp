@@ -7,4 +7,6 @@ Node<Type>::Node(Type data, Node *next) {
 }
 
 template <typename Type>
-Node<Type>::~Node() { delete next; }
+Node<Type>::~Node() {
+    delete next;
+}
