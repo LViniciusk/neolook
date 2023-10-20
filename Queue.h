@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "Node.h"
+#include "Node.cpp"
 
 /**
  * @brief Classe que implementa um iterador para a classe Queue
