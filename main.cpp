@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @author Júnior Silva (junior.silva@alu.ufc.br)
- * @author Linyker Vinicius (email)
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br)
  * @brief
  * @version 0.1
  * @date 20-10-2023
@@ -11,9 +11,8 @@
 
 #include <iostream>
 using namespace std;
-#include "OrderedList.h"
-#include "PriorityQueue.cpp"
-#include "Queue.cpp"
+#include "TAD'S/PriorityQueue.cpp"
+#include "TAD'S/Queue.cpp"
 
 int main() {
     PriorityQueue<char> pq;
