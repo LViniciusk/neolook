@@ -19,10 +19,10 @@ int PriorityQueue<Type>::right(unsigned i) {
 }
 
 template <typename Type>
-void PriorityQueue<Type>::swap(int *a, int *b) {
-    int aux = *a;
-    *a = *b;
-    *b = aux;
+void PriorityQueue<Type>::swap(Type &a, Type &b) {
+    Type aux = a;
+    a = b;
+    b = aux;
 }
 
 template <typename Type>
