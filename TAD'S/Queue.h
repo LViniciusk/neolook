@@ -16,10 +16,6 @@
 
 #include "Node.h"
 
-/**
- * @brief Classe que implementa um iterador para a classe Queue
- *
- */
 template <typename Type>
 class iterator_queue {
    private:
@@ -87,6 +83,16 @@ class iterator_queue {
     }
 };
 
+/**
+ * @file Queue.h
+ * @brief Esse arquivo contém a implementação de uma fila para tipo genérico
+ *
+ * Uma fila é uma estrutura de dados linear que segue a ordem "Primeiro a
+ * Entrar, Primeiro a Sair" (FIFO - First In, First Out). Ela mantém uma coleção
+ * de elementos onde a remoção de elementos ocorre no início da fila e a
+ * inserção de elementos ocorre no final da fila.
+ *
+ */
 template <typename Type>
 class Queue {
    private:

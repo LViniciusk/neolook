@@ -12,6 +12,15 @@
 #ifndef NODE_H
 #define NODE_H
 
+/**
+ * @brief Estrutura que define um nó em uma lista encadeada.
+ *
+ * Esta estrutura representa um nó em uma lista encadeada simples. Cada nó
+ * contém um valor e um ponteiro para o próximo nó na lista.
+ * Esta estrutura é usada na implementação da classe Queue.
+ *
+ * @tparam Type
+ */
 template <typename Type>
 struct Node {
     Type data;   // dado armazenado no Node
@@ -31,6 +40,8 @@ struct Node {
     /**
      * @brief Destrutor da classe Node
      *
+     * Este método é responsável por liberar a memória alocada para o Node e
+     * seus nós subsequentes.
      */
     ~Node() { delete next; }
 };

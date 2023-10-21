@@ -12,6 +12,17 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
+/**
+ * @brief Classe que implementa uma Priority Queue baseada em min heap.
+ *
+ * Uma Priority Queue é uma estrutura de dados que mantém um conjunto de
+ * elementos onde cada elemento possui uma prioridade associada, e a operação de
+ * retirar um elemento da fila sempre remove o elemento de maior prioridade.
+ * Neste caso, a Priority Queue é implementada como um min-heap, onde os
+ * elementos de menor valor têm maior prioridade.
+ *
+ * @tparam Type
+ */
 template <typename Type>
 class PriorityQueue {
    private:
