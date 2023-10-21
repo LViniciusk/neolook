@@ -10,9 +10,9 @@
  */
 
 #include <iostream>
-using namespace std;
-#include "TAD'S/PriorityQueue.cpp"
-#include "TAD'S/Queue.cpp"
+
+#include "PriorityQueue.h"
+#include "Queue.h"
 
 int main() {
     PriorityQueue<char> pq;
@@ -35,18 +35,18 @@ int main() {
     pq.insert('g');
     pq.insert('i');
 
-    cout << "Queue: " << endl;
+    std::cout << "Queue: " << std::endl;
     while (!q.empty()) {
-        cout << q.front() << " ";
+        std::cout << q.front() << " ";
         q.pop();
     }
-    cout << endl;
+    std::cout << std::endl;
 
-    cout << "Priority Queue: " << endl;
+    std::cout << "Priority Queue: " << std::endl;
     pq.print();
 
     while (!pq.empty()) {
-        cout << "Front: " << pq.front() << endl;
+        std::cout << "Front: " << pq.front() << std::endl;
         pq.pop();
     }
 }

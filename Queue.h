@@ -11,11 +11,10 @@
 
 #ifndef QUEUE_H
 #define QUEUE_H
-#include <stdexcept>
-#include <string>
-#include <vector>
 
-#include "Node.cpp"
+#include <stdexcept>
+
+#include "Node.h"
 
 /**
  * @brief Classe que implementa um iterador para a classe Queue
