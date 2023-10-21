@@ -49,7 +49,7 @@ class PriorityQueue {
      * @param a
      * @param b
      */
-    void swap(Type &a, Type &b);
+    void swap(int *a, int *b);
 
     /**
      * @brief Função que corrige a heap
