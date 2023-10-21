@@ -11,8 +11,8 @@
 
 #include <iostream>
 
-#include "PriorityQueue.h"
-#include "Queue.h"
+#include "TAD'S/PriorityQueue.h"
+#include "TAD'S/Queue.h"
 
 int main() {
     PriorityQueue<char> pq;

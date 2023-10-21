@@ -23,13 +23,16 @@ struct Node {
      * @param data dado a ser armazenado no Node
      * @param next ponteiro para o proximo Node
      */
-    Node(Type data, Node* next);
+    Node(Type data, Node* next) {
+        this->data = data;
+        this->next = next;
+    }
 
     /**
      * @brief Destrutor da classe Node
      *
      */
-    ~Node();
+    ~Node() { delete next; }
 };
 
 #endif  // NODE_H
