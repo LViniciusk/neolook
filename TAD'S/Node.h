@@ -22,7 +22,7 @@
  * @tparam Type
  */
 template <typename Type>
-struct Node {
+class Node {
     Type data;   // dado armazenado no Node
     Node* next;  // ponteiro para o proximo Node
 
