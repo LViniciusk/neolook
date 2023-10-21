@@ -1,7 +1,7 @@
 /**
  * @file Node.h
- * @author Júnior Silva (junior.silva@alu.ufc.br)
- * @author Linyker Vinicius (botlink2030@alu.ufc.br)
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
  * @brief Implementação da classe Node, usada na implementação da classe Queue
  * @version 0.1
  * @date 20-10-2023

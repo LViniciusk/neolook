@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
- * @author Júnior Silva (junior.silva@alu.ufc.br)
- * @author Linyker Vinicius (botlink2030@alu.ufc.br)
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
  * @brief
  * @version 0.1
  * @date 20-10-2023
