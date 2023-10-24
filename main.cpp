@@ -15,38 +15,12 @@
 #include "TAD'S/Queue.h"
 
 int main() {
-    PriorityQueue<char> pq;
-    Queue<int> q;
-    q.push(10);
-    q.push(32);
-    q.push(15);
-    // pq.insert(4);
-    // pq.insert(2);
-    // pq.insert(8);
-    // pq.insert(7);
-    // pq.insert(1);
-    // pq.insert(5);
-    // pq.insert(3);
-    // pq.insert(6);
-    // pq.insert(10);
-    pq.insert('a');
-    pq.insert('z');
-    pq.insert('r');
-    pq.insert('g');
-    pq.insert('i');
-
-    std::cout << "Queue: " << std::endl;
-    while (!q.empty()) {
-        std::cout << q.front() << " ";
-        q.pop();
-    }
-    std::cout << std::endl;
-
-    std::cout << "Priority Queue: " << std::endl;
-    pq.print();
-
+    PriorityQueue<int> pq;
+    pq.push(2);
+    pq.push(3);
+    pq.push(1);
     while (!pq.empty()) {
-        std::cout << "Front: " << pq.front() << std::endl;
+        std::cout << pq.top() << " ";
         pq.pop();
     }
 }

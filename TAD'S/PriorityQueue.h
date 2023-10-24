@@ -12,6 +12,72 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
+#include <iostream>
+#include <stdexcept>
+
+/**
+ * @brief Classe que implementa um iterador para a Priority Queue
+ *
+ */
+class iteratorPQ {
+   private:
+    int* m_ptr;  // ponteiro para o no atual
+
+   public:
+    /**
+     * @brief Construct a new iterator P Q object
+     *
+     * @param ptr
+     */
+    iteratorPQ(int* ptr) { m_ptr = ptr; }
+
+    /**
+     * @brief Sobrecarga do operador de pré-incremento.
+     *
+     * @return iteratorPQ&
+     */
+    iteratorPQ& operator++() {
+        m_ptr++;
+        return *this;
+    }
+
+    /**
+     * @brief Sobre carga do operador de pós-incremento.
+     *
+     * @return iteratorPQ
+     */
+    iteratorPQ operator++(int) {
+        iteratorPQ temp = *this;
+        m_ptr++;
+        return temp;
+    }
+
+    /**
+     * @brief Sobrecarga do operador de indireção.
+     *
+     * @return int&
+     */
+    int& operator*() { return *m_ptr; }
+
+    /**
+     * @brief Sobrecarga do operador de igualdade.
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    bool operator==(const iteratorPQ& rhs) { return m_ptr == rhs.m_ptr; }
+
+    /**
+     * @brief Sobrecarga do operador de diferença.
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    bool operator!=(const iteratorPQ& rhs) { return m_ptr != rhs.m_ptr; }
+};
+
 /**
  * @brief Classe que implementa uma Priority Queue baseada em min heap.
  *
@@ -96,13 +162,13 @@ class PriorityQueue {
      */
     void reserve(unsigned new_capacity) {
         if (m_capacity < new_capacity) {
-            m_capacity = new_capacity;
-            int* aux = new int[m_capacity];          // aloca um novo vetor
+            int* aux = new int[new_capacity];        // aloca um novo vetor
             for (unsigned i = 0; i < m_size; ++i) {  // copia os elementos
                 aux[i] = m_heap[i];
             }
             delete[] m_heap;  // libera o vetor antigo
             m_heap = aux;     // atualiza o ponteiro
+            m_capacity = new_capacity;
         }
     }
 
@@ -140,7 +206,7 @@ class PriorityQueue {
      *
      * @param key
      */
-    void insert(Type key) {
+    void push(Type key) {
         // se a heap estiver cheia, aumenta a capacidade
         if (m_size == m_capacity) {
             reserve(2 * m_capacity);
@@ -162,9 +228,7 @@ class PriorityQueue {
      */
     void pop() {
         // se a heap estiver vazia, lança uma exceção
-        if (m_size == 0) {
-            throw std::runtime_error("Empty queue");
-        }
+        if (m_size == 0) throw std::runtime_error("Empty queue");
         // se a heap tiver apenas um elemento, remove-o
         if (m_size == 1) {
             m_size--;
@@ -181,11 +245,9 @@ class PriorityQueue {
      *
      * @return Type
      */
-    Type front() {
+    Type top() {
         // se a heap estiver vazia, lança uma exceção
-        if (m_size == 0) {
-            throw std::runtime_error("Empty queue");
-        }
+        if (m_size == 0) throw std::runtime_error("Empty queue");
         return m_heap[0];  // retorna o elemento de maior prioridade
     }
 
@@ -194,6 +256,7 @@ class PriorityQueue {
      *
      */
     void print() {
+        if (m_size == 0) throw std::runtime_error("Empty queue");
         for (unsigned i = 0; i < m_size; ++i) {
             std::cout << (Type)m_heap[i] << " ";
         }
@@ -214,6 +277,20 @@ class PriorityQueue {
      * @return false
      */
     bool empty() const { return m_size == 0; }
+
+    /**
+     * @brief Função que retorna o iterador para o primeiro elemento da fila
+     *
+     * @return iteratorPQ
+     */
+    iteratorPQ begin() { return iteratorPQ(m_heap); }
+
+    /**
+     * @brief Função que retorna o iterador para o último elemento da fila
+     *
+     * @return iteratorPQ
+     */
+    iteratorPQ end() { return iteratorPQ(m_heap + m_size); }
 };
 
 #endif  // PRIORITYQUEUE_H
