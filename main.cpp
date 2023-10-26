@@ -10,17 +10,42 @@
  */
 
 #include <iostream>
+#include <stdlib.h>
 
 #include "TAD'S/PriorityQueue.h"
 #include "TAD'S/Queue.h"
+#include "System/Computer.h"
+#include "System/Process.h"
+
+
+
+
+
+
+
+
+
+
+using namespace std;
 
 int main() {
-    PriorityQueue<int> pq;
-    pq.push(2);
-    pq.push(3);
-    pq.push(1);
-    while (!pq.empty()) {
-        std::cout << pq.top() << " ";
-        pq.pop();
+
+    int N = 10;
+    Queue<Process> p;
+
+
+
+    p.push(Process(10, 20, 30));
+
+    Computer<Queue<int>> pcs[N];
+
+    for(int i  = 0; i < N; i++ ){
+        pcs[i].CPU.push(p.front().d_cpu);
     }
+
+    srand (48);
+
+
+    for(int i = 0; i < N; i++) cout << "PC " << i << ": " << pcs[i].CPU.front() << endl;
+
 }

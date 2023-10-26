@@ -160,7 +160,7 @@ class Queue {
      *
      * @param val - valor a ser inserido
      */
-    void push(const int &val) {
+    void push(const Type &val) {
         Node<Type> *aux = new Node<Type>(val, nullptr);
         if (m_size > 0) {
             m_tail->next = aux;
@@ -174,9 +174,9 @@ class Queue {
     /**
      * @brief Função que retorna uma referencia para o primeiro elemento da fila
      *
-     * @return int&
+     * @return Type&
      */
-    int &front() {
+    Type &front() {
         if (m_size == 0) throw std::runtime_error("empty queue");
         return m_head->data;
     }
@@ -184,9 +184,9 @@ class Queue {
     /**
      * @brief Função que retorna uma referencia para o primeiro elemento da fila
      *
-     * @return const int&
+     * @return const Type&
      */
-    const int &front() const {
+    const Type &front() const {
         if (m_size == 0) throw std::runtime_error("empty queue");
         return m_head->data;
     }
@@ -209,9 +209,9 @@ class Queue {
      * @brief Função que retorna uma referencia para o último elemento da
      * fila
      *
-     * @return int&
+     * @return Type&
      */
-    int &back() {
+    Type &back() {
         if (m_size == 0) throw std::runtime_error("empty queue");
         return m_tail->data;
     }
@@ -220,9 +220,9 @@ class Queue {
      * @brief Função que retorna uma referencia para o último elemento da
      * fila
      *
-     * @return const int&
+     * @return const Type&
      */
-    const int &back() const {
+    const Type &back() const {
         if (m_size == 0) throw std::runtime_error("empty queue");
         return m_tail->data;
     }
