@@ -190,7 +190,7 @@ class PriorityQueue {
      *
      */
     PriorityQueue() {
-        m_capacity = 50;
+        m_capacity = 1;
         m_size = 0;
         m_heap = new int[m_capacity];
     }
@@ -241,7 +241,7 @@ class PriorityQueue {
     }
 
     /**
-     * @brief Função que retorna uma referência para o primeiro elemento da fila
+     * @brief Função que retorna uma cópia para o primeiro elemento da fila
      *
      * @return Type
      */
