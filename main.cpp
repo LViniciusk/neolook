@@ -10,42 +10,105 @@
  */
 
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
+#include <time.h> 
 
 #include "TAD'S/PriorityQueue.h"
 #include "TAD'S/Queue.h"
 #include "System/Computer.h"
 #include "System/Process.h"
 
-
-
-
-
-
-
-
-
-
 using namespace std;
 
-int main() {
-
-    int N = 10;
-    Queue<Process> p;
-
-
-
-    p.push(Process(10, 20, 30));
-
-    Computer<Queue<int>> pcs[N];
-
-    for(int i  = 0; i < N; i++ ){
-        pcs[i].CPU.push(p.front().d_cpu);
+void print(Queue<Process> p)
+{
+    int t = p.size();
+    for (int i = 0; i < t; i++)
+    {
+        cout << "Processo " << i << ":" << endl;
+        cout << endl;
+        cout << "Start: " << p.front().d_start << endl;
+        cout << "CPU: " << p.front().d_cpu << endl;
+        cout << "DISK: " << p.front().d_disk << endl;
+        cout << "REDE: " << p.front().d_rede << endl;
+        cout << endl;
+        p.pop();
     }
+}
 
-    srand (48);
+void readTrace(Queue<Process> &p)
+{
+    FILE *trace;
+    int d_start, d_cpu, d_disk, d_rede;
+    trace = fopen("trace.txt", "r");
+    while (fscanf(trace, "%d %d %d %d", &d_start, &d_cpu, &d_disk, &d_rede) == 4)
+    {
+        p.push(Process(d_start, d_cpu, d_disk, d_rede));
+    }
+    fclose(trace);
+}
+
+int main()
+{
+    srand(time(0));
+    Queue<Process> p;
+    int op, n{5};
+    
+    cout << "Politica: "; cin >> op;
+
+    if (op == 0)
+    {
+        Computer<PriorityQueue<int>> pcs[n];
+        readTrace(p);
 
 
-    for(int i = 0; i < N; i++) cout << "PC " << i << ": " << pcs[i].CPU.front() << endl;
+        cout << "Quantia de processos pendentes: " << p.size() << "\n\n";
+        cout << "Distribuindo . . ." << endl;
+        int t = p.size();
+        for (int i = 0; i < t; i++)
+        {
+            pcs[rand() % n].receiveProcess(p.front());
+            p.pop();
+        }
 
+        
+        cout << "Quantia de processos pendentes: " << p.size() << "\n\n";
+
+        for(int i = 0; i < n; i++){
+            cout << "PC " << i << ": " << "\n";
+            pcs[i].print();
+        }
+
+
+
+        print(p);
+    }
+    else
+    {
+        Computer<Queue<int>> pcs[n];
+        readTrace(p);
+
+
+        cout << "Quantia de processos pendentes: " << p.size() << "\n\n";
+        cout << "Distribuindo . . ." << endl;
+        int t = p.size();
+        for (int i = 0; i < t; i++)
+        {
+            pcs[rand() % n].receiveProcess(p.front());
+            p.pop();
+        }
+
+        
+        cout << "Quantia de processos pendentes: " << p.size() << "\n\n";
+
+        for(int i = 0; i < n; i++){
+            cout << "PC " << i << ": " << "\n";
+            pcs[i].print();
+        }
+
+
+
+        print(p);
+    }
 }
