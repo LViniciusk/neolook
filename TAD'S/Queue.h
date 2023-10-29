@@ -152,7 +152,11 @@ class Queue {
      * @brief Função que remove todos os elementos da lista: size() == 0
      *
      */
-    void clear() { delete m_head; }
+    void clear() {
+        while (m_size > 0) {
+            pop();
+        }
+    }
 
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no
