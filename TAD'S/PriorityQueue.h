@@ -300,6 +300,17 @@ class PriorityQueue {
     }
 
     /**
+     * @brief Função que remove todos os elementos da fila: size() == 0
+     * Complexidade: O(n)
+     *
+     */
+    void clear() {
+        while (m_size > 0) {
+            pop();
+        }
+    }
+
+    /**
      * @brief Função que retorna o tamanho da fila
      * Complexidade: O(1)
      *
