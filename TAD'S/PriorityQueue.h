@@ -26,6 +26,7 @@ class iteratorPQ {
    public:
     /**
      * @brief Construct a new iterator P Q object
+     * Complexidade: O(1)
      *
      * @param ptr
      */
@@ -33,6 +34,7 @@ class iteratorPQ {
 
     /**
      * @brief Sobrecarga do operador de pré-incremento.
+     * Complexidade: O(1)
      *
      * @return iteratorPQ&
      */
@@ -43,6 +45,7 @@ class iteratorPQ {
 
     /**
      * @brief Sobre carga do operador de pós-incremento.
+     * Complexidade: O(1)
      *
      * @return iteratorPQ
      */
@@ -54,6 +57,7 @@ class iteratorPQ {
 
     /**
      * @brief Sobrecarga do operador de indireção.
+     * Complexidade: O(1)
      *
      * @return int&
      */
@@ -61,6 +65,7 @@ class iteratorPQ {
 
     /**
      * @brief Sobrecarga do operador de igualdade.
+     * Complexidade: O(1)
      *
      * @param rhs
      * @return true
@@ -70,6 +75,7 @@ class iteratorPQ {
 
     /**
      * @brief Sobrecarga do operador de diferença.
+     * Complexidade: O(1)
      *
      * @param rhs
      * @return true
@@ -98,6 +104,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna o índice do pai de um nó
+     * Complexidade: O(1)
      *
      * @param i
      * @return int
@@ -106,6 +113,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna o índice do filho esquerdo de um nó
+     * Complexidade: O(1)
      *
      * @param i
      * @return int
@@ -114,6 +122,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna o índice do filho direito de um nó
+     * Complexidade: O(1)
      *
      * @param i
      * @return int
@@ -122,6 +131,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que troca o valor de dois nós
+     * Complexidade: O(1)
      *
      * @param a
      * @param b
@@ -134,6 +144,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que corrige a heap
+     * Complexidade: O(log n)
      *
      * @param i
      */
@@ -157,6 +168,7 @@ class PriorityQueue {
      * @brief Função que aumenta a capacidade da fila. Se m_capacity >=
      * new_capacity, a funcao faz nada. Caso contrario, a funcao aumenta a
      * capacidade da fila para um valor maior ou igual a new_capacity.
+     * Complexidade: O(n)
      *
      * @param new_capacity nova capacidade da fila
      */
@@ -175,6 +187,7 @@ class PriorityQueue {
    public:
     /**
      * @brief Construtor da classe PriorityQueue
+     * Complexidade: O(1)
      *
      * @param capacity
      */
@@ -187,6 +200,7 @@ class PriorityQueue {
     /**
      * @brief Construtor default da classe PriorityQueue. É aloca um vetor de 50
      * posições.
+     * Complexidade: O(1)
      *
      */
     PriorityQueue() {
@@ -196,13 +210,31 @@ class PriorityQueue {
     }
 
     /**
+     * @brief Construtor de cópia da classe PriorityQueue.
+     * Complexidade: O(n)
+     *
+     * @param pq PriorityQueue a ser copiada
+     */
+    PriorityQueue(const PriorityQueue& pq) {
+        m_capacity = pq.m_capacity;
+        m_size = pq.m_size;
+        m_heap = new int[m_capacity];
+        for (unsigned i = 0; i < m_size; ++i) {
+            m_heap[i] = pq.m_heap[i];
+        }
+    }
+
+    /**
      * @brief Destrutor da classe PriorityQueue
+     * Complexidade: O(1)
      *
      */
     ~PriorityQueue() { delete[] m_heap; }
 
     /**
-     * @brief
+     * @brief Função que insere um elemento na fila. O elemento é inserido no
+     * final da heap. Logo após, a heap é corrigida.
+     * Complexidade: O(n) / O(log n) amortizado
      *
      * @param key
      */
@@ -224,6 +256,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que remove o elemento de maior prioridade da fila
+     * Complexidade: O(log n)
      *
      */
     void pop() {
@@ -242,6 +275,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna uma cópia para o primeiro elemento da fila
+     * Complexidade: O(1)
      *
      * @return Type
      */
@@ -252,7 +286,9 @@ class PriorityQueue {
     }
 
     /**
-     * @brief
+     * @brief Função que imprime os elementos da fila na ordem em que estão no
+     * vetor
+     * Complexidade: O(n)
      *
      */
     void print() {
@@ -265,6 +301,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna o tamanho da fila
+     * Complexidade: O(1)
      *
      * @return int
      */
@@ -272,6 +309,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que verifica se a fila está vazia
+     * Complexidade: O(1)
      *
      * @return true
      * @return false
@@ -280,6 +318,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna o iterador para o primeiro elemento da fila
+     * Complexidade: O(1)
      *
      * @return iteratorPQ
      */
@@ -287,6 +326,7 @@ class PriorityQueue {
 
     /**
      * @brief Função que retorna o iterador para o último elemento da fila
+     * Complexidade: O(1)
      *
      * @return iteratorPQ
      */

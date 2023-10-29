@@ -24,6 +24,7 @@ class iterator_queue {
    public:
     /**
      * @brief Construtor da classe iterator_queue
+     * Complexidade: O(1)
      *
      * @param ptr
      */
@@ -32,6 +33,7 @@ class iterator_queue {
     /**
      * @brief Sobrecarga do operador de pré-incremento.
      * Faz o iterador apontar para o proximo elemento da lista.
+     * Complexidade: O(1)
      *
      * @return iterator& retorna uma referencia para o iterador
      */
@@ -43,6 +45,7 @@ class iterator_queue {
     /**
      * @brief Sobrecarga do operador de pós-incremento.
      * Faz o iterador apontar para o proximo elemento da lista.
+     * Complexidade: O(1)
      *
      * @return iterator retorna o iterador antes de ser incrementado
      */
@@ -55,6 +58,7 @@ class iterator_queue {
     /**
      * @brief Sobrecarga do operador de indireção.
      * Retorna o valor armazenado no Node apontado pelo iterador.
+     * Complexidade: O(1)
      *
      * @return Type& retorna uma referencia para o dado armazenado no Node
      */
@@ -62,6 +66,7 @@ class iterator_queue {
 
     /**
      * @brief Sobrecarga do operador de igualdade.
+     * Complexidade: O(1)
      *
      * @param other iterador a ser comparado
      * @return true se os iteradores apontam para o mesmo nó
@@ -73,6 +78,7 @@ class iterator_queue {
 
     /**
      * @brief Sobrecarga do operador de desigualdade.
+     * Complexidade: O(1)
      *
      * @param other iterador a ser comparado
      * @return true se os iteradores apontam para nós diferentes
@@ -103,6 +109,7 @@ class Queue {
    public:
     /**
      * @brief Construtor da classe Queue. Cria uma fila vazia.
+     * Complexidade: O(1)
      *
      */
     Queue() {
@@ -113,6 +120,7 @@ class Queue {
 
     /**
      * @brief Construtor de cópia da classe Queue
+     * Complexidade: O(n)
      *
      * @param lst - fila a ser copiada
      */
@@ -129,12 +137,14 @@ class Queue {
     /**
      * @brief Destrutor da classe Queue.
      * Libera toda a memoria alocada, ate mesmo o nó sentinela
+     * Complexidade: O(n)
      *
      */
     ~Queue() { delete m_head; }
 
     /**
      * @brief Funçãi que verifica se uma lista está vazia.
+     * Complexidade: O(1)
      *
      * @return true se a lista está vazia,
      * @return false caso contrário
@@ -143,6 +153,7 @@ class Queue {
 
     /**
      * @brief Função que retorna o número de elementos na fila
+     * Complexidade: O(1)
      *
      * @return unsigned int
      */
@@ -150,6 +161,7 @@ class Queue {
 
     /**
      * @brief Função que remove todos os elementos da lista: size() == 0
+     * Complexidade: O(n)
      *
      */
     void clear() {
@@ -161,6 +173,7 @@ class Queue {
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no
      * final da fila.
+     * Complexidade: O(1)
      *
      * @param val - valor a ser inserido
      */
@@ -177,6 +190,7 @@ class Queue {
 
     /**
      * @brief Função que retorna uma referencia para o primeiro elemento da fila
+     * Complexidade: O(1)
      *
      * @return Type&
      */
@@ -187,6 +201,7 @@ class Queue {
 
     /**
      * @brief Função que retorna uma referencia para o primeiro elemento da fila
+     * Complexidade: O(1)
      *
      * @return const Type&
      */
@@ -197,6 +212,7 @@ class Queue {
 
     /**
      * @brief Função que remove o primeiro elemento da fila
+     * Complexidade: O(1)
      *
      */
 
@@ -212,6 +228,7 @@ class Queue {
     /**
      * @brief Função que retorna uma referencia para o último elemento da
      * fila
+     * Complexidade: O(1)
      *
      * @return Type&
      */
@@ -223,6 +240,7 @@ class Queue {
     /**
      * @brief Função que retorna uma referencia para o último elemento da
      * fila
+     * Complexidade: O(1)
      *
      * @return const Type&
      */
@@ -233,6 +251,7 @@ class Queue {
     /**
      * @brief Função que retorna um iterador que aponta para o primeiro
      * elemento da fila
+     * Complexidade: O(1)
      *
      * @return iterator_queue<Type>
      */
@@ -241,6 +260,7 @@ class Queue {
     /**
      * @brief Função que retorna um iterador que aponta para o primeiro bit
      * após o último elemento da fila
+     * Complexidade: O(1)
      *
      * @return iterator_queue<Type>
      */
