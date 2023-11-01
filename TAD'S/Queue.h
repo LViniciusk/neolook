@@ -19,7 +19,7 @@
 template <typename Type>
 class iterator_queue {
    private:
-    Node<int> *m_ptr;  // ponteiro para o no atual
+    Node<Type> *m_ptr;  // ponteiro para o no atual
 
    public:
     /**

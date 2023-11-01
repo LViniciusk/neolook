@@ -3,31 +3,35 @@
 
 #include <iostream>
 
+#include "CPU.h"
+#include "Disk.h"
 #include "Process.h"
 
 template <typename Type>
 class Computer {
-   public:
-    Type CPU;
-    Type Disk[2];
+   private:
+    CPU<Type> cpu;     // CPU do computador
+    Disk<Type>* disk;  // Discos do computador
 
-    void receiveProcess(Process p) {
-        CPU.push(p.d_cpu);
-        if ((Disk[0].empty() && Disk[1].empty()) ||
-            (!Disk[0].empty() && !Disk[1].empty())) {
-            Disk[rand() % 2].push(p.d_disk);
-        } else if (Disk[0].empty()) {
-            Disk[0].push(p.d_disk);
-        } else {
-            Disk[1].push(p.d_disk);
-        }
+   public:
+    Queue<Process> processos;  // para fins de teste
+
+    Computer() {
+        disk = new Disk<Type>[2];
+        processos = Queue<Process>();
     }
 
     void print() {
-        std::cout << "    CPU: " << CPU.size() << std::endl;
-        std::cout << "    Disk1: " << Disk[0].size() << std::endl;
-        std::cout << "    Disk2: " << Disk[1].size() << "\n\n";
+        std::cout << "Computador: " << std::endl;
+        std::cout << "\tCPU: " << std::endl;
+        cpu.print();
+        std::cout << "\tDisco 1: " << std::endl;
+        disk[0].print();
+        std::cout << "\tDisco 2: " << std::endl;
+        disk[1].print();
     }
+
+    void receiveProcess(Process p) { processos.push(p); }
 };
 
 #endif
