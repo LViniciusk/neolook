@@ -1,21 +1,28 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
+#include "../TAD'S/PriorityQueuePair.h"
+#include "../TAD'S/Queue.h"
 #include "Process.h"
 
-template <typename Type>
 class Network {
    private:
-    Process* process{};  // processo que esta sendo executado na rede
-    Type networkQueue;   // fila de processos da rede
+    Process* process{};     // processo que esta sendo executado na rede
+    Queue<Process>* queue;  // fila de processos da rede
+    PriorityQueuePair<Process>* pq;  // fila de processos da rede
+    bool politica;                   // politica de escalonamento. 0 - FCFS, 1 -
+                                     // SJF
 
    public:
-    Network() {
-        process = nullptr;
-        networkQueue = Type();
+    Network(bool politica) : politica(politica) {
+        queue = new Queue<Process>();
+        pq = new PriorityQueuePair<Process>();
     }
 
-    ~Network() { delete process; }
+    ~Network() {
+        delete queue;
+        delete pq;
+    }
 
     // getters e setters
     /**
@@ -31,7 +38,16 @@ class Network {
      *
      * @param p Processo a ser executado na rede
      */
-    void setProcess(Process* p) { process = p; }
+    void setProcess(Process& p) {
+        if (process == nullptr) {
+            process = &p;
+        } else {
+            if (politica)
+                pq->push(p.getDisk(), p);
+            else
+                queue->push(p);
+        }
+    }
 
     /**
      * @brief Função que imprime o estado atual da rede
@@ -45,7 +61,21 @@ class Network {
         else
             std::cout << "Nenhum processo em execução" << std::endl;
         std::cout << "\tFila: " << std::endl;
-        for (auto& p : networkQueue) p->print();
+        if (politica) {
+            if (pq->empty())
+                std::cout << "\t\tFila vazia" << std::endl;
+            else
+                for (auto& p : *pq) {
+                    p.print();
+                }
+        } else {
+            if (queue->empty())
+                std::cout << "\t\tFila vazia" << std::endl;
+            else
+                for (auto& p : *queue) {
+                    p.print();
+                }
+        }
     }
 };
 

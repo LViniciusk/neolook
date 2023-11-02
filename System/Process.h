@@ -31,6 +31,15 @@ class Process {
         std::cout << "\tDisco: " << d_disk << std::endl;
         std::cout << "\tRede: " << d_rede << std::endl;
     }
+
+    Process operator*(const Process& p) {
+        Process temp;
+        temp.d_start = d_start * p.d_start;
+        temp.d_cpu = d_cpu * p.d_cpu;
+        temp.d_disk = d_disk * p.d_disk;
+        temp.d_rede = d_rede * p.d_rede;
+        return temp;
+    }
 };
 
 #endif

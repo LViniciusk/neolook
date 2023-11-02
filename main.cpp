@@ -22,13 +22,15 @@ using namespace std;
 int main() {
     int qPcs;
     string arq;
+    bool politica;
 
     cout << "Digite a quantidade de computadores: ";
     cin >> qPcs;
     cout << "Digite o nome do arquivo: ";
     cin >> arq;
-
-    System<Queue<Process>> s(qPcs, arq);
+    cout << "Digite a politica de escalonamento (0 - FCFS, 1 - SJF): ";
+    cin >> politica;
+    System system(qPcs, arq, politica);
 
     return 0;
 }

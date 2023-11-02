@@ -15,20 +15,33 @@
 
 #define SEED 12345678
 
-template <typename Type>
 class System {
    private:
-    int qPcs;                   // quantidade de computadores
-    Computer<Type>* computers;  // computadores do sistema
-    Network<Type> network;      // rede do sistema
+    int qPcs;             // quantidade de computadores
+    Computer* computers;  // computadores do sistema
+    Network* network;     // rede do sistema
+    bool politica;        // politica de escalonamento
 
    public:
-    System(int qPcs, std::string arq) {
+    /**
+     * @brief Construct a new System object.
+     * 0 - FCFS
+     * 1 - SJF
+     *
+     * @param qPcs Quantidade de computadores
+     * @param arq Arquivo trace a ser carregado
+     * @param politica Política de escalonamento
+     */
+    System(int qPcs, std::string arq, bool politica) {
         this->qPcs = qPcs;
-        computers = new Computer<Type>[qPcs];
-        network = Network<Type>();
+        this->politica = politica;
+        computers = new Computer[qPcs];
+        for (int i = 0; i < qPcs; i++) computers[i] = Computer(politica);
+        network = new Network(politica);
         loadFile(arq);
     }
+
+    ~System() { delete[] computers; }
 
     void loadFile(std::string arq) {
         Queue<Process> p;  // fila auxiliar, para carregar o arquivo
@@ -50,33 +63,27 @@ class System {
         srand(SEED);
         while (!p.empty()) {
             int i = rand() % qPcs;
+            std::cout << "Processo com instante " << p.front().getStart()
+                      << " enviado para "
+                      << "o computador " << i << std::endl;
             computers[i].receiveProcess(p.front());
             p.pop();
         }
 
-        // Imprime o estado inicial do sistema
-        std::cout << "Estado inicial do sistema: " << std::endl;
-        for (int i = 0; i < qPcs; i++) {
-            std::cout << "Computador " << i << std::endl;
-            std::cout << "\tFila de processos: " << std::endl;
-            for (auto& process : computers[i].processos) process.print();
-            std::cout << "----------------------------------------"
-                      << std::endl;
-            std::cout << std::endl;
-        }
+        // // Imprime o estado inicial do sistema
+        // std::cout << "Estado inicial do sistema: " << std::endl;
+        // printPCS();
     }
 
     void printPCS() {
+        std::cout << "COMPUTADORES: " << std::endl;
         for (int i = 0; i < qPcs; i++) {
-            std::cout << "Computador " << i << std::endl;
+            std::cout << "Computador " << i << ": ";
             computers[i].print();
-            std::cout << std::endl;
-            std::cout << "----------------------------------------"
-                      << std::endl;
         }
+        std::cout << "REDE: " << std::endl;
+        network->print();
     }
-
-    ~System() { delete[] computers; }
 };
 
 #endif  // SYSTEM_H
