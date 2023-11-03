@@ -209,7 +209,10 @@ class PriorityQueuePair {
      * Complexidade: O(1)
      *
      */
-    ~PriorityQueuePair() { delete[] m_heap; }
+    ~PriorityQueuePair() {
+        delete[] m_heap;
+        std::cout << "PriorityQueuePair destruida" << std::endl;
+    }
 
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no
@@ -219,16 +222,13 @@ class PriorityQueuePair {
      * @param key
      */
     void push(int key, const Type& value) {
-        // se a heap estiver cheia, aumenta a capacidade
         if (m_size == m_capacity) {
             reserve(2 * m_capacity);
         }
-        // insere o elemento na última posição
         m_heap[m_size] = std::make_pair(key, value);
         m_size++;
-        // corrige a heap
-        int i = m_size - 1;
-        while (i > 0 && m_heap[i].first < m_heap[parent(i)].first) {
+        unsigned i = m_size - 1;
+        while (i > 0 && m_heap[parent(i)].first > m_heap[i].first) {
             swap(&m_heap[i], &m_heap[parent(i)]);
             i = parent(i);
         }
@@ -240,17 +240,10 @@ class PriorityQueuePair {
      *
      */
     void pop() {
-        // se a heap estiver vazia, lança uma exceção
         if (m_size == 0) throw std::runtime_error("Empty queue");
-        // se a heap tiver apenas um elemento, remove-o
-        if (m_size == 1) {
-            m_size--;
-            return;
-        }
-
-        m_heap[0] = m_heap[m_size - 1];  // copia o último elemento para a raiz
-        m_size--;                        // decrementa o tamanho da heap
-        heapify(0);                      // corrige a heap
+        m_heap[0] = m_heap[m_size - 1];
+        m_size--;
+        heapify(0);
     }
 
     /**

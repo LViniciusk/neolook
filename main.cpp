@@ -9,6 +9,7 @@
  *
  */
 
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
@@ -19,6 +20,25 @@
 using namespace std;
 
 int main() {
+    std::cout << "\033[2J\033[1;1H";
+
+    // Título estilizado para o projeto Neolook
+    std::cout << "=========================================" << std::endl;
+    std::cout << "            NEOLOOK SIMULATOR           " << std::endl;
+    std::cout << "=========================================" << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Comandos:" << std::endl;
+    std::cout
+        << "init <qtd pcs> <politica> - Cria o sistema com a quantidade de pcs "
+           "e a politica de escalonamento"
+        << std::endl;
+    std::cout << "load <arq> - Carrega o arquivo trace" << std::endl;
+    std::cout << "print - Imprime o estado atual do sistema" << std::endl;
+    std::cout << "execute - Executa o sistema" << std::endl;
+    std::cout << "exit - Sai do programa" << std::endl;
+    std::cout << std::endl;
+
     int qPcs;
     string arq;
     bool politica;

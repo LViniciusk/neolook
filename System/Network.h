@@ -7,17 +7,17 @@
 
 class Network {
    private:
-    Process process{};     // processo que está sendo executado no disco
-    Queue<Process> queue;  // fila de processos do disco
-    PriorityQueuePair<Process> pq;  // fila de processos do disco
+    Process process{};      // processo que está sendo executado no disco
+    Queue<Process>* queue;  // fila de processos do disco
+    PriorityQueuePair<Process>* pq;  // fila de processos do disco
     bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;      // indica se o disco está ocupado
     int time;       // tempo de execução do processo atual
 
    public:
     Network(bool politica) : politica(politica) {
-        queue = Queue<Process>();
-        pq = PriorityQueuePair<Process>();
+        queue = new Queue<Process>();
+        pq = new PriorityQueuePair<Process>();
         busy = false;
         std::cout << "\tRede criada" << std::endl;
     }
@@ -45,66 +45,24 @@ class Network {
             process = p;
             busy = true;
             time = 0;
-            std::cout << "\t\tProcesso " << process.getInstant()
-                      << " inserido na Rede" << std::endl;
+            // std::cout << "\t\tProcesso " << process.getInstant()
+            //           << " inserido na Rede" << std::endl;
         } else {
             if (politica) {
-                pq.push(p.getNetwork(), p);
-                std::cout << "\t\tProcesso " << process.getInstant()
-                          << " carregado no Rede" << std::endl;
+                pq->push(p.getCPU(), p);
             } else {
-                queue.push(p);
-                std::cout << "\t\tProcesso " << process.getInstant()
-                          << " carregado no Rede" << std::endl;
+                queue->push(p);
             }
+            // std::cout << "\t\tProcesso " << p.getInstant()
+            //           << " inserido na fila da Rede" << std::endl;
         }
     }
-
-    // void setTime() { time++; }
-
-    // int getTime() { return time; }
-
-    // void setBusy(bool b) { busy = b; }
-
-    // /**
-    //  * @brief Função que imprime o estado atual do disco
-    //  *
-    //  */
-    // void print() {
-    //     std::cout << "Disco: " << std::endl;
-    //     std::cout << "\tEm execução: ";
-    //     if (busy)
-    //         process.print();
-    //     else
-    //         std::cout << "Nenhum processo em execução" << std::endl;
-
-    //     std::cout << "\tFila: " << std::endl;
-    //     if (politica) {
-    //         if (pq.empty())
-    //             std::cout << "\t\tFila vazia" << std::endl;
-    //         else
-    //             for (auto& p : pq) {
-    //                 p.print();
-    //             }
-    //     } else {
-    //         if (queue.empty())
-    //             std::cout << "\t\tFila vazia" << std::endl;
-    //         else
-    //             for (auto& p : queue) {
-    //                 p.print();
-    //             }
-    //     }
-    // }
-
-    // bool isConcluded() {
-    //     if (!busy && queue.empty() && pq.empty()) return true;
-    // }
 
     Process* execute() {
         if (busy) {
             if (time == process.getDisk()) {
-                std::cout << "\t\tProcesso " << process.getInstant()
-                          << " concluido na Disco" << std::endl;
+                // std::cout << "\t\tProcesso " << process.getInstant()
+                //           << " concluido na Disco" << std::endl;
                 busy = false;
                 return &process;
             } else {
@@ -112,22 +70,22 @@ class Network {
             }
         } else {
             if (politica) {
-                if (!pq.empty()) {
-                    process = pq.top();
-                    pq.pop();
+                if (!pq->empty()) {
+                    process = pq->top();
+                    pq->pop();
                     busy = true;
                     time = 0;
-                    std::cout << "\t\tProcesso " << process.getInstant()
-                              << " inserido na fila do Disco" << std::endl;
+                    // std::cout << "\t\tProcesso " << process.getInstant()
+                    //           << " inserido na fila do Disco" << std::endl;
                 }
             } else {
-                if (!queue.empty()) {
-                    process = queue.front();
-                    queue.pop();
+                if (!queue->empty()) {
+                    process = queue->front();
+                    queue->pop();
                     busy = true;
                     time = 0;
-                    std::cout << "\t\tProcesso " << process.getInstant()
-                              << " inserido na fila do Disco" << std::endl;
+                    // std::cout << "\t\tProcesso " << process.getInstant()
+                    //           << " inserido na fila do Disco" << std::endl;
                 }
             }
         }

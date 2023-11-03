@@ -98,9 +98,10 @@ class System {
                    queueProcess.front().getInstant() == timer) {
                 // escolhe um computador aleatório
                 int pc = rand() % qPcs;
-                std::cout << "Time " << timer << " - Processo "
-                          << queueProcess.front().getInstant()
-                          << " enviado para o computador " << pc << std::endl;
+                // std::cout << "Time " << timer << " - Processo "
+                //           << queueProcess.front().getInstant()
+                //           << " enviado para o computador " << pc <<
+                //           std::endl;
                 computers[pc]->getCPU().setProcess(queueProcess.front());
                 queueProcess.pop();
             }
@@ -108,36 +109,40 @@ class System {
             for (int i = 0; i < qPcs; i++) {
                 Process* cpuProcess = computers[i]->getCPU().execute();
                 if (cpuProcess != nullptr) {
-                    std::cout << "Time " << timer << " - Processo "
-                              << cpuProcess->getInstant()
-                              << " concluido na CPU do computador " << i
-                              << std::endl;
+                    // std::cout << "Time " << timer << " - Processo "
+                    //           << cpuProcess->getInstant()
+                    //           << " concluido na CPU do computador " << i
+                    //           << std::endl;
                     // escolhe um disco aleatório
                     int disk = rand() % 2;
                     computers[i]->getDisk(disk).setProcess(*cpuProcess);
                 }
                 Process* diskProcess = computers[i]->getDisk(0).execute();
                 if (diskProcess != nullptr) {
-                    std::cout << "Time " << timer << " - Processo "
-                              << diskProcess->getInstant()
-                              << " concluido no Disco 0 do computador " << i
-                              << std::endl;
+                    // std::cout << "Time " << timer << " - Processo "
+                    //           << diskProcess->getInstant()
+                    //           << " concluido no Disco 0 do computador " << i
+                    //           << std::endl;
                     network->setProcess(*diskProcess);
                 }
                 diskProcess = computers[i]->getDisk(1).execute();
                 if (diskProcess != nullptr) {
-                    std::cout << "Time " << timer << " - Processo "
-                              << diskProcess->getInstant()
-                              << " concluido no Disco 1 do computador " << i
-                              << std::endl;
+                    // std::cout << "Time " << timer << " - Processo "
+                    //           << diskProcess->getInstant()
+                    //           << " concluido no Disco 1 do computador " << i
+                    //           << std::endl;
                     network->setProcess(*diskProcess);
                 }
             }
             Process* aux = network->execute();
             if (aux != nullptr) {
-                std::cout << "Time " << timer << " - PROCESSO "
-                          << aux->getInstant() << " CONCLUÍDO. ------------- "
-                          << std::endl;
+                // std::cout << "Time " << timer << " - Processo "
+                //           << aux->getInstant() << " concluido na Rede "
+                //           << std::endl;
+                // std::cout << "Time " << timer << " - PROCESSO "
+                //           << aux->getInstant() << " CONCLUÍDO. -------------
+                //           "
+                //           << std::endl;
                 pendentes--;
             }
 
