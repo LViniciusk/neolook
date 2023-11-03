@@ -56,6 +56,21 @@ class Vector {
         m_vet = new Type[m_capacity];
     }
 
+    Vector(unsigned int size) {
+        m_size = size;
+        m_capacity = size;
+        m_vet = new Type[m_capacity];
+    }
+
+    Vector(unsigned int size, const Type& value) {
+        m_size = size;
+        m_capacity = size;
+        m_vet = new Type[m_capacity];
+        for (unsigned int i = 0; i < m_size; i++) {
+            m_vet[i] = value;
+        }
+    }
+
     ~Vector() { delete[] m_vet; }
 
     /**

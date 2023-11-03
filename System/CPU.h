@@ -23,6 +23,7 @@ class CPU {
         queue = Queue<Process>();
         pq = PriorityQueuePair<Process>();
         busy = false;
+        std::cout << "\tCPU criada" << std::endl;
     }
 
     ~CPU() { std::cout << "CPU destruida" << std::endl; }
@@ -61,10 +62,13 @@ class CPU {
             process = p;
             time = 0;
             busy = true;
+            std::cout << "\t\tProcesso inserido na CPU" << std::endl;
         } else {
-            if (politica)
-                pq.push(p.getCPU(), p);
-            else
+            std::cout << "\t\tProcesso inserido na fila da CPU" << std::endl;
+            if (politica) {
+                int prioridade = p.getCPU();
+                pq.push(prioridade, p);
+            } else
                 queue.push(p);
         }
     }
@@ -110,10 +114,14 @@ class CPU {
 
     int getTime() { return time; }
 
-    void execute() {
+    // Método que executa o processo atual da CPU
+    Process* execute() {
         if (busy) {
             if (time == process.getCPU()) {
+                std::cout << "\t\tProcesso " << process.getInstant()
+                          << " concluido na CPU" << std::endl;
                 busy = false;
+                return &process;
             } else {
                 time++;
             }
@@ -124,6 +132,8 @@ class CPU {
                     pq.pop();
                     busy = true;
                     time = 0;
+                    std::cout << "\t\tProcesso " << process.getInstant()
+                              << " inserido na fila da CPU" << std::endl;
                 }
             } else {
                 if (!queue.empty()) {
@@ -131,9 +141,12 @@ class CPU {
                     queue.pop();
                     busy = true;
                     time = 0;
+                    std::cout << "\t\tProcesso " << process.getInstant()
+                              << " inserido na fila da CPU" << std::endl;
                 }
             }
         }
+        return nullptr;
     }
 };
 

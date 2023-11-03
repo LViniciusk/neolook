@@ -17,15 +17,16 @@ class Process {
         executado = false;
     }
 
-    ~Process() {
-        std::cout << "Processo " << getInstant() << " destruido" << std::endl;
-    }
+    ~Process() = default;
 
     // getters e setters
     int getInstant() const { return instant; }
     int getCPU() const { return d_cpu; }
     int getDisk() const { return d_disk; }
     int getNetwork() const { return d_network; }
+
+    bool getExecutado() const { return executado; }
+    void setExecutado(bool e) { executado = e; }
 
     void print() {
         std::cout << "Processo: " << std::endl;

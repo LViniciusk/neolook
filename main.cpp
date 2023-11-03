@@ -22,15 +22,33 @@ int main() {
     int qPcs;
     string arq;
     bool politica;
+    System* sys;
 
-    cout << "Digite a quantidade de computadores: ";
-    cin >> qPcs;
-    cout << "Digite o nome do arquivo: ";
-    cin >> arq;
-    cout << "Digite a politica de escalonamento (0 - FCFS, 1 - SJF): ";
-    cin >> politica;
-    System system(qPcs, arq, politica);
-    system.execute();
+    // comandos:
+    // init <qtd pcs> <politica> - Cria o sistema com a quantidade de pcs e a
+    // politica de escalonamento load <arq> - Carrega o arquivo trace
+
+    while (true) {
+        string cmd;
+        cin >> cmd;
+        if (cmd == "init") {
+            cin >> qPcs >> politica;
+            cout << "Criando sistema com " << qPcs << " pcs e politica "
+                 << politica << endl;
+            sys = new System(qPcs, politica);
+        } else if (cmd == "load") {
+            cin >> arq;
+            sys->loadFile(arq);
+        } else if (cmd == "print") {
+            sys->print();
+        } else if (cmd == "execute") {
+            sys->execute();
+        } else if (cmd == "exit") {
+            break;
+        } else {
+            cout << "Comando inválido" << endl;
+        }
+    }
 
     return 0;
 }

@@ -27,7 +27,7 @@
 template <typename Type>
 class PriorityQueuePairIterator {
    private:
-    std::pair<unsigned, Type>* m_ptr;
+    std::pair<int, Type>* m_ptr;
 
    public:
     using iterator_category = std::forward_iterator_tag;
@@ -36,7 +36,7 @@ class PriorityQueuePairIterator {
     using pointer = Type*;
     using reference = Type&;
 
-    PriorityQueuePairIterator(std::pair<unsigned, Type>* ptr) : m_ptr(ptr) {}
+    PriorityQueuePairIterator(std::pair<int, Type>* ptr) : m_ptr(ptr) {}
 
     PriorityQueuePairIterator& operator++() {
         ++m_ptr;
@@ -78,7 +78,7 @@ class PriorityQueuePair {
    private:
     // vetor que armazena os elementos da fila. O par consiste em um inteiro e
     // um Type, sendo o inteiro a prioridade do elemento
-    std::pair<unsigned, Type>* m_heap;
+    std::pair<int, Type>* m_heap;
     unsigned m_size;
     unsigned m_capacity;
 
@@ -116,8 +116,8 @@ class PriorityQueuePair {
      * @param a
      * @param b
      */
-    void swap(std::pair<unsigned, Type>* a, std::pair<unsigned, Type>* b) {
-        std::pair<unsigned, Type> aux = *a;
+    void swap(std::pair<int, Type>* a, std::pair<int, Type>* b) {
+        std::pair<int, Type> aux = *a;
         *a = *b;
         *b = aux;
     }
@@ -154,8 +154,7 @@ class PriorityQueuePair {
      */
     void reserve(unsigned new_capacity) {
         if (m_capacity < new_capacity) {
-            std::pair<unsigned, Type>* aux =
-                new std::pair<unsigned, Type>[new_capacity];
+            std::pair<int, Type>* aux = new std::pair<int, Type>[new_capacity];
             for (unsigned i = 0; i < m_size; ++i) {  // copia os elementos
                 aux[i] = m_heap[i];
             }
@@ -176,7 +175,7 @@ class PriorityQueuePair {
         m_capacity = capacity;
         m_size = 0;
         // cria um vetor de pares (prioridade, elemento)
-        m_heap = new std::pair<unsigned, Type>[m_capacity];
+        m_heap = new std::pair<int, Type>[m_capacity];
     }
 
     /**
@@ -187,7 +186,7 @@ class PriorityQueuePair {
     PriorityQueuePair() {
         m_capacity = 1;
         m_size = 0;
-        m_heap = new std::pair<unsigned, Type>[m_capacity];
+        m_heap = new std::pair<int, Type>[m_capacity];
     }
 
     /**
@@ -199,7 +198,7 @@ class PriorityQueuePair {
     PriorityQueuePair(const PriorityQueuePair& pq) {
         m_capacity = pq.m_capacity;
         m_size = pq.m_size;
-        m_heap = new std::pair<unsigned, Type>[m_capacity];
+        m_heap = new std::pair<int, Type>[m_capacity];
         for (unsigned i = 0; i < m_size; ++i) {
             m_heap[i] = pq.m_heap[i];
         }
@@ -219,7 +218,7 @@ class PriorityQueuePair {
      *
      * @param key
      */
-    void push(unsigned key, Type value) {
+    void push(int key, const Type& value) {
         // se a heap estiver cheia, aumenta a capacidade
         if (m_size == m_capacity) {
             reserve(2 * m_capacity);
@@ -260,7 +259,13 @@ class PriorityQueuePair {
      *
      * @return Type
      */
-    Type top() {
+    Type& top() {
+        // se a heap estiver vazia, lança uma exceção
+        if (m_size == 0) throw std::runtime_error("Empty queue");
+        return m_heap[0].second;
+    }
+
+    const Type& top() const {
         // se a heap estiver vazia, lança uma exceção
         if (m_size == 0) throw std::runtime_error("Empty queue");
         return m_heap[0].second;
