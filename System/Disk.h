@@ -15,6 +15,11 @@ class Disk {
     int time;       // tempo de execução do processo atual
 
    public:
+    /**
+     * @brief Classe que representa o disco do sistema.
+     *
+     * @param politica Política de escalonamento. 0 - FCFS, 1 - SJF
+     */
     Disk(bool politica) : politica(politica) {
         queue = new Queue<Process>();
         pq = new PriorityQueuePair<Process>();
@@ -22,6 +27,10 @@ class Disk {
         std::cout << "\tDisco criado" << std::endl;
     }
 
+    /**
+     * @brief Destrói o objeto Disco e libera a memória alocada para as filas.
+     *
+     */
     ~Disk() {
         delete queue;
         delete pq;
@@ -30,8 +39,7 @@ class Disk {
 
     /**
      * @brief Seta um processo para ser executado no disco. Se o disco já
-     * estiver ocupado, o processo é adicionado na fila de processos do
-     disco.
+     * estiver ocupado, o processo é adicionado na fila de processos do disco.
      *
      * @param p Processo a ser executado no disco
      */
@@ -52,6 +60,13 @@ class Disk {
         }
     }
 
+    /**
+     * @brief Função que executa o processo no disco. Se o disco estiver
+     * ocupada, verifica se o processo terminou e o retorna. Caso contrário,
+     * verifica se há algum processo na fila de processos e o carrega no disco.
+     *
+     * @return Process*
+     */
     Process* execute() {
         if (busy) {
             if (time == process.getDisk()) {

@@ -84,6 +84,8 @@ class System {
     }
 
     void execute() {
+        // Taxa de processamento = n / (instante final - instante inicial)
+        int tempoMedioExecucao, tempoMedioEspera, taxaProcessamento;  // TODO
         int timer = 0;
         int pendentes = queueProcess.size();
         srand(123);
@@ -149,7 +151,7 @@ class System {
             timer++;
         }
 
-        // Imprime as estatísticas
+        std::cout << "EXECUÇÃO FINALIZADA\n" << std::endl;
         std::cout << "Tempo total de execução: " << timer << std::endl;
     }
 };

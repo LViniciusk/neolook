@@ -15,6 +15,13 @@ class Network {
     int time;       // tempo de execução do processo atual
 
    public:
+    /**
+     * @brief Construct a new Network object
+     *
+     * Essa classe é responsável por gerenciar a rede de processos, mantendo uma
+     * fila de processos a serem executados e uma fila de processos em execução.
+     *
+     */
     Network(bool politica) : politica(politica) {
         queue = new Queue<Process>();
         pq = new PriorityQueuePair<Process>();
@@ -22,23 +29,17 @@ class Network {
         std::cout << "\tRede criada" << std::endl;
     }
 
+    /**
+     * @brief Destroy the Network object
+     *
+     */
     ~Network() { std::cout << "Rede destruida" << std::endl; }
 
-    // // getters e setters
-
-    // /**
-    //  * @brief Retorna o processo que está sendo executado no disco
-    //  *
-    //  * @return Process*
-    //  */
-    // Process& getProcess() { return process; }
-
     /**
-     * @brief Seta um processo para ser executado no disco. Se o disco já
-     * estiver ocupado, o processo é adicionado na fila de processos do
-     disco.
+     * @brief Seta um processo para ser executado na rede. Se a rede já
+     * estiver ocupado, o processo é adicionado na fila de processos da rede.
      *
-     * @param p Processo a ser executado no disco
+     * @param p Processo a ser executado no rede
      */
     void setProcess(Process& p) {
         if (!busy) {
@@ -58,6 +59,13 @@ class Network {
         }
     }
 
+    /**
+     * @brief Função que executa o processo na rede. Se a rede estiver
+     * ocupada, verifica se o processo terminou e o retorna. Caso contrário,
+     * verifica se há algum processo na fila de processos e o carrega na rede.
+     *
+     * @return Process*
+     */
     Process* execute() {
         if (busy) {
             if (time == process.getDisk()) {

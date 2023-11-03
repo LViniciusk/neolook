@@ -17,8 +17,20 @@ class CPU {
     int time;       // tempo de execução do processo atual
 
    public:
+    /**
+     * @brief Classe que representa a CPU do sistema.
+     *
+     */
     CPU() = default;
 
+    /**
+     * @brief Classe que representa a CPU do sistema.
+     *
+     * Essa classe é responsável por gerenciar a execução dos processos no
+     * sistema. Ela possui uma fila de processos e uma fila de prioridades, além
+     * de uma política de escalonamento.
+     *
+     */
     CPU(bool politica) : politica(politica) {
         queue = new Queue<Process>();
         pq = new PriorityQueuePair<Process>();
@@ -26,6 +38,12 @@ class CPU {
         std::cout << "\tCPU criada" << std::endl;
     }
 
+    /**
+     * @brief Destrutor da classe CPU.
+     *
+     * Libera a memória alocada para a fila de processos e a fila de
+     * prioridades. Imprime uma mensagem informando que a CPU foi destruída.
+     */
     ~CPU() {
         delete queue;
         delete pq;
@@ -35,31 +53,30 @@ class CPU {
     // getters e setters
 
     /**
-     * @brief Retorna o processo que está sendo executado na CPU
+     * @brief Retorna a referência para o objeto Process associado a CPU.
      *
-     * @return Process*
+     * @return Process&
      */
     Process& getProcess() { return process; }
 
     /**
-     * @brief Retorna a fila de processos da CPU
+     * @brief Retorna a fila de processos da CPU.
      *
-     * @return Queue<Process>*
+     * @return Queue<Process>&
      */
     Queue<Process>& getQueue() { return *queue; }
 
     /**
-     * @brief Retorna a fila de processos da CPU
+     * @brief Retorna a fila de prioridades da CPU.
      *
-     * @return PriorityQueuePair<Process>*
+     * @return PriorityQueuePair<Process>&
      */
     PriorityQueuePair<Process>& getPriorityQueue() { return *pq; }
 
     /**
-     * @brief Seta o processo que está sendo executado na CPU. Se a CPU já
-     * estiver ocupada, o processo é adicionado na fila de processos da CPU.
+     * @brief Define o processo a ser executado pela CPU.
      *
-     * @param p Processo a ser executado na CPU
+     * @param p Processo a ser executado.
      */
     void setProcess(Process& p) {
         if (!busy) {
@@ -78,19 +95,13 @@ class CPU {
         }
     }
 
-    void setBusy(bool b) { busy = b; }
-
-    bool isBusy() { return busy; }
-
-    bool isConcluded() {
-        if (!busy && queue->empty() && pq->empty()) return true;
-    }
-
-    void setTime() { time++; }
-
-    int getTime() { return time; }
-
-    // Método que executa o processo atual da CPU
+    /**
+     * @brief Função que executa o processo na CPU. Se a CPU estiver ocupada,
+     * verifica se o processo terminou e o retorna. Caso contrário, verifica se
+     * há algum processo na fila de processos e o carrega na CPU.
+     *
+     * @return Process*
+     */
     Process* execute() {
         if (busy) {
             if (time == process.getCPU()) {
