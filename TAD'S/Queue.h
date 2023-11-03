@@ -140,7 +140,10 @@ class Queue {
      * Complexidade: O(n)
      *
      */
-    ~Queue() { delete m_head; }
+    ~Queue() {
+        clear();
+        delete m_head;
+    }
 
     /**
      * @brief Funçãi que verifica se uma lista está vazia.

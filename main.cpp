@@ -10,7 +10,6 @@
  */
 
 #include <iostream>
-#include <string>
 #include <vector>
 
 #include "System/System.h"
@@ -31,6 +30,7 @@ int main() {
     cout << "Digite a politica de escalonamento (0 - FCFS, 1 - SJF): ";
     cin >> politica;
     System system(qPcs, arq, politica);
+    system.execute();
 
     return 0;
 }

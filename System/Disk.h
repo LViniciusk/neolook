@@ -7,17 +7,21 @@
 
 class Disk {
    private:
-    Process* process{};     // processo que está sendo executado no disco
-    Queue<Process>* queue;  // fila de processos do disco
-    PriorityQueuePair<Process>* pq;  // fila de processos do disco
+    Process process{};     // processo que está sendo executado no disco
+    Queue<Process> queue;  // fila de processos do disco
+    PriorityQueuePair<Process> pq;  // fila de processos do disco
     bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
+    bool busy;      // indica se o disco está ocupado
+    int time;       // tempo de execução do processo atual
 
    public:
-    Disk(bool politica) {
-        this->politica = politica;
-        queue = new Queue<Process>();
-        pq = new PriorityQueuePair<Process>();
+    Disk(bool politica) : politica(politica) {
+        queue = Queue<Process>();
+        pq = PriorityQueuePair<Process>();
+        busy = false;
     }
+
+    ~Disk() { std::cout << "Disco destruido" << std::endl; }
 
     // getters e setters
 
@@ -26,7 +30,7 @@ class Disk {
      *
      * @return Process*
      */
-    Process* getProcess() { return process; }
+    Process& getProcess() { return process; }
 
     /**
      * @brief Seta um processo para ser executado no disco. Se o disco já
@@ -35,15 +39,23 @@ class Disk {
      * @param p Processo a ser executado no disco
      */
     void setProcess(Process& p) {
-        if (process == nullptr) {
-            process = &p;
+        if (!busy) {
+            process = p;
+            busy = true;
+            time = 0;
         } else {
             if (politica)
-                pq->push(p.getDisk(), p);
+                pq.push(p.getDisk(), p);
             else
-                queue->push(p);
+                queue.push(p);
         }
     }
+
+    void setTime() { time++; }
+
+    int getTime() { return time; }
+
+    void setBusy(bool b) { busy = b; }
 
     /**
      * @brief Função que imprime o estado atual do disco
@@ -52,32 +64,57 @@ class Disk {
     void print() {
         std::cout << "Disco: " << std::endl;
         std::cout << "\tEm execução: ";
-        if (process != nullptr)
-            process->print();
+        if (busy)
+            process.print();
         else
             std::cout << "Nenhum processo em execução" << std::endl;
 
         std::cout << "\tFila: " << std::endl;
         if (politica) {
-            if (pq->empty())
+            if (pq.empty())
                 std::cout << "\t\tFila vazia" << std::endl;
             else
-                for (auto& p : *pq) {
+                for (auto& p : pq) {
                     p.print();
                 }
         } else {
-            if (queue->empty())
+            if (queue.empty())
                 std::cout << "\t\tFila vazia" << std::endl;
             else
-                for (auto& p : *queue) {
+                for (auto& p : queue) {
                     p.print();
                 }
         }
     }
 
-    ~Disk() {
-        delete queue;
-        delete pq;
+    bool isConcluded() {
+        if (!busy && queue.empty() && pq.empty()) return true;
+    }
+
+    void execute() {
+        if (busy) {
+            if (time == process.getDisk()) {
+                busy = false;
+            } else {
+                time++;
+            }
+        } else {
+            if (politica) {
+                if (!pq.empty()) {
+                    process = pq.top();
+                    pq.pop();
+                    busy = true;
+                    time = 0;
+                }
+            } else {
+                if (!queue.empty()) {
+                    process = queue.front();
+                    queue.pop();
+                    busy = true;
+                    time = 0;
+                }
+            }
+        }
     }
 };
 
