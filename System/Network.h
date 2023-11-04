@@ -26,7 +26,6 @@ class Network {
         queue = new Queue<Process*>();
         pq = new PriorityQueuePair<Process*>();
         busy = false;
-        std::cout << "\tRede criada" << std::endl;
     }
 
     /**
@@ -42,8 +41,8 @@ class Network {
      * @param p Processo a ser executado no rede
      */
     void setProcess(Process* p, const long long& timeSystem) {
-        p->setInstanteRede(timeSystem);
         if (!busy) {
+            p->setInstanteRede(timeSystem);
             process = p;
             busy = true;
             time = 0;
@@ -71,7 +70,7 @@ class Network {
      */
     Process* execute(const long long& timeSystem) {
         if (busy) {
-            if (time == process->getDisk()) {
+            if (time == process->getNetwork()) {
                 // std::cout << "Time " << timeSystem << " - Processo "
                 //           << process->getId() << " concluido na Rede"
                 //           << std::endl;
@@ -87,13 +86,10 @@ class Network {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    process->setTempoEsperaRede(timeSystem -
-                                                (process->getInstanteCPU()));
-                    // std::cout
-                    //     << "Time " << timeSystem << " - Processo "
-                    //     << process->getId()
-                    //     << " carregado da fila da Rede - Espera = " << espera
-                    //     << std::endl;
+                    process->setInstanteRede(timeSystem);
+                    // std::cout << "Time " << timeSystem << " - Processo "
+                    //           << process->getId()
+                    //           << " carregado da fila da Rede" << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -101,13 +97,10 @@ class Network {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    process->setTempoEsperaRede(timeSystem -
-                                                (process->getInstanteCPU()));
-                    // std::cout
-                    //     << "Time " << timeSystem << " - Processo "
-                    //     << process->getId()
-                    //     << " carregado da fila da Rede - Espera = " << espera
-                    //     << std::endl;
+                    process->setInstanteRede(timeSystem);
+                    // std::cout << "Time " << timeSystem << " - Processo "
+                    //           << process->getId()
+                    //           << " carregado da fila da Rede" << std::endl;
                 }
             }
         }

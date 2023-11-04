@@ -77,24 +77,25 @@ class Process {
     long long getInstanteDisco() const { return instanteDisco; }
     long long getInstanteRede() const { return instanteRede; }
     long long getTempoEsperaCPU() const { return tempoEsperaCPU; }
-    void setTempoEsperaCPU(const long long& time) { tempoEsperaCPU = time; }
     long long getTempoEsperaDisco() const { return tempoEsperaDisco; }
-    void setTempoEsperaDisco(const long long& time) { tempoEsperaDisco = time; }
     long long getTempoEsperaRede() const { return tempoEsperaRede; }
-    void setTempoEsperaRede(const long long& time) { tempoEsperaRede = time; }
     long long getInstanteFinal() const { return instanteFinal; }
+
     void setInstanteCPU(const long long& time) {
         instanteCPU = time;
         tempoEsperaCPU = instanteCPU - instant;
     }
+
     void setInstanteDisco(const long long& time) {
         instanteDisco = time;
-        tempoEsperaDisco = instanteDisco - instanteCPU;
+        tempoEsperaDisco = time - (instanteCPU + d_cpu);
     }
+
     void setInstanteRede(const long long& time) {
         instanteRede = time;
-        tempoEsperaRede = instanteRede - instanteDisco;
+        tempoEsperaRede = time - (instanteDisco + d_disk);
     }
+
     void setInstanteFinal(const long long& time) { instanteFinal = time; }
 
     void calculaTempos() {

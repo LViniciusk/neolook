@@ -24,7 +24,6 @@ class Disk {
         queue = new Queue<Process*>();
         pq = new PriorityQueuePair<Process*>();
         busy = false;
-        std::cout << "\tDisco criado" << std::endl;
     }
 
     /**
@@ -44,8 +43,8 @@ class Disk {
      * @param p Processo a ser executado no disco
      */
     void setProcess(Process* p, const long long& timeSystem) {
-        p->setInstanteDisco(timeSystem);
         if (!busy) {
+            p->setInstanteDisco(timeSystem);
             process = p;
             busy = true;
             time = 0;
@@ -89,13 +88,10 @@ class Disk {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    process->setTempoEsperaDisco(timeSystem -
-                                                 (process->getInstanteCPU()));
-                    // std::cout
-                    //     << "Time " << timeSystem << " - Processo "
-                    //     << process->getId()
-                    //     << " inserido na fila do Disco - Espera = " << espera
-                    //     << std::endl;
+                    process->setInstanteDisco(timeSystem);
+                    // std::cout << "Time " << timeSystem << " - Processo "
+                    //           << process->getId()
+                    //           << " inserido na fila do Disco" << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -103,13 +99,10 @@ class Disk {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    process->setTempoEsperaDisco(timeSystem -
-                                                 (process->getInstanteCPU()));
-                    // std::cout
-                    //     << "Time " << timeSystem << " - Processo "
-                    //     << process->getId()
-                    //     << " inserido na fila do Disco - Espera = " << espera
-                    //     << std::endl;
+                    process->setInstanteDisco(timeSystem);
+                    // std::cout << "Time " << timeSystem << " - Processo "
+                    //           << process->getId()
+                    //           << " inserido na fila do Disco" << std::endl;
                 }
             }
         }

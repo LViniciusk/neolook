@@ -35,7 +35,6 @@ class CPU {
         queue = new Queue<Process*>();
         pq = new PriorityQueuePair<Process*>();
         busy = false;
-        std::cout << "\tCPU criada" << std::endl;
     }
 
     /**
@@ -79,8 +78,8 @@ class CPU {
      * @param p Processo a ser executado.
      */
     void setProcess(Process* p, const long long& timeSystem) {
-        p->setInstanteCPU(timeSystem);
         if (!busy) {
+            p->setInstanteCPU(timeSystem);
             process = p;
             time = 0;
             busy = true;
@@ -121,13 +120,11 @@ class CPU {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    process->setTempoEsperaCPU(timeSystem -
-                                               (process->getInstanteCPU()));
-                    // std::cout
-                    //     << "Time " << timeSystem << " - Processo "
-                    //     << process->getId()
-                    //     << " carregado da fila da CPU - Espera = " << espera
-                    //     << std::endl;
+                    process->setInstanteCPU(timeSystem);
+                    // std::cout << "Time " << timeSystem << " - Processo "
+                    //           << process->getId() << " carregado da fila da
+                    //           CPU"
+                    //           << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -135,13 +132,11 @@ class CPU {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    process->setTempoEsperaDisco(timeSystem -
-                                                 (process->getInstanteCPU()));
-                    // std::cout
-                    //     << "Time " << timeSystem << " - Processo "
-                    //     << process->getId()
-                    //     << " carregado da fila da CPU - Espera = " << espera
-                    //     << std::endl;
+                    process->setInstanteCPU(timeSystem);
+                    // std::cout << "Time " << timeSystem << " - Processo "
+                    //           << process->getId() << " carregado da fila da
+                    //           CPU"
+                    //           << std::endl;
                 }
             }
         }

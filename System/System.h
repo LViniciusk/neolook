@@ -52,11 +52,17 @@ class System {
      * @param politica Política de escalonamento
      */
     System(int qPcs, bool pol) : qPcs(qPcs), politica(pol) {
+        std::cout << "Criando sistema, com " << qPcs << " computadores"
+                  << std::endl;
+        std::cout << "Politica de escalonamento: ";
+        if (politica)
+            std::cout << "SJF" << std::endl;
+        else
+            std::cout << "FCFS" << std::endl;
         process = new Vector<Process>();
         network = new Network(politica);
         computers = Vector<Computer*>();
         for (int i = 0; i < qPcs; i++) {
-            std::cout << "-Criando computador " << i << std::endl;
             computers.push_back(new Computer(politica, network));
         }
         std::cout << "SISTEMA CRIADO COM SUCESSO" << std::endl;
@@ -72,6 +78,7 @@ class System {
     }
 
     void loadFile(std::string arq) {
+        process->clear();
         std::ifstream file(arq);
         if (!file.is_open())
             std::cout << "Erro ao abrir o arquivo" << std::endl;
@@ -102,6 +109,7 @@ class System {
         if (!process->empty()) {
             for (auto& p : *process) {
                 std::cout << "Process - ";
+                std::cout << std::setw(5) << p.getId() << " - ";
                 std::cout << std::setw(5) << p.getInstant() << " - ";
                 std::cout << std::setw(5) << p.getCPU() << " - ";
                 std::cout << std::setw(5) << p.getDisk() << " - ";

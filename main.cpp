@@ -53,8 +53,6 @@ int main() {
         cin >> cmd;
         if (cmd == "init") {
             cin >> qPcs >> politica;
-            cout << "Criando sistema com " << qPcs << " pcs e politica "
-                 << politica << endl;
             sys = new System(qPcs, politica);
         } else if (cmd == "load") {
             cin >> arq;
