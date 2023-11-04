@@ -7,9 +7,9 @@
 
 class Disk {
    private:
-    Process process{};      // processo que está sendo executado no disco
-    Queue<Process>* queue;  // fila de processos do disco
-    PriorityQueuePair<Process>* pq;  // fila de processos do disco
+    Process* process{};      // processo que está sendo executado no disco
+    Queue<Process*>* queue;  // fila de processos do disco
+    PriorityQueuePair<Process*>* pq;  // fila de processos do disco
     bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;      // indica se o disco está ocupado
     int time;       // tempo de execução do processo atual
@@ -21,8 +21,8 @@ class Disk {
      * @param politica Política de escalonamento. 0 - FCFS, 1 - SJF
      */
     Disk(bool politica) : politica(politica) {
-        queue = new Queue<Process>();
-        pq = new PriorityQueuePair<Process>();
+        queue = new Queue<Process*>();
+        pq = new PriorityQueuePair<Process*>();
         busy = false;
         std::cout << "\tDisco criado" << std::endl;
     }
@@ -43,19 +43,23 @@ class Disk {
      *
      * @param p Processo a ser executado no disco
      */
-    void setProcess(Process& p) {
+    void setProcess(Process* p, const long long& timeSystem) {
+        p->setInstanteDisco(timeSystem);
         if (!busy) {
             process = p;
             busy = true;
             time = 0;
-            // std::cout << "\t\tProcesso inserido no Disco" << std::endl;
+            // std::cout << "Time " << timeSystem << " - Processo " <<
+            // p->getId()
+            //           << " inserido no Disco" << std::endl;
         } else {
             if (politica) {
-                pq->push(p.getCPU(), p);
+                pq->push(p->getDisk(), p);
             } else {
                 queue->push(p);
             }
-            // std::cout << "\t\tProcesso " << p.getInstant()
+            // std::cout << "Time " << timeSystem << " - Processo " <<
+            // p->getId()
             //           << " inserido na fila do Disco" << std::endl;
         }
     }
@@ -67,13 +71,14 @@ class Disk {
      *
      * @return Process*
      */
-    Process* execute() {
+    Process* execute(const long long& timeSystem) {
         if (busy) {
-            if (time == process.getDisk()) {
-                // std::cout << "\t\tProcesso " << process.getInstant()
-                //           << " concluido na Disco" << std::endl;
+            if (time == process->getDisk()) {
+                // std::cout << "Time " << timeSystem << " - Processo "
+                //           << process->getId() << " concluido no Disco"
+                //           << std::endl;
                 busy = false;
-                return &process;
+                return process;
             } else {
                 time++;
             }
@@ -84,8 +89,13 @@ class Disk {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    // std::cout << "\t\tProcesso " << process.getInstant()
-                    //           << " inserido na fila do Disco" << std::endl;
+                    process->setTempoEsperaDisco(timeSystem -
+                                                 (process->getInstanteCPU()));
+                    // std::cout
+                    //     << "Time " << timeSystem << " - Processo "
+                    //     << process->getId()
+                    //     << " inserido na fila do Disco - Espera = " << espera
+                    //     << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -93,8 +103,13 @@ class Disk {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    // std::cout << "\t\tProcesso " << process.getInstant()
-                    //           << " inserido na fila do Disco" << std::endl;
+                    process->setTempoEsperaDisco(timeSystem -
+                                                 (process->getInstanteCPU()));
+                    // std::cout
+                    //     << "Time " << timeSystem << " - Processo "
+                    //     << process->getId()
+                    //     << " inserido na fila do Disco - Espera = " << espera
+                    //     << std::endl;
                 }
             }
         }

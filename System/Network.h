@@ -7,9 +7,9 @@
 
 class Network {
    private:
-    Process process{};      // processo que está sendo executado no disco
-    Queue<Process>* queue;  // fila de processos do disco
-    PriorityQueuePair<Process>* pq;  // fila de processos do disco
+    Process* process{};      // processo que está sendo executado no disco
+    Queue<Process*>* queue;  // fila de processos do disco
+    PriorityQueuePair<Process*>* pq;  // fila de processos do disco
     bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;      // indica se o disco está ocupado
     int time;       // tempo de execução do processo atual
@@ -23,8 +23,8 @@ class Network {
      *
      */
     Network(bool politica) : politica(politica) {
-        queue = new Queue<Process>();
-        pq = new PriorityQueuePair<Process>();
+        queue = new Queue<Process*>();
+        pq = new PriorityQueuePair<Process*>();
         busy = false;
         std::cout << "\tRede criada" << std::endl;
     }
@@ -41,20 +41,23 @@ class Network {
      *
      * @param p Processo a ser executado no rede
      */
-    void setProcess(Process& p) {
+    void setProcess(Process* p, const long long& timeSystem) {
+        p->setInstanteRede(timeSystem);
         if (!busy) {
             process = p;
             busy = true;
             time = 0;
-            // std::cout << "\t\tProcesso " << process.getInstant()
+            // std::cout << "Time " << timeSystem << " - Processo " <<
+            // p->getId()
             //           << " inserido na Rede" << std::endl;
         } else {
             if (politica) {
-                pq->push(p.getCPU(), p);
+                pq->push(p->getNetwork(), p);
             } else {
                 queue->push(p);
             }
-            // std::cout << "\t\tProcesso " << p.getInstant()
+            // std::cout << "Time " << timeSystem << " - Processo " <<
+            // p->getId()
             //           << " inserido na fila da Rede" << std::endl;
         }
     }
@@ -66,13 +69,14 @@ class Network {
      *
      * @return Process*
      */
-    Process* execute() {
+    Process* execute(const long long& timeSystem) {
         if (busy) {
-            if (time == process.getDisk()) {
-                // std::cout << "\t\tProcesso " << process.getInstant()
-                //           << " concluido na Disco" << std::endl;
+            if (time == process->getDisk()) {
+                // std::cout << "Time " << timeSystem << " - Processo "
+                //           << process->getId() << " concluido na Rede"
+                //           << std::endl;
                 busy = false;
-                return &process;
+                return process;
             } else {
                 time++;
             }
@@ -83,8 +87,13 @@ class Network {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    // std::cout << "\t\tProcesso " << process.getInstant()
-                    //           << " inserido na fila do Disco" << std::endl;
+                    process->setTempoEsperaRede(timeSystem -
+                                                (process->getInstanteCPU()));
+                    // std::cout
+                    //     << "Time " << timeSystem << " - Processo "
+                    //     << process->getId()
+                    //     << " carregado da fila da Rede - Espera = " << espera
+                    //     << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -92,8 +101,13 @@ class Network {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    // std::cout << "\t\tProcesso " << process.getInstant()
-                    //           << " inserido na fila do Disco" << std::endl;
+                    process->setTempoEsperaRede(timeSystem -
+                                                (process->getInstanteCPU()));
+                    // std::cout
+                    //     << "Time " << timeSystem << " - Processo "
+                    //     << process->getId()
+                    //     << " carregado da fila da Rede - Espera = " << espera
+                    //     << std::endl;
                 }
             }
         }
