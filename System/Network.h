@@ -1,15 +1,19 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include "../TAD'S/PriorityQueuePair.h"
+#include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa a rede do sistema.
+ *
+ */
 class Network {
    private:
-    Process* process{};      // processo que está sendo executado no disco
-    Queue<Process*>* queue;  // fila de processos do disco
-    PriorityQueuePair<Process*>* pq;  // fila de processos do disco
+    Process* process{};           // processo que está sendo executado no disco
+    Queue<Process*>* queue;       // fila de processos do disco
+    PriorityQueue<Process*>* pq;  // fila de processos do disco
     bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;      // indica se o disco está ocupado
     int time;       // tempo de execução do processo atual
@@ -24,7 +28,7 @@ class Network {
      */
     Network(bool politica) : politica(politica) {
         queue = new Queue<Process*>();
-        pq = new PriorityQueuePair<Process*>();
+        pq = new PriorityQueue<Process*>();
         busy = false;
     }
 

@@ -8,6 +8,10 @@
 #include "Network.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa um computador.
+ *
+ */
 class Computer {
    private:
     CPU* cpu;          // CPU do computador

@@ -3,15 +3,19 @@
 
 #include <iostream>
 
-#include "../TAD'S/PriorityQueuePair.h"
+#include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa a CPU do computador.
+ *
+ */
 class CPU {
    private:
-    Process* process{};      // processo que está sendo executado na CPU
-    Queue<Process*>* queue;  // fila de processos da CPU
-    PriorityQueuePair<Process*>* pq;  // fila de processos da CPU
+    Process* process{};           // processo que está sendo executado na CPU
+    Queue<Process*>* queue;       // fila de processos da CPU
+    PriorityQueue<Process*>* pq;  // fila de processos da CPU
     bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;      // indica se a CPU está ocupada
     int time;       // tempo de execução do processo atual
@@ -33,7 +37,7 @@ class CPU {
      */
     CPU(bool politica) : politica(politica) {
         queue = new Queue<Process*>();
-        pq = new PriorityQueuePair<Process*>();
+        pq = new PriorityQueue<Process*>();
         busy = false;
     }
 
@@ -48,29 +52,6 @@ class CPU {
         delete pq;
         std::cout << "CPU destruida" << std::endl;
     }
-
-    // getters e setters
-
-    /**
-     * @brief Retorna a referência para o objeto Process associado a CPU.
-     *
-     * @return Process&
-     */
-    Process* getProcess() { return process; }
-
-    /**
-     * @brief Retorna a fila de processos da CPU.
-     *
-     * @return Queue<Process>&
-     */
-    Queue<Process*>* getQueue() { return queue; }
-
-    /**
-     * @brief Retorna a fila de prioridades da CPU.
-     *
-     * @return PriorityQueuePair<Process>&
-     */
-    PriorityQueuePair<Process*>* getPriorityQueue() { return pq; }
 
     /**
      * @brief Define o processo a ser executado pela CPU.

@@ -1,20 +1,10 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-// Tempo médio de execução: o tempo de execução de um processo inclui não
-// somente os tempos de processamento em cada recurso, mas também os tempos de
-// espera em cada fila de cada recurso.
-
-// Tempo médio de espera: o tempo de espera de um processo consiste na soma dos
-// tempos de espera em cada fila de cada recurso. Você deve contabilizar os
-// tempos de espera de cada processo simulado e, ao final, calcular a média.
-
-// Taxa de processamento: taxa de processamento consiste na razão do número
-// total de processos executados pelo intervalo de tempo decorrente desde o
-// início do primeiro processo até o término do último. Logo, se o primeiro
-// processo foi iniciado no instante t1 e o n-ésimo (último) foi finalizado no
-// instante t2, a taxa de processamento é calculada como n/(t2 − t1).
-
+/**
+ * @brief Classe que representa um processo.
+ *
+ */
 class Process {
    private:
     unsigned id{};                  // identificador do processo
@@ -52,46 +42,175 @@ class Process {
     }
 
     /**
-     * @brief Destroy the Process object
+     * @brief Destrutor da classe Process.
      *
      */
     ~Process() = default;
 
     // getters e setters
+    /**
+     * @brief Retorna o identificador do processo.
+     *
+     * @return unsigned
+     */
     unsigned getId() const { return id; }
+
+    /**
+     * @brief Retorna o instante de início do processo.
+     *
+     * @return int
+     */
     int getInstant() const { return instant; }
+
+    /**
+     * @brief Retorna a demanda de CPU do processo.
+     *
+     * @return int
+     */
     int getCPU() const { return d_cpu; }
+
+    /**
+     * @brief Retorna a demanda de disco do processo.
+     *
+     * @return int
+     */
     int getDisk() const { return d_disk; }
+
+    /**
+     * @brief Retorna a demanda de rede do processo.
+     *
+     * @return int
+     */
     int getNetwork() const { return d_network; }
+
+    /**
+     * @brief Retorna se o processo já foi executado.
+     *
+     * @return true
+     * @return false
+     */
     bool getExecutado() const { return executado; }
+
+    /**
+     * @brief Seta se o processo já foi executado.
+     *
+     * @param e true se o processo já foi executado, false caso contrário.
+     */
     void setExecutado(bool e) { executado = e; }
+
+    /**
+     * @brief Retorna o tempo total de espera do processo.
+     *
+     * @return unsigned long
+     */
     unsigned long getTempoEspera() const { return tempoEspera; }
+
+    /**
+     * @brief Seta o tempo total de espera do processo.
+     *
+     * @param time Tempo médio de espera do processo.
+     */
     void setTempoEspera(const unsigned long& time) { tempoEspera = time; }
+
+    /**
+     * @brief Retorna o tempo total de execução do processo.
+     *
+     * @return unsigned long
+     */
     unsigned long getTempoExecucao() const { return tempoExecucao; }
+
+    /**
+     * @brief Retorna o instante que o processo foi enviado para ser executado
+     * na CPU.
+     *
+     * @return unsigned long
+     */
     unsigned long getInstanteCPU() const { return instanteCPU; }
+
+    /**
+     * @brief Retorna o instante que o processo foi enviado para ser executado
+     * no disco.
+     *
+     * @return unsigned long
+     */
     unsigned long getInstanteDisco() const { return instanteDisco; }
+
+    /**
+     * @brief Retorrna o instante que o processo foi enviado para ser executado
+     * na rede.
+     *
+     * @return unsigned long
+     */
     unsigned long getInstanteRede() const { return instanteRede; }
+
+    /**
+     * @brief Retorna o instante de término do processo.
+     *
+     * @return unsigned long
+     */
     unsigned long getInstanteFinal() const { return instanteFinal; }
 
+    /**
+     * @brief Seta o instante que o processo foi enviado para ser executado na
+     * CPU. Incrementa o tempo de espera e o tempo de execução do processo.
+     *
+     * @param time Instante que o processo foi enviado para ser executado na CPU
+     */
     void setInstanteCPU(const unsigned long& time) {
         instanteCPU = time;
         tempoEspera += time - instant;
         tempoExecucao += tempoEspera;
     }
 
+    /**
+     * @brief Seta o instante que o processo foi enviado para ser executado no
+     * disco. Incrementa o tempo de espera e o tempo de execução do processo.
+     *
+     * @param time Instante que o processo foi enviado para ser executado no
+     * disco
+     */
     void setInstanteDisco(const unsigned long& time) {
         instanteDisco = time;
         tempoEspera += time - (instanteCPU + d_cpu);
         tempoExecucao += tempoEspera;
     }
 
+    /**
+     * @brief Seta o instante que o processo foi enviado para ser executado na
+     * rede. Incrementa o tempo de espera e o tempo de execução do processo.
+     *
+     * @param time Instante que o processo foi enviado para ser executado na
+     * rede
+     */
     void setInstanteRede(const unsigned long& time) {
         instanteRede = time;
         tempoEspera += time - (instanteDisco + d_disk);
         tempoExecucao += tempoEspera;
     }
 
+    /**
+     * @brief Seta o instante de término do processo.
+     *
+     * @param time Instante de término do processo
+     */
     void setInstanteFinal(const unsigned long& time) { instanteFinal = time; }
+
+    /**
+     * @brief Função que imprime os dados do processo.
+     *
+     */
+    void print() {
+        std::cout << "Process - ";
+        std::cout << std::setw(5) << id << " - ";
+        std::cout << std::setw(5) << instant << " - ";
+        std::cout << std::setw(5) << d_cpu << " - ";
+        std::cout << std::setw(5) << d_disk << " - ";
+        std::cout << std::setw(5) << d_network << " - ";
+        std::cout << std::setw(5) << instanteFinal << " - ";
+        std::cout << std::setw(2) << executado << " - ";
+        std::cout << std::setw(5) << tempoEspera << " - ";
+        std::cout << std::setw(5) << tempoExecucao << "\n";
+    }
 };
 
 #endif

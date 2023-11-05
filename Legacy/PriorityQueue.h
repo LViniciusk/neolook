@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef PRIORITYQUEUEPAIR_H
-#define PRIORITYQUEUEPAIR_H
+#ifndef PRIORITYQUEUE_H
+#define PRIORITYQUEUE_H
 
 #include <iostream>
 #include <stdexcept>
@@ -19,47 +19,69 @@
  * @brief Classe que implementa um iterador para a Priority Queue
  *
  */
-/**
- * @brief Classe que implementa um iterador para a Priority Queue
- *
- * @tparam Type
- */
-template <typename Type>
-class PriorityQueuePairIterator {
+class iteratorPQ {
    private:
-    std::pair<int, Type>* m_ptr;
+    int* m_ptr;  // ponteiro para o no atual
 
    public:
-    using iterator_category = std::forward_iterator_tag;
-    using value_type = Type;
-    using difference_type = std::ptrdiff_t;
-    using pointer = Type*;
-    using reference = Type&;
+    /**
+     * @brief Construct a new iterator P Q object
+     * Complexidade: O(1)
+     *
+     * @param ptr
+     */
+    iteratorPQ(int* ptr) { m_ptr = ptr; }
 
-    PriorityQueuePairIterator(std::pair<int, Type>* ptr) : m_ptr(ptr) {}
-
-    PriorityQueuePairIterator& operator++() {
-        ++m_ptr;
+    /**
+     * @brief Sobrecarga do operador de pré-incremento.
+     * Complexidade: O(1)
+     *
+     * @return iteratorPQ&
+     */
+    iteratorPQ& operator++() {
+        m_ptr++;
         return *this;
     }
 
-    PriorityQueuePairIterator operator++(int) {
-        PriorityQueuePairIterator tmp = *this;
-        ++(*this);
-        return tmp;
+    /**
+     * @brief Sobre carga do operador de pós-incremento.
+     * Complexidade: O(1)
+     *
+     * @return iteratorPQ
+     */
+    iteratorPQ operator++(int) {
+        iteratorPQ temp = *this;
+        m_ptr++;
+        return temp;
     }
 
-    reference operator*() const { return m_ptr->second; }
+    /**
+     * @brief Sobrecarga do operador de indireção.
+     * Complexidade: O(1)
+     *
+     * @return int&
+     */
+    int& operator*() { return *m_ptr; }
 
-    pointer operator->() const { return &(m_ptr->second); }
+    /**
+     * @brief Sobrecarga do operador de igualdade.
+     * Complexidade: O(1)
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    bool operator==(const iteratorPQ& rhs) { return m_ptr == rhs.m_ptr; }
 
-    bool operator==(const PriorityQueuePairIterator& other) const {
-        return m_ptr == other.m_ptr;
-    }
-
-    bool operator!=(const PriorityQueuePairIterator& other) const {
-        return !(*this == other);
-    }
+    /**
+     * @brief Sobrecarga do operador de diferença.
+     * Complexidade: O(1)
+     *
+     * @param rhs
+     * @return true
+     * @return false
+     */
+    bool operator!=(const iteratorPQ& rhs) { return m_ptr != rhs.m_ptr; }
 };
 
 /**
@@ -74,11 +96,9 @@ class PriorityQueuePairIterator {
  * @tparam Type
  */
 template <typename Type>
-class PriorityQueuePair {
+class PriorityQueue {
    private:
-    // vetor que armazena os elementos da fila. O par consiste em um inteiro e
-    // um Type, sendo o inteiro a prioridade do elemento
-    std::pair<int, Type>* m_heap;
+    int* m_heap;
     unsigned m_size;
     unsigned m_capacity;
 
@@ -116,8 +136,8 @@ class PriorityQueuePair {
      * @param a
      * @param b
      */
-    void swap(std::pair<int, Type>* a, std::pair<int, Type>* b) {
-        std::pair<int, Type> aux = *a;
+    void swap(int* a, int* b) {
+        int aux = *a;
         *a = *b;
         *b = aux;
     }
@@ -132,10 +152,10 @@ class PriorityQueuePair {
         int l = left(i);
         int r = right(i);
         unsigned smallest = i;
-        if (l != -1 && m_heap[l].first < m_heap[i].first) {
+        if (l != -1 && m_heap[l] < m_heap[i]) {
             smallest = l;
         }
-        if (r != -1 && m_heap[r].first < m_heap[smallest].first) {
+        if (r != -1 && m_heap[r] < m_heap[smallest]) {
             smallest = r;
         }
         if (smallest != i) {
@@ -154,7 +174,7 @@ class PriorityQueuePair {
      */
     void reserve(unsigned new_capacity) {
         if (m_capacity < new_capacity) {
-            std::pair<int, Type>* aux = new std::pair<int, Type>[new_capacity];
+            int* aux = new int[new_capacity];        // aloca um novo vetor
             for (unsigned i = 0; i < m_size; ++i) {  // copia os elementos
                 aux[i] = m_heap[i];
             }
@@ -166,53 +186,50 @@ class PriorityQueuePair {
 
    public:
     /**
-     * @brief Construtor da classe PriorityQueuePair
+     * @brief Construtor da classe PriorityQueue
      * Complexidade: O(1)
      *
      * @param capacity
      */
-    PriorityQueuePair(unsigned capacity) {
+    PriorityQueue(unsigned capacity) {
         m_capacity = capacity;
         m_size = 0;
-        // cria um vetor de pares (prioridade, elemento)
-        m_heap = new std::pair<int, Type>[m_capacity];
+        m_heap = new int[m_capacity];
     }
 
     /**
-     * @brief Construtor default da classe PriorityQueuePair. É aloca um vetor
-     * de 50 posições. Complexidade: O(1)
+     * @brief Construtor default da classe PriorityQueue. É aloca um vetor de 50
+     * posições.
+     * Complexidade: O(1)
      *
      */
-    PriorityQueuePair() {
+    PriorityQueue() {
         m_capacity = 1;
         m_size = 0;
-        m_heap = new std::pair<int, Type>[m_capacity];
+        m_heap = new int[m_capacity];
     }
 
     /**
-     * @brief Construtor de cópia da classe PriorityQueuePair.
+     * @brief Construtor de cópia da classe PriorityQueue.
      * Complexidade: O(n)
      *
-     * @param pq PriorityQueuePair a ser copiada
+     * @param pq PriorityQueue a ser copiada
      */
-    PriorityQueuePair(const PriorityQueuePair& pq) {
+    PriorityQueue(const PriorityQueue& pq) {
         m_capacity = pq.m_capacity;
         m_size = pq.m_size;
-        m_heap = new std::pair<int, Type>[m_capacity];
+        m_heap = new int[m_capacity];
         for (unsigned i = 0; i < m_size; ++i) {
             m_heap[i] = pq.m_heap[i];
         }
     }
 
     /**
-     * @brief Destrutor da classe PriorityQueuePair
+     * @brief Destrutor da classe PriorityQueue
      * Complexidade: O(1)
      *
      */
-    ~PriorityQueuePair() {
-        delete[] m_heap;
-        std::cout << "PriorityQueuePair destruida" << std::endl;
-    }
+    ~PriorityQueue() { delete[] m_heap; }
 
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no
@@ -221,14 +238,17 @@ class PriorityQueuePair {
      *
      * @param key
      */
-    void push(int key, const Type& value) {
+    void push(Type key) {
+        // se a heap estiver cheia, aumenta a capacidade
         if (m_size == m_capacity) {
             reserve(2 * m_capacity);
         }
-        m_heap[m_size] = std::make_pair(key, value);
+        // insere o elemento na última posição
+        m_heap[m_size] = key;
         m_size++;
-        unsigned i = m_size - 1;
-        while (i > 0 && m_heap[parent(i)].first > m_heap[i].first) {
+        // corrige a heap
+        int i = m_size - 1;
+        while (i > 0 && m_heap[parent(i)] > m_heap[i]) {
             swap(&m_heap[i], &m_heap[parent(i)]);
             i = parent(i);
         }
@@ -240,10 +260,17 @@ class PriorityQueuePair {
      *
      */
     void pop() {
+        // se a heap estiver vazia, lança uma exceção
         if (m_size == 0) throw std::runtime_error("Empty queue");
-        m_heap[0] = m_heap[m_size - 1];
-        m_size--;
-        heapify(0);
+        // se a heap tiver apenas um elemento, remove-o
+        if (m_size == 1) {
+            m_size--;
+            return;
+        }
+
+        m_heap[0] = m_heap[m_size - 1];  // copia o último elemento para a raiz
+        m_size--;                        // decrementa o tamanho da heap
+        heapify(0);                      // corrige a heap
     }
 
     /**
@@ -252,16 +279,10 @@ class PriorityQueuePair {
      *
      * @return Type
      */
-    Type& top() {
+    Type top() {
         // se a heap estiver vazia, lança uma exceção
         if (m_size == 0) throw std::runtime_error("Empty queue");
-        return m_heap[0].second;
-    }
-
-    const Type& top() const {
-        // se a heap estiver vazia, lança uma exceção
-        if (m_size == 0) throw std::runtime_error("Empty queue");
-        return m_heap[0].second;
+        return m_heap[0];  // retorna o elemento de maior prioridade
     }
 
     /**
@@ -273,7 +294,7 @@ class PriorityQueuePair {
     void print() {
         if (m_size == 0) throw std::runtime_error("Empty queue");
         for (unsigned i = 0; i < m_size; ++i) {
-            std::cout << (Type)m_heap[i].second << " ";
+            std::cout << (Type)m_heap[i] << " ";
         }
         std::cout << std::endl;
     }
@@ -306,15 +327,13 @@ class PriorityQueuePair {
      */
     bool empty() const { return m_size == 0; }
 
-    using iterator = PriorityQueuePairIterator<Type>;
-
     /**
      * @brief Função que retorna o iterador para o primeiro elemento da fila
      * Complexidade: O(1)
      *
      * @return iteratorPQ
      */
-    iterator begin() { return iterator(m_heap); }
+    iteratorPQ begin() { return iteratorPQ(m_heap); }
 
     /**
      * @brief Função que retorna o iterador para o último elemento da fila
@@ -322,7 +341,7 @@ class PriorityQueuePair {
      *
      * @return iteratorPQ
      */
-    iterator end() { return iterator(m_heap + m_size); }
+    iteratorPQ end() { return iteratorPQ(m_heap + m_size); }
 };
 
-#endif  // PRIORITYQUEUEPAIR_H
+#endif  // PRIORITYQUEUE_H

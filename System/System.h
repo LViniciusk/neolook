@@ -14,20 +14,10 @@
 #include "Network.h"
 #include "Process.h"
 
-// Tempo médio de execução: o tempo de execução de um processo inclui não
-// somente os tempos de processamento em cada recurso, mas também os tempos de
-// espera em cada fila de cada recurso.
-
-// Tempo médio de espera: o tempo de espera de um processo consiste na soma dos
-// tempos de espera em cada fila de cada recurso. Você deve contabilizar os
-// tempos de espera de cada processo simulado e, ao final, calcular a média.
-
-// Taxa de processamento: taxa de processamento consiste na razão do número
-// total de processos executados pelo intervalo de tempo decorrente desde o
-// início do primeiro processo até o término do último. Logo, se o primeiro
-// processo foi iniciado no instante t1 e o n-ésimo (último) foi finalizado no
-// instante t2, a taxa de processamento é calculada como n/(t2 − t1).
-
+/**
+ * @brief Classe que representa o sistema.
+ *
+ */
 class System {
    private:
     int qPcs;                          // quantidade de computadores
@@ -69,6 +59,10 @@ class System {
         std::cout << "SISTEMA CRIADO COM SUCESSO" << std::endl;
     }
 
+    /**
+     * @brief Destrutor da classe System.
+     *
+     */
     ~System() {
         for (int i = 0; i < qPcs; i++) {
             delete computers[i];
@@ -78,6 +72,11 @@ class System {
         std::cout << "Sistema destruido" << std::endl;
     }
 
+    /**
+     * @brief Função que carrega o arquivo trace para o sistema.
+     *
+     * @param arq Diretório do arquivo trace
+     */
     void loadFile(std::string arq) {
         process->clear();
         std::ifstream file(arq);
@@ -96,6 +95,10 @@ class System {
         file.close();
     }
 
+    /**
+     * @brief Função que imprime o estado atual do sistema.
+     *
+     */
     void print() {
         std::cout << "Sistema: " << std::endl;
         std::cout << "\tPolitica: ";
@@ -109,20 +112,20 @@ class System {
 
         if (!process->empty()) {
             for (auto& p : *process) {
-                std::cout << "Process - ";
-                std::cout << std::setw(5) << p.getId() << " - ";
-                std::cout << std::setw(5) << p.getInstant() << " - ";
-                std::cout << std::setw(5) << p.getCPU() << " - ";
-                std::cout << std::setw(5) << p.getDisk() << " - ";
-                std::cout << std::setw(5) << p.getNetwork() << " - ";
-                std::cout << std::setw(5) << p.getInstanteFinal() << " - ";
-                std::cout << std::setw(5) << p.getExecutado() << " - ";
-                std::cout << std::setw(5) << p.getTempoEspera() << " - ";
-                std::cout << std::setw(5) << p.getTempoExecucao() << "\n";
+                p.print();
             }
         }
     }
 
+    /**
+     * @brief Função que executa o sistema. Enquanto houverem processos não
+     * executados, o sistema envia os processos aleatoriamente para as CPUs dos
+     * computadores. Quando um processo termina de executar na CPU, ele é
+     * enviado para um disco aleatório. Quando o processo termina de executar no
+     * disco, ele é enviado para a rede. Quando o processo termina de executar
+     * na rede, ele é finalizado.
+     *
+     */
     void execute() {
         int pendentes = process->size();
         // cria um iterador para percorrer o vetor de processos, e um iterador
@@ -202,6 +205,11 @@ class System {
                   << std::endl;
     }
 
+    /**
+     * @brief Função que calcula o tempo médio de espera, o tempo médio de
+     * execução e a taxa de processamento da simulação.
+     *
+     */
     void calculate() {
         int totalEspera{}, totalExecucao{};
         for (auto& p : *process) {
