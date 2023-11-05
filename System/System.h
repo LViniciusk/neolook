@@ -211,7 +211,7 @@ class System {
      *
      */
     void calculate() {
-        int totalEspera{}, totalExecucao{};
+        unsigned long totalEspera{}, totalExecucao{};
         for (auto& p : *process) {
             totalEspera += p.getTempoEspera();
             totalExecucao += p.getTempoExecucao();

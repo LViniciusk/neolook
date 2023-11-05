@@ -159,7 +159,6 @@ class Process {
     void setInstanteCPU(const unsigned long& time) {
         instanteCPU = time;
         tempoEspera += time - instant;
-        tempoExecucao += tempoEspera;
     }
 
     /**
@@ -172,7 +171,6 @@ class Process {
     void setInstanteDisco(const unsigned long& time) {
         instanteDisco = time;
         tempoEspera += time - (instanteCPU + d_cpu);
-        tempoExecucao += tempoEspera;
     }
 
     /**
