@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include <cstdlib>
+#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -132,7 +133,7 @@ class System {
         // para o final do vetor
         Vector<Process>::iterator it = process->begin();
         Vector<Process>::iterator last = process->end();
-        srand(123);
+        srand(time(NULL));
         if (pendentes == 0) {
             std::cout << "Sem processos para executar" << std::endl;
             return;
