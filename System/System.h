@@ -2,7 +2,6 @@
 #define SYSTEM_H
 
 #include <cstdlib>
-#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -130,7 +129,7 @@ class System {
         // para o final do vetor
         Vector<Process>::iterator it = process->begin();
         Vector<Process>::iterator last = process->end();
-        srand(time(0));
+        srand(123);
         if (pendentes == 0) {
             std::cout << "Sem processos para executar" << std::endl;
             return;
@@ -212,8 +211,8 @@ class System {
         tempoMedioEspera = (long double)totalEspera / process->size();
         tempoMedioExecucao = (long double)totalExecucao / process->size();
         taxaProcessamento =
-            (long double)process->size() / (process->back().getInstanteFinal() -
-                                            process->front().getInstant());
+            (long double)process->size() /
+            (lastExecuted->getInstanteFinal() - process->begin()->getInstant());
     }
 };
 
