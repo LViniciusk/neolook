@@ -17,21 +17,18 @@
 
 class Process {
    private:
-    unsigned id{};                 // identificador do processo
-    int instant;                   // instante de início do processo.
-    int d_cpu;                     // demanda de CPU do processo.
-    int d_disk;                    // demanda de disco do processo.
-    int d_network;                 // demanda de rede do processo.
-    bool executado{};              // indica se o processo já foi executado.
-    long long tempoEspera{};       // tempo médio de espera do processo.
-    long long tempoExecucao{};     // tempo médio de execução do processo.
-    long long instanteCPU{};       // instante que foi enviado para a CPU.
-    long long instanteDisco{};     // instante que foi enviado para o disco.
-    long long instanteRede{};      // instante que foi enviado para a rede.
-    long long tempoEsperaCPU{};    // tempo de espera na CPU.
-    long long tempoEsperaDisco{};  // tempo de espera no disco.
-    long long tempoEsperaRede{};   // tempo de espera na rede.
-    long long instanteFinal{};     // instante de término do processo.
+    unsigned id{};                  // identificador do processo
+    int instant;                    // instante de início do processo.
+    int d_cpu;                      // demanda de CPU do processo.
+    int d_disk;                     // demanda de disco do processo.
+    int d_network;                  // demanda de rede do processo.
+    bool executado{};               // indica se o processo já foi executado.
+    unsigned long tempoEspera{};    // tempo médio de espera do processo.
+    unsigned long tempoExecucao{};  // tempo médio de execução do processo.
+    unsigned long instanteCPU{};    // instante que foi enviado para a CPU.
+    unsigned long instanteDisco{};  // instante que foi enviado para o disco.
+    unsigned long instanteRede{};   // instante que foi enviado para a rede.
+    unsigned long instanteFinal{};  // instante de término do processo.
 
    public:
     /**
@@ -50,6 +47,7 @@ class Process {
      */
     Process(unsigned id, int start, int cpu, int disk, int rede)
         : id(id), instant(start), d_cpu(cpu), d_disk(disk), d_network(rede) {
+        tempoExecucao = cpu + disk + rede;
         executado = false;
     }
 
@@ -66,42 +64,34 @@ class Process {
     int getDisk() const { return d_disk; }
     int getNetwork() const { return d_network; }
     bool getExecutado() const { return executado; }
-    void setExecutado(bool e) {
-        executado = e;
-        calculaTempos();
-    }
-    long long getTempoEspera() const { return tempoEspera; }
-    void setTempoEspera(const long long& time) { tempoEspera = time; }
-    long long getTempoExecucao() const { return tempoExecucao; }
-    long long getInstanteCPU() const { return instanteCPU; }
-    long long getInstanteDisco() const { return instanteDisco; }
-    long long getInstanteRede() const { return instanteRede; }
-    long long getTempoEsperaCPU() const { return tempoEsperaCPU; }
-    long long getTempoEsperaDisco() const { return tempoEsperaDisco; }
-    long long getTempoEsperaRede() const { return tempoEsperaRede; }
-    long long getInstanteFinal() const { return instanteFinal; }
+    void setExecutado(bool e) { executado = e; }
+    unsigned long getTempoEspera() const { return tempoEspera; }
+    void setTempoEspera(const unsigned long& time) { tempoEspera = time; }
+    unsigned long getTempoExecucao() const { return tempoExecucao; }
+    unsigned long getInstanteCPU() const { return instanteCPU; }
+    unsigned long getInstanteDisco() const { return instanteDisco; }
+    unsigned long getInstanteRede() const { return instanteRede; }
+    unsigned long getInstanteFinal() const { return instanteFinal; }
 
-    void setInstanteCPU(const long long& time) {
+    void setInstanteCPU(const unsigned long& time) {
         instanteCPU = time;
-        tempoEsperaCPU = instanteCPU - instant;
+        tempoEspera += time - instant;
+        tempoExecucao += tempoEspera;
     }
 
-    void setInstanteDisco(const long long& time) {
+    void setInstanteDisco(const unsigned long& time) {
         instanteDisco = time;
-        tempoEsperaDisco = time - (instanteCPU + d_cpu);
+        tempoEspera += time - (instanteCPU + d_cpu);
+        tempoExecucao += tempoEspera;
     }
 
-    void setInstanteRede(const long long& time) {
+    void setInstanteRede(const unsigned long& time) {
         instanteRede = time;
-        tempoEsperaRede = time - (instanteDisco + d_disk);
+        tempoEspera += time - (instanteDisco + d_disk);
+        tempoExecucao += tempoEspera;
     }
 
-    void setInstanteFinal(const long long& time) { instanteFinal = time; }
-
-    void calculaTempos() {
-        tempoEspera = tempoEsperaCPU + tempoEsperaDisco + tempoEsperaRede;
-        tempoExecucao = instanteFinal - instant;
-    }
+    void setInstanteFinal(const unsigned long& time) { instanteFinal = time; }
 };
 
 #endif

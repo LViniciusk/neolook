@@ -62,6 +62,7 @@ class System {
         process = new Vector<Process>();
         network = new Network(politica);
         computers = Vector<Computer*>();
+        timer = -1;
         for (int i = 0; i < qPcs; i++) {
             computers.push_back(new Computer(politica, network));
         }
@@ -116,9 +117,6 @@ class System {
                 std::cout << std::setw(5) << p.getNetwork() << " - ";
                 std::cout << std::setw(5) << p.getInstanteFinal() << " - ";
                 std::cout << std::setw(5) << p.getExecutado() << " - ";
-                std::cout << std::setw(5) << p.getTempoEsperaCPU() << " - ";
-                std::cout << std::setw(5) << p.getTempoEsperaDisco() << " - ";
-                std::cout << std::setw(5) << p.getTempoEsperaRede() << " - ";
                 std::cout << std::setw(5) << p.getTempoEspera() << " - ";
                 std::cout << std::setw(5) << p.getTempoExecucao() << "\n";
             }
@@ -139,6 +137,7 @@ class System {
         std::cout << "Distribuindo processos" << std::endl;
         std::cout << "Processos restantes: " << pendentes << std::endl;
         while (pendentes) {
+            timer++;
             while (it != last && it->getInstant() == timer) {
                 // escolhe um computador aleatório
                 int pc = rand() % qPcs;
@@ -191,8 +190,6 @@ class System {
                 pendentes--;
                 lastExecuted = aux;
             }
-
-            timer++;
         }
 
         std::cout << "EXECUÇÃO FINALIZADA\n" << std::endl;
