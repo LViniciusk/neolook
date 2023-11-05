@@ -3,6 +3,8 @@
 
 #include "../TAD'S/PriorityQueuePair.h"
 #include "../TAD'S/Queue.h"
+#include "../TAD'S/Vector.h"
+#include "Event.h"
 #include "Process.h"
 
 class Network {
@@ -10,9 +12,10 @@ class Network {
     Process* process{};      // processo que está sendo executado no disco
     Queue<Process*>* queue;  // fila de processos do disco
     PriorityQueuePair<Process*>* pq;  // fila de processos do disco
-    bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
-    bool busy;      // indica se o disco está ocupado
-    int time;       // tempo de execução do processo atual
+    bool politica;          // politica de escalonamento. 0 - FCFS, 1 - SJF
+    bool busy;              // indica se o disco está ocupado
+    int time;               // tempo de execução do processo atual
+    Vector<Event>* events;  // vetor de eventos do sistema
 
    public:
     /**
@@ -22,7 +25,8 @@ class Network {
      * fila de processos a serem executados e uma fila de processos em execução.
      *
      */
-    Network(bool politica) : politica(politica) {
+    Network(bool politica, Vector<Event>* events)
+        : politica(politica), events(events) {
         queue = new Queue<Process*>();
         pq = new PriorityQueuePair<Process*>();
         busy = false;
@@ -40,24 +44,24 @@ class Network {
      *
      * @param p Processo a ser executado no rede
      */
-    void setProcess(Process* p, const long long& timeSystem) {
+    void setProcess(Event* e, const long long& timeSystem) {
         if (!busy) {
-            p->setInstanteRede(timeSystem);
-            process = p;
+            e->setInstanteRede(timeSystem);
+            process = e->process;
             busy = true;
             time = 0;
-            // std::cout << "Time " << timeSystem << " - Processo " <<
-            // p->getId()
-            //           << " inserido na Rede" << std::endl;
+            std::cout << "Time " << timeSystem << " - Processo "
+                      << e->process->getId() << " inserido na Rede"
+                      << std::endl;
         } else {
             if (politica) {
-                pq->push(p->getNetwork(), p);
+                pq->push(e->process->getNetwork(), e->process);
             } else {
-                queue->push(p);
+                queue->push(e->process);
             }
-            // std::cout << "Time " << timeSystem << " - Processo " <<
-            // p->getId()
-            //           << " inserido na fila da Rede" << std::endl;
+            std::cout << "Time " << timeSystem << " - Processo "
+                      << e->process->getId() << " inserido na fila da Rede"
+                      << std::endl;
         }
     }
 
@@ -71,9 +75,6 @@ class Network {
     Process* execute(const long long& timeSystem) {
         if (busy) {
             if (time == process->getNetwork()) {
-                // std::cout << "Time " << timeSystem << " - Processo "
-                //           << process->getId() << " concluido na Rede"
-                //           << std::endl;
                 busy = false;
                 return process;
             } else {
@@ -86,10 +87,10 @@ class Network {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    process->setInstanteRede(timeSystem);
-                    // std::cout << "Time " << timeSystem << " - Processo "
-                    //           << process->getId()
-                    //           << " carregado da fila da Rede" << std::endl;
+                    events->at(process->getId()).setInstanteRede(timeSystem);
+                    std::cout << "Time " << timeSystem << " - Processo "
+                              << process->getId()
+                              << " carregado da fila da Rede" << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -97,10 +98,10 @@ class Network {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    process->setInstanteRede(timeSystem);
-                    // std::cout << "Time " << timeSystem << " - Processo "
-                    //           << process->getId()
-                    //           << " carregado da fila da Rede" << std::endl;
+                    events->at(process->getId()).setInstanteRede(timeSystem);
+                    std::cout << "Time " << timeSystem << " - Processo "
+                              << process->getId()
+                              << " carregado da fila da Rede" << std::endl;
                 }
             }
         }

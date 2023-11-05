@@ -5,16 +5,19 @@
 
 #include "../TAD'S/PriorityQueuePair.h"
 #include "../TAD'S/Queue.h"
+#include "../TAD'S/Vector.h"
+#include "Event.h"
 #include "Process.h"
 
 class CPU {
    private:
-    Process* process{};      // processo que está sendo executado na CPU
+    Process* process;        // processo que está sendo executado na CPU
     Queue<Process*>* queue;  // fila de processos da CPU
     PriorityQueuePair<Process*>* pq;  // fila de processos da CPU
-    bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
-    bool busy;      // indica se a CPU está ocupada
-    int time;       // tempo de execução do processo atual
+    bool politica;          // politica de escalonamento. 0 - FCFS, 1 - SJF
+    bool busy;              // indica se a CPU está ocupada
+    int time;               // tempo de execução do processo atual
+    Vector<Event>* events;  // vetor de eventos do sistema
 
    public:
     /**
@@ -31,7 +34,8 @@ class CPU {
      * de uma política de escalonamento.
      *
      */
-    CPU(bool politica) : politica(politica) {
+    CPU(bool politica, Vector<Event>* events)
+        : politica(politica), events(events) {
         queue = new Queue<Process*>();
         pq = new PriorityQueuePair<Process*>();
         busy = false;
@@ -52,49 +56,27 @@ class CPU {
     // getters e setters
 
     /**
-     * @brief Retorna a referência para o objeto Process associado a CPU.
-     *
-     * @return Process&
-     */
-    Process* getProcess() { return process; }
-
-    /**
-     * @brief Retorna a fila de processos da CPU.
-     *
-     * @return Queue<Process>&
-     */
-    Queue<Process*>* getQueue() { return queue; }
-
-    /**
-     * @brief Retorna a fila de prioridades da CPU.
-     *
-     * @return PriorityQueuePair<Process>&
-     */
-    PriorityQueuePair<Process*>* getPriorityQueue() { return pq; }
-
-    /**
      * @brief Define o processo a ser executado pela CPU.
      *
      * @param p Processo a ser executado.
      */
-    void setProcess(Process* p, const long long& timeSystem) {
+    void setProcess(Event* e, const long long& timeSystem) {
         if (!busy) {
-            p->setInstanteCPU(timeSystem);
-            process = p;
+            e->setInstanteCPU(timeSystem);
+            process = e->process;
             time = 0;
             busy = true;
-            // std::cout << "Time " << timeSystem << " - Processo " <<
-            // p->getId()
-            //           << " inserido na CPU" << std::endl;
+            std::cout << "Time " << timeSystem << " - Processo "
+                      << e->process->getId() << " inserido na CPU" << std::endl;
         } else {
             if (politica) {
-                pq->push(p->getCPU(), p);
+                pq->push(e->process->getCPU(), e->process);
             } else {
-                queue->push(p);
+                queue->push(e->process);
             }
-            // std::cout << "Time " << timeSystem << " - Processo " <<
-            // p->getId()
-            //           << " inserido na fila da CPU" << std::endl;
+            std::cout << "Time " << timeSystem << " - Processo "
+                      << e->process->getId() << " inserido na fila da CPU"
+                      << std::endl;
         }
     }
 
@@ -120,11 +102,10 @@ class CPU {
                     pq->pop();
                     busy = true;
                     time = 0;
-                    process->setInstanteCPU(timeSystem);
-                    // std::cout << "Time " << timeSystem << " - Processo "
-                    //           << process->getId() << " carregado da fila da
-                    //           CPU"
-                    //           << std::endl;
+                    events->at(process->getId()).setInstanteCPU(timeSystem);
+                    std::cout << "Time " << timeSystem << " - Processo "
+                              << process->getId()
+                              << " carregado da fila da CPU " << std::endl;
                 }
             } else {
                 if (!queue->empty()) {
@@ -132,11 +113,10 @@ class CPU {
                     queue->pop();
                     busy = true;
                     time = 0;
-                    process->setInstanteCPU(timeSystem);
-                    // std::cout << "Time " << timeSystem << " - Processo "
-                    //           << process->getId() << " carregado da fila da
-                    //           CPU"
-                    //           << std::endl;
+                    events->at(process->getId()).setInstanteCPU(timeSystem);
+                    std::cout << "Time " << timeSystem << " - Processo "
+                              << process->getId() << " carregado da fila da CPU"
+                              << std::endl;
                 }
             }
         }

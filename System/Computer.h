@@ -26,9 +26,10 @@ class Computer {
      * @brief Classe que representa um computador.
      *
      */
-    Computer(bool politica, Network* net) : politica(politica), network(net) {
-        cpu = new CPU(politica);
-        disk = new Disk[2]{Disk(politica), Disk(politica)};
+    Computer(bool politica, Network* net, Vector<Event>* events)
+        : politica(politica), network(net) {
+        cpu = new CPU(politica, events);
+        disk = new Disk[2]{Disk(politica, events), Disk(politica, events)};
     }
 
     /**

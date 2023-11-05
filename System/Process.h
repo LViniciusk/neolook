@@ -1,41 +1,17 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-// Tempo médio de execução: o tempo de execução de um processo inclui não
-// somente os tempos de processamento em cada recurso, mas também os tempos de
-// espera em cada fila de cada recurso.
-
-// Tempo médio de espera: o tempo de espera de um processo consiste na soma dos
-// tempos de espera em cada fila de cada recurso. Você deve contabilizar os
-// tempos de espera de cada processo simulado e, ao final, calcular a média.
-
-// Taxa de processamento: taxa de processamento consiste na razão do número
-// total de processos executados pelo intervalo de tempo decorrente desde o
-// início do primeiro processo até o término do último. Logo, se o primeiro
-// processo foi iniciado no instante t1 e o n-ésimo (último) foi finalizado no
-// instante t2, a taxa de processamento é calculada como n/(t2 − t1).
-
 class Process {
    private:
-    unsigned id{};                 // identificador do processo
-    int instant;                   // instante de início do processo.
-    int d_cpu;                     // demanda de CPU do processo.
-    int d_disk;                    // demanda de disco do processo.
-    int d_network;                 // demanda de rede do processo.
-    bool executado{};              // indica se o processo já foi executado.
-    long long tempoEspera{};       // tempo médio de espera do processo.
-    long long tempoExecucao{};     // tempo médio de execução do processo.
-    long long instanteCPU{};       // instante que foi enviado para a CPU.
-    long long instanteDisco{};     // instante que foi enviado para o disco.
-    long long instanteRede{};      // instante que foi enviado para a rede.
-    long long tempoEsperaCPU{};    // tempo de espera na CPU.
-    long long tempoEsperaDisco{};  // tempo de espera no disco.
-    long long tempoEsperaRede{};   // tempo de espera na rede.
-    long long instanteFinal{};     // instante de término do processo.
+    int id{};       // identificador do processo
+    int instant{};  // instante de chegada do processo
+    int cpu{};      // tempo de execução na CPU
+    int disk{};     // tempo de execução no disco
+    int network{};  // tempo de execução na rede
 
    public:
     /**
-     * @brief Construct a new Process object
+     * @brief Classe que representa um processo.
      *
      */
     Process() = default;
@@ -43,65 +19,57 @@ class Process {
     /**
      * @brief Construtor da classe Process.
      *
-     * @param start Instante de início do processo
-     * @param cpu Demanda de CPU do processo
-     * @param disk Demanda de disco do processo
-     * @param rede Demanda de rede do processo
+     * @param id Identificador do processo
+     * @param instant Instante de chegada do processo
+     * @param cpu Tempo de execução na CPU
+     * @param disk Tempo de execução no disco
+     * @param network Tempo de execução na rede
      */
-    Process(unsigned id, int start, int cpu, int disk, int rede)
-        : id(id), instant(start), d_cpu(cpu), d_disk(disk), d_network(rede) {
-        executado = false;
-    }
+    Process(int id, int instant, int cpu, int disk, int network)
+        : id(id), instant(instant), cpu(cpu), disk(disk), network(network) {}
 
     /**
-     * @brief Destroy the Process object
+     * @brief Destrutor da classe Process.
      *
      */
     ~Process() = default;
 
     // getters e setters
-    unsigned getId() const { return id; }
-    int getInstant() const { return instant; }
-    int getCPU() const { return d_cpu; }
-    int getDisk() const { return d_disk; }
-    int getNetwork() const { return d_network; }
-    bool getExecutado() const { return executado; }
-    void setExecutado(bool e) {
-        executado = e;
-        calculaTempos();
-    }
-    long long getTempoEspera() const { return tempoEspera; }
-    void setTempoEspera(const long long& time) { tempoEspera = time; }
-    long long getTempoExecucao() const { return tempoExecucao; }
-    long long getInstanteCPU() const { return instanteCPU; }
-    long long getInstanteDisco() const { return instanteDisco; }
-    long long getInstanteRede() const { return instanteRede; }
-    long long getTempoEsperaCPU() const { return tempoEsperaCPU; }
-    long long getTempoEsperaDisco() const { return tempoEsperaDisco; }
-    long long getTempoEsperaRede() const { return tempoEsperaRede; }
-    long long getInstanteFinal() const { return instanteFinal; }
 
-    void setInstanteCPU(const long long& time) {
-        instanteCPU = time;
-        tempoEsperaCPU = instanteCPU - instant;
-    }
+    /**
+     * @brief Retorna o identificador do processo.
+     *
+     * @return int Identificador do processo.
+     */
+    int getId() { return id; }
 
-    void setInstanteDisco(const long long& time) {
-        instanteDisco = time;
-        tempoEsperaDisco = time - (instanteCPU + d_cpu);
-    }
+    /**
+     * @brief Retorna o instante de chegada do processo.
+     *
+     * @return int Instante de chegada do processo.
+     */
+    int getInstant() { return instant; }
 
-    void setInstanteRede(const long long& time) {
-        instanteRede = time;
-        tempoEsperaRede = time - (instanteDisco + d_disk);
-    }
+    /**
+     * @brief Retorna o tempo de execução do processo na CPU.
+     *
+     * @return int Tempo de execução do processo na CPU.
+     */
+    int getCPU() { return cpu; }
 
-    void setInstanteFinal(const long long& time) { instanteFinal = time; }
+    /**
+     * @brief Retorna o tempo de execução do processo no disco.
+     *
+     * @return int Tempo de execução do processo no disco.
+     */
+    int getDisk() { return disk; }
 
-    void calculaTempos() {
-        tempoEspera = tempoEsperaCPU + tempoEsperaDisco + tempoEsperaRede;
-        tempoExecucao = instanteFinal - instant;
-    }
+    /**
+     * @brief Retorna o tempo de execução do processo na rede.
+     *
+     * @return int Tempo de execução do processo na rede.
+     */
+    int getNetwork() { return network; }
 };
 
 #endif

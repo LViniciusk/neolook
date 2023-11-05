@@ -142,6 +142,8 @@ class Vector {
      */
     Type& back() { return at(m_size - 1); }
 
+    Type* backPtr() { return &at(m_size - 1); }
+
     const Type& back() const { return at(m_size - 1); }
 
     void reserve(unsigned int new_capacity) {
