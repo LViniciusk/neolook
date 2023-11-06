@@ -1,3 +1,14 @@
+/**
+ * @file CPU.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
+ * @brief Classe que representa a CPU do computador.
+ * @version 0.1
+ * @date 06-11-2023
+ *
+ *
+ */
+
 #ifndef CPU_H
 #define CPU_H
 
@@ -5,20 +16,17 @@
 
 #include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
+#include "../TAD'S/Vector.h"
 #include "Process.h"
 
-/**
- * @brief Classe que representa a CPU do computador.
- *
- */
 class CPU {
    private:
-    Process* process{};           // processo que está sendo executado na CPU
+    Process* process;             // processo que está sendo executado na CPU
     Queue<Process*>* queue;       // fila de processos da CPU
     PriorityQueue<Process*>* pq;  // fila de processos da CPU
-    bool politica;  // politica de escalonamento. 0 - FCFS, 1 - SJF
-    bool busy;      // indica se a CPU está ocupada
-    int time;       // tempo de execução do processo atual
+    bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
+    bool busy;                    // indica se a CPU está ocupada
+    int time;                     // tempo de execução do processo atual
 
    public:
     /**
@@ -50,75 +58,75 @@ class CPU {
     ~CPU() {
         delete queue;
         delete pq;
-        std::cout << "CPU destruida" << std::endl;
     }
 
-    /**
-     * @brief Define o processo a ser executado pela CPU.
-     *
-     * @param p Processo a ser executado.
-     */
-    void setProcess(Process* p, const long long& timeSystem) {
+    // getters e setters
+
+    bool isBusy() const { return busy; }
+
+    void setBusy(bool b) { busy = b; }
+
+    Process* getProcess() const { return process; }
+
+    // /**
+    //  * @brief Define o processo a ser executado pela CPU.
+    //  *
+    //  * @param p Processo a ser executado.
+    //  */
+    bool setProcess(Process* p) {
         if (!busy) {
-            p->setInstanteCPU(timeSystem);
-            process = p;
-            time = 0;
-            busy = true;
-            // std::cout << "Time " << timeSystem << " - Processo " <<
-            // p->getId()
-            //           << " inserido na CPU" << std::endl;
+            process = p;  // insere o processo na CPU
+            time = 0;     // reseta o tempo de execução
+            busy = true;  // indica que a CPU está ocupada
+            return true;  // indica que o processo foi enviado para a execução
+                          // na CPU diretamente
         } else {
             if (politica) {
                 pq->push(p->getCPU(), p);
             } else {
                 queue->push(p);
             }
-            // std::cout << "Time " << timeSystem << " - Processo " <<
-            // p->getId()
-            //           << " inserido na fila da CPU" << std::endl;
+            return false;  // indica que o processo foi enviado para a fila de
+                           // espera da CPU
         }
     }
 
-    /**
-     * @brief Função que executa o processo na CPU. Se a CPU estiver ocupada,
-     * verifica se o processo terminou e o retorna. Caso contrário, verifica se
-     * há algum processo na fila de processos e o carrega na CPU.
-     *
-     * @return Process*
-     */
-    Process* execute(const long long& timeSystem) {
+    bool loadFromQueue() {
+        if (politica) {
+            if (!pq->empty()) {
+                process = pq->top();
+                pq->pop();
+                busy = true;
+                time = 0;
+                return true;
+            }
+        } else {
+            if (!queue->empty()) {
+                process = queue->front();
+                queue->pop();
+                busy = true;
+                time = 0;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // /**
+    //  * @brief Função que executa o processo na CPU. Se a CPU estiver ocupada,
+    //  * verifica se o processo terminou e o retorna. Caso contrário, verifica
+    //  se
+    //  * há algum processo na fila de processos e o carrega na CPU.
+    //  *
+    //  * @return Process*
+    //  */
+    Process* execute() {
         if (busy) {
             if (time == process->getCPU()) {
                 busy = false;
                 return process;
             } else {
                 time++;
-            }
-        } else {
-            if (politica) {
-                if (!pq->empty()) {
-                    process = pq->top();
-                    pq->pop();
-                    busy = true;
-                    time = 0;
-                    process->setInstanteCPU(timeSystem);
-                    // std::cout << "Time " << timeSystem << " - Processo "
-                    //           << process->getId() << " carregado da fila da
-                    //           CPU"
-                    //           << std::endl;
-                }
-            } else {
-                if (!queue->empty()) {
-                    process = queue->front();
-                    queue->pop();
-                    busy = true;
-                    time = 0;
-                    process->setInstanteCPU(timeSystem);
-                    // std::cout << "Time " << timeSystem << " - Processo "
-                    //           << process->getId() << " carregado da fila da
-                    //           CPU"
-                    //           << std::endl;
-                }
             }
         }
         return nullptr;
