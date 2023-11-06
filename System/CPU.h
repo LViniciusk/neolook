@@ -14,19 +14,19 @@
 
 #include <iostream>
 
-#include "../TAD'S/PriorityQueuePair.h"
+#include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
 #include "../TAD'S/Vector.h"
 #include "Process.h"
 
 class CPU {
    private:
-    Process* process;                 // processo que está sendo executado na CPU
-    Queue<Process*>* queue;           // fila de processos da CPU
-    PriorityQueuePair<Process*>* pq;  // fila de processos da CPU
-    bool politica;                    // politica de escalonamento. 0 - FCFS, 1 - SJF
-    bool busy;                        // indica se a CPU está ocupada
-    int time;                         // tempo de execução do processo atual
+    Process* process;             // processo que está sendo executado na CPU
+    Queue<Process*>* queue;       // fila de processos da CPU
+    PriorityQueue<Process*>* pq;  // fila de processos da CPU
+    bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
+    bool busy;                    // indica se a CPU está ocupada
+    int time;                     // tempo de execução do processo atual
 
    public:
     /**
@@ -45,7 +45,7 @@ class CPU {
      */
     CPU(bool politica) : politica(politica) {
         queue = new Queue<Process*>();
-        pq = new PriorityQueuePair<Process*>();
+        pq = new PriorityQueue<Process*>();
         busy = false;
     }
 

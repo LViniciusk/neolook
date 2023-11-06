@@ -16,10 +16,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
-#include <string>
 
-#include "../TAD'S/PriorityQueue.h"
-#include "../TAD'S/Queue.h"
 #include "../TAD'S/Vector.h"
 #include "Computer.h"
 #include "Event.h"
