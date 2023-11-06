@@ -30,7 +30,7 @@ class CPU {
     PriorityQueue<Process*>* pq;  // fila de processos da CPU
     bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;                    // indica se a CPU está ocupada
-    int time;                     // tempo de execução do processo atual
+    unsigned time;                // tempo de execução do processo atual
 
    public:
     /**
@@ -100,7 +100,7 @@ class CPU {
     bool setProcess(Process* p) {
         if (!busy) {
             process = p;
-            time = 0;
+            time = 1;
             busy = true;
             return true;
         } else {

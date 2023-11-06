@@ -14,11 +14,11 @@
 
 class Process {
    private:
-    int id{};       // identificador do processo
-    int instant{};  // instante de chegada do processo
-    int cpu{};      // demanda de execução na CPU
-    int disk{};     // demanda de execução no disco
-    int network{};  // demanda de execução na rede
+    unsigned id{};       // identificador do processo
+    unsigned instant{};  // instante de chegada do processo
+    unsigned cpu{};      // demanda de execução na CPU
+    unsigned disk{};     // demanda de execução no disco
+    unsigned network{};  // demanda de execução na rede
 
    public:
     /**
@@ -36,7 +36,7 @@ class Process {
      * @param disk Demanda de tempo de execução do processo no disco.
      * @param network Demanda de tempo de execução do processo na rede.
      */
-    Process(int id, int instant, int cpu, int disk, int network)
+    Process(unsigned id, unsigned instant, unsigned cpu, unsigned disk, unsigned network)
         : id(id), instant(instant), cpu(cpu), disk(disk), network(network) {}
 
     /**
@@ -53,35 +53,35 @@ class Process {
      *
      * @return Identificador do processo.
      */
-    int getId() { return id; }
+    unsigned getId() { return id; }
 
     /**
      * @brief Retorna o instante de chegada do processo.
      *
      * @return Instante de chegada do processo.
      */
-    int getInstant() { return instant; }
+    unsigned getInstant() { return instant; }
 
     /**
      * @brief Retorna a demanda de execução do processo na CPU.
      *
      * @return Demanda de execução do processo na CPU.
      */
-    int getCPU() { return cpu; }
+    unsigned getCPU() { return cpu; }
 
     /**
      * @brief Retorna a demanda de execução do processo no disco.
      *
      * @return Demanda de execução do processo no disco.
      */
-    int getDisk() { return disk; }
+    unsigned getDisk() { return disk; }
 
     /**
      * @brief Retorna a demanda de execução do processo na rede.
      *
      * @return Demanda de execução do processo na rede.
      */
-    int getNetwork() { return network; }
+    unsigned getNetwork() { return network; }
 };
 
 #endif

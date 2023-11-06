@@ -1,0 +1,29 @@
+LOG DE EXECUÇÃO -------------------------------------
+Quantidade de processos: 2
+Política de escalonamento: SJF
+Quantidade de computadores: 1
+-----------------------------------------------------
+
+Time 0 - Processo 0 carregado diretamente para execução na CPU do Computador 0
+Time 9 - Processo 0 finalizou execução na CPU do Computador 0
+Time 9 - Processo 0 carregado diretamente para execução no Disco 1 do Computador 0
+Time 29 - Processo 0 finalizou execução no Disco 1 do Computador 0
+Time 29 - Processo 0 carregado diretamente para execução na Rede
+Time 32 - Processo 0 finalizou execução na Rede
+Time 32 - Processo 0 finalizado
+Time 33 - Processo 1 carregado diretamente para execução na CPU do Computador 0
+Time 42 - Processo 1 finalizou execução na CPU do Computador 0
+Time 42 - Processo 1 carregado diretamente para execução no Disco 1 do Computador 0
+Time 62 - Processo 1 finalizou execução no Disco 1 do Computador 0
+Time 62 - Processo 1 carregado diretamente para execução na Rede
+Time 65 - Processo 1 finalizou execução na Rede
+Time 65 - Processo 1 finalizado
+
+SIMULAÇÃO ENCERRADA COM SUCESSO!
+
+Estatísticas: ---------------------------------------
+Tempo total de execução: 66
+Tempo médio de espera: 0
+Tempo médio de execução: 33
+Taxa de processamento: 0.030303
+-----------------------------------------------------

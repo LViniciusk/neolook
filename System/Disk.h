@@ -28,7 +28,7 @@ class Disk {
     PriorityQueue<Process*>* pq;  // fila de processos do disco
     bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;                    // indica se o disco está ocupado
-    int time;                     // tempo de execução do processo atual
+    unsigned time;                // tempo de execução do processo atual
 
    public:
     /**
