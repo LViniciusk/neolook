@@ -1,28 +1,28 @@
+/**
+ * @file Process.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
+ * @brief Classe que representa um processo.
+ * @version 0.1
+ * @date 06-11-2023
+ *
+ *
+ */
+
 #ifndef PROCESS_H
 #define PROCESS_H
 
-/**
- * @brief Classe que representa um processo.
- *
- */
 class Process {
    private:
-    unsigned id{};                  // identificador do processo
-    int instant;                    // instante de início do processo.
-    int d_cpu;                      // demanda de CPU do processo.
-    int d_disk;                     // demanda de disco do processo.
-    int d_network;                  // demanda de rede do processo.
-    bool executado{};               // indica se o processo já foi executado.
-    unsigned long tempoEspera{};    // tempo médio de espera do processo.
-    unsigned long tempoExecucao{};  // tempo médio de execução do processo.
-    unsigned long instanteCPU{};    // instante que foi enviado para a CPU.
-    unsigned long instanteDisco{};  // instante que foi enviado para o disco.
-    unsigned long instanteRede{};   // instante que foi enviado para a rede.
-    unsigned long instanteFinal{};  // instante de término do processo.
+    int id{};       // identificador do processo
+    int instant{};  // instante de chegada do processo
+    int cpu{};      // tempo de execução na CPU
+    int disk{};     // tempo de execução no disco
+    int network{};  // tempo de execução na rede
 
    public:
     /**
-     * @brief Construct a new Process object
+     * @brief Classe que representa um processo.
      *
      */
     Process() = default;
@@ -30,16 +30,14 @@ class Process {
     /**
      * @brief Construtor da classe Process.
      *
-     * @param start Instante de início do processo
-     * @param cpu Demanda de CPU do processo
-     * @param disk Demanda de disco do processo
-     * @param rede Demanda de rede do processo
+     * @param id Identificador do processo
+     * @param instant Instante de chegada do processo
+     * @param cpu Tempo de execução na CPU
+     * @param disk Tempo de execução no disco
+     * @param network Tempo de execução na rede
      */
-    Process(unsigned id, int start, int cpu, int disk, int rede)
-        : id(id), instant(start), d_cpu(cpu), d_disk(disk), d_network(rede) {
-        tempoExecucao = cpu + disk + rede;
-        executado = false;
-    }
+    Process(int id, int instant, int cpu, int disk, int network)
+        : id(id), instant(instant), cpu(cpu), disk(disk), network(network) {}
 
     /**
      * @brief Destrutor da classe Process.
@@ -48,166 +46,46 @@ class Process {
     ~Process() = default;
 
     // getters e setters
+
     /**
      * @brief Retorna o identificador do processo.
      *
-     * @return unsigned
+     * @return int Identificador do processo.
      */
-    unsigned getId() const { return id; }
+    int getId() { return id; }
 
     /**
-     * @brief Retorna o instante de início do processo.
+     * @brief Retorna o instante de chegada do processo.
      *
-     * @return int
+     * @return int Instante de chegada do processo.
      */
-    int getInstant() const { return instant; }
+    int getInstant() { return instant; }
 
     /**
-     * @brief Retorna a demanda de CPU do processo.
+     * @brief Retorna o tempo de execução do processo na CPU.
      *
-     * @return int
+     * @return int Tempo de execução do processo na CPU.
      */
-    int getCPU() const { return d_cpu; }
+    int getCPU() { return cpu; }
 
     /**
-     * @brief Retorna a demanda de disco do processo.
+     * @brief Retorna o tempo de execução do processo no disco.
      *
-     * @return int
+     * @return int Tempo de execução do processo no disco.
      */
-    int getDisk() const { return d_disk; }
+    int getDisk() { return disk; }
 
     /**
-     * @brief Retorna a demanda de rede do processo.
+     * @brief Retorna o tempo de execução do processo na rede.
      *
-     * @return int
+     * @return int Tempo de execução do processo na rede.
      */
-    int getNetwork() const { return d_network; }
+    int getNetwork() { return network; }
 
-    /**
-     * @brief Retorna se o processo já foi executado.
-     *
-     * @return true
-     * @return false
-     */
-    bool getExecutado() const { return executado; }
-
-    /**
-     * @brief Seta se o processo já foi executado.
-     *
-     * @param e true se o processo já foi executado, false caso contrário.
-     */
-    void setExecutado(bool e) { executado = e; }
-
-    /**
-     * @brief Retorna o tempo total de espera do processo.
-     *
-     * @return unsigned long
-     */
-    unsigned long getTempoEspera() const { return tempoEspera; }
-
-    /**
-     * @brief Seta o tempo total de espera do processo.
-     *
-     * @param time Tempo médio de espera do processo.
-     */
-    void setTempoEspera(const unsigned long& time) { tempoEspera = time; }
-
-    /**
-     * @brief Retorna o tempo total de execução do processo.
-     *
-     * @return unsigned long
-     */
-    unsigned long getTempoExecucao() const { return tempoExecucao; }
-
-    /**
-     * @brief Retorna o instante que o processo foi enviado para ser executado
-     * na CPU.
-     *
-     * @return unsigned long
-     */
-    unsigned long getInstanteCPU() const { return instanteCPU; }
-
-    /**
-     * @brief Retorna o instante que o processo foi enviado para ser executado
-     * no disco.
-     *
-     * @return unsigned long
-     */
-    unsigned long getInstanteDisco() const { return instanteDisco; }
-
-    /**
-     * @brief Retorrna o instante que o processo foi enviado para ser executado
-     * na rede.
-     *
-     * @return unsigned long
-     */
-    unsigned long getInstanteRede() const { return instanteRede; }
-
-    /**
-     * @brief Retorna o instante de término do processo.
-     *
-     * @return unsigned long
-     */
-    unsigned long getInstanteFinal() const { return instanteFinal; }
-
-    /**
-     * @brief Seta o instante que o processo foi enviado para ser executado na
-     * CPU. Incrementa o tempo de espera e o tempo de execução do processo.
-     *
-     * @param time Instante que o processo foi enviado para ser executado na CPU
-     */
-    void setInstanteCPU(const unsigned long& time) {
-        instanteCPU = time;
-        tempoEspera += time - instant;
-    }
-
-    /**
-     * @brief Seta o instante que o processo foi enviado para ser executado no
-     * disco. Incrementa o tempo de espera e o tempo de execução do processo.
-     *
-     * @param time Instante que o processo foi enviado para ser executado no
-     * disco
-     */
-    void setInstanteDisco(const unsigned long& time) {
-        instanteDisco = time;
-        tempoEspera += time - (instanteCPU + d_cpu);
-    }
-
-    /**
-     * @brief Seta o instante que o processo foi enviado para ser executado na
-     * rede. Incrementa o tempo de espera e o tempo de execução do processo.
-     *
-     * @param time Instante que o processo foi enviado para ser executado na
-     * rede
-     */
-    void setInstanteRede(const unsigned long& time) {
-        instanteRede = time;
-        tempoEspera += time - (instanteDisco + d_disk);
-        tempoExecucao += tempoEspera;
-    }
-
-    /**
-     * @brief Seta o instante de término do processo.
-     *
-     * @param time Instante de término do processo
-     */
-    void setInstanteFinal(const unsigned long& time) { instanteFinal = time; }
-
-    /**
-     * @brief Função que imprime os dados do processo.
-     *
-     */
     void print() {
-        std::cout << "Process - ";
-        std::cout << std::setw(5) << id << " - ";
-        std::cout << std::setw(5) << instant << " - ";
-        std::cout << std::setw(5) << d_cpu << " - ";
-        std::cout << std::setw(5) << d_disk << " - ";
-        std::cout << std::setw(5) << d_network << " - ";
-        std::cout << std::setw(5) << instanteFinal << " - ";
-        std::cout << std::setw(2) << executado << " - ";
-        std::cout << std::setw(5) << tempoEspera << " - ";
-        std::cout << std::setw(5) << tempoExecucao << "\n";
+        std::cout << "Processo " << id << " - Instante: " << instant
+                  << " - CPU: " << cpu << " - Disco: " << disk
+                  << " - Rede: " << network << std::endl;
     }
 };
 
