@@ -125,8 +125,8 @@ class System {
         int pendentes = events->size();
         // cria um iterador para percorrer o vetor de processos, e um iterador
         // para o final do vetor
-        Vector<Event>::iterator it = events->begin();
-        Vector<Event>::iterator last = events->end();
+        Vector<Process>::iterator it = process->begin();
+        Vector<Process>::iterator last = process->end();
         srand(123);
         if (pendentes == 0) {
             std::cout << "Sem processos para executar" << std::endl;
