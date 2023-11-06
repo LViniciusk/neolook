@@ -17,6 +17,10 @@
 #include "../TAD'S/Vector.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa um Disco do computador.
+ *
+ */
 class Disk {
    private:
     Process* process{};           // processo que está sendo executado no disco
@@ -28,9 +32,12 @@ class Disk {
 
    public:
     /**
-     * @brief Classe que representa o disco do sistema.
+     * @brief Construtor parametrizado da classe Disk.
      *
-     * @param politica Política de escalonamento. 0 - FCFS, 1 - SJF
+     * Inicializa a fila de processos e a fila de prioridades, e define a política de escalonamento do Disco.
+     * Por padrão, o Disco é inicializado como ocioso.
+     *
+     * @param politica Política de escalonamento do sistema. 0 - FCFS, 1 - SJF
      */
     Disk(bool politica) : politica(politica) {
         queue = new Queue<Process*>();
@@ -47,28 +54,60 @@ class Disk {
         delete pq;
     }
 
+    /**
+     * @brief Verifica se o disco está ocupada.
+     *
+     * @return True, se o disco estiver ocupado. False, caso contrário.
+     */
     bool isBusy() const { return busy; }
 
+    /**
+     * @brief Define se o disco está ocupado.
+     *
+     * @param b True, se o disco estiver ocupado. False, caso contrário.
+     */
     void setBusy(bool b) { busy = b; }
 
+    /**
+     * @brief Retorna o processo que está sendo executado pelo disco.
+     *
+     * @return Ponteiro para o processo que está sendo executado pelo disco.
+     */
     Process* getProcess() const { return process; }
 
+    /**
+     * @brief Função que recebe um processo e o insere no disco. Se o disco estiver ocupado,
+     * o processo é inserido na fila de processos. Caso contrário, o processo é
+     * inserido diretamente no disco para ser executado.
+     *
+     * @param p Ponteiro para o processo que será inserido.
+     * @return True, se o processo foi inserido diretamente. False, caso o processo
+     * tenha sido inserido na fila de processos.
+     *
+     */
     bool setProcess(Process* p) {
         if (!busy) {
-            process = p;  // insere o processo na CPU
-            time = 0;     // reseta o tempo de execução
-            busy = true;  // indica que a CPU está ocupada
-            return true;  // indica que o processo foi enviado para a execução na CPU diretamente
+            process = p;
+            time = 0;
+            busy = true;
+            return true;
         } else {
             if (politica) {
                 pq->push(p->getDisk(), p);
             } else {
                 queue->push(p);
             }
-            return false;  // indica que o processo foi enviado para a fila de espera da CPU
+            return false;
         }
     }
 
+    /**
+     * @brief Função que carrega um processo da fila de processos para ser executado.
+     *
+     * @return True, se um processo foi carregado da fila de processos. False, caso
+     * contrário.
+     *
+     */
     bool loadFromQueue() {
         if (politica) {
             if (!pq->empty()) {
@@ -90,6 +129,14 @@ class Disk {
         return false;
     }
 
+    /**
+     * @brief Função que executa o processo que está no disco. Se o processo terminar de ser executado,
+     * o disco é liberado e o processo é retornado. Caso contrário, o disco continua ocupado e a função
+     * retorna nullptr.
+     *
+     * @return Ponteiro para o processo que terminou de ser executado. nullptr, caso o processo ainda
+     * não tenha terminado de ser executado.
+     */
     Process* execute() {
         if (busy) {
             if (time == process->getDisk()) {

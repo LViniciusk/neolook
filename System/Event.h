@@ -15,14 +15,18 @@
 #include <iomanip>
 #include <iostream>
 
+/**
+ * @brief Estrutura que representa um evento.
+ *
+ */
 struct Event {
     int id{};                       // identificador do processo.
     bool concluded{};               // indica se o processo foi concluído.
     unsigned long tempoEspera{};    // tempo de espera do processo.
     unsigned long tempoExecucao{};  // tempo de execução do processo.
-    unsigned long instanteCPU{};    // instante que foi enviado para a CPU.
-    unsigned long instanteDisco{};  // instante que foi enviado para o disco.
-    unsigned long instanteRede{};   // instante que foi enviado para a rede.
+    unsigned long instanteCPU{};    // instante que foi enviado para execução na CPU.
+    unsigned long instanteDisco{};  // instante que foi enviado para execução no disco.
+    unsigned long instanteRede{};   // instante que foi enviado para execução na rede.
     unsigned long instanteFinal{};  // instante de término do processo.
 };
 

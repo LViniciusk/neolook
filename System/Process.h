@@ -16,25 +16,25 @@ class Process {
    private:
     int id{};       // identificador do processo
     int instant{};  // instante de chegada do processo
-    int cpu{};      // tempo de execução na CPU
-    int disk{};     // tempo de execução no disco
-    int network{};  // tempo de execução na rede
+    int cpu{};      // demanda de execução na CPU
+    int disk{};     // demanda de execução no disco
+    int network{};  // demanda de execução na rede
 
    public:
     /**
-     * @brief Classe que representa um processo.
+     * @brief Construtor padrão da classe Process.
      *
      */
     Process() = default;
 
     /**
-     * @brief Construtor da classe Process.
+     * @brief Construtor parametrizado da classe Process.
      *
-     * @param id Identificador do processo
-     * @param instant Instante de chegada do processo
-     * @param cpu Tempo de execução na CPU
-     * @param disk Tempo de execução no disco
-     * @param network Tempo de execução na rede
+     * @param id Identificador do processo.
+     * @param instant Instante de chegada do processo.
+     * @param cpu Demanda de tempo de execução do processo na CPU.
+     * @param disk Demanda de tempo de execução do processo no disco.
+     * @param network Demanda de tempo de execução do processo na rede.
      */
     Process(int id, int instant, int cpu, int disk, int network)
         : id(id), instant(instant), cpu(cpu), disk(disk), network(network) {}
@@ -48,45 +48,40 @@ class Process {
     // getters e setters
 
     /**
-     * @brief Retorna o identificador do processo.
+     * @brief Retorna o identificador do processo. Este índice é único para cada processo, e
+     * representa o índice do processo no vetor de processos do sistema.
      *
-     * @return int Identificador do processo.
+     * @return Identificador do processo.
      */
     int getId() { return id; }
 
     /**
      * @brief Retorna o instante de chegada do processo.
      *
-     * @return int Instante de chegada do processo.
+     * @return Instante de chegada do processo.
      */
     int getInstant() { return instant; }
 
     /**
-     * @brief Retorna o tempo de execução do processo na CPU.
+     * @brief Retorna a demanda de execução do processo na CPU.
      *
-     * @return int Tempo de execução do processo na CPU.
+     * @return Demanda de execução do processo na CPU.
      */
     int getCPU() { return cpu; }
 
     /**
-     * @brief Retorna o tempo de execução do processo no disco.
+     * @brief Retorna a demanda de execução do processo no disco.
      *
-     * @return int Tempo de execução do processo no disco.
+     * @return Demanda de execução do processo no disco.
      */
     int getDisk() { return disk; }
 
     /**
-     * @brief Retorna o tempo de execução do processo na rede.
+     * @brief Retorna a demanda de execução do processo na rede.
      *
-     * @return int Tempo de execução do processo na rede.
+     * @return Demanda de execução do processo na rede.
      */
     int getNetwork() { return network; }
-
-    void print() {
-        std::cout << "Processo " << id << " - Instante: " << instant
-                  << " - CPU: " << cpu << " - Disco: " << disk
-                  << " - Rede: " << network << std::endl;
-    }
 };
 
 #endif

@@ -24,6 +24,14 @@
 #include "Network.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa o sistema como um todo.
+ * Possui um vetor de computadores, uma rede e um vetor de processos.
+ * Possui também um vetor de eventos, que é utilizado para gerar o log do sistema.
+ * Possui um relógio lógico, que é incrementado a cada iteração do loop principal.
+ * Possui também o tempo médio de espera, o tempo médio de execução e a taxa de processamento do sistema.
+ *
+ */
 class System {
    private:
     int qPcs;                          // quantidade de computadores
@@ -36,17 +44,16 @@ class System {
     long double tempoMedioEspera{};    // tempo médio de espera do sistema
     long double tempoMedioExecucao{};  // tempo médio de execução do sistema
     long double taxaProcessamento{};   // taxa de processamento do sistema
-    Process* lastExecuted{};           // último processo executado
 
    public:
     /**
-     * @brief Construct a new System object.
-     * 0 - FCFS
-     * 1 - SJF
+     * @brief Construtor parametrizado da classe System.
+     * Cria um vetor de computadores, uma rede e um vetor de processos.
+     * O timer é inicializado com -1, pois o primeiro processo chega no instante 0.
      *
      * @param qPcs Quantidade de computadores
      * @param arq Arquivo trace a ser carregado
-     * @param politica Política de escalonamento
+     * @param politica Política de escalonamento. 0 - FCFS, 1 - SJF
      */
     System(int qPcs, bool pol) : qPcs(qPcs), politica(pol) {
         timer = -1;
@@ -58,6 +65,11 @@ class System {
         }
     }
 
+    /**
+     * @brief Destrutor da classe System.
+     * Libera a memória alocada para os computadores, a rede, o vetor de processos e o vetor de eventos.
+     *
+     */
     ~System() {
         for (int i = 0; i < qPcs; i++) {
             delete computers[i];
@@ -67,6 +79,11 @@ class System {
         delete[] log;
     }
 
+    /**
+     * @brief Função que carrega o arquivo trace para o vetor de processos.
+     *
+     * @param arq Arquivo trace a ser carregado
+     */
     void loadFile(std::string arq) {
         processos->clear();
         std::ifstream file(arq);
@@ -80,24 +97,31 @@ class System {
         log = new Event[processos->size()];
     }
 
-    void print() {
-        std::cout << "Sistema: " << std::endl;
-        std::cout << "\tPolitica: ";
-        if (politica) {
-            std::cout << "SJF" << std::endl;
-        } else {
-            std::cout << "FCFS" << std::endl;
-        }
-        std::cout << "\tQuant. Computadores: " << computers.size() << std::endl;
-        std::cout << "\tQuant. Processos Carregados: " << processos->size() << std::endl;
-
-        if (!processos->empty()) {
-            for (auto& p : *processos) {
-                p.print();
-            }
-        }
-    }
-
+    /**
+     * @brief Função que executa o sistema.
+     * O sistema é executado enquanto houverem processos pendentes.
+     * A cada iteração do loop principal:
+     * -    O timer é incrementado
+     * -    Os processos que chegam no instante atual são enviados para a CPU
+     * -    Para cada computador:
+     *     -   Se a CPU estiver ociosa, o processo é carregado da fila de processos
+     *     -   Se a CPU estiver ocupada, o processo é executado
+     *     -   Se o processo terminar na CPU, ele é enviado para um disco aleatório
+     * -    Para cada disco:
+     *     -   Se o disco estiver ocioso, o processo é carregado da fila de processos
+     *     -   Se o disco estiver ocupado, o processo é executado
+     *     -    Se o processo terminar no disco, ele é enviado para a rede
+     * -    Para a rede:
+     *     -    Se a rede estiver ociosa, o processo é carregado da fila de processos
+     *     -    Se a rede estiver ocupada, o processo é executado
+     *     -    Se o processo terminar na rede, ele é removido do sistema
+     * -    O loop principal é encerrado quando não houverem mais processos pendentes
+     *
+     * Após a execução do sistema, são calculados o tempo médio de espera,
+     * o tempo médio de execução e a taxa de processamento.
+     * Por fim, o log do sistema é impresso no arquivo log.txt.
+     *
+     */
     void execute() {
         LogFile* logFile = new LogFile();
         int pendentes = processos->size();                  // quantidade de processos pendentes
@@ -113,9 +137,8 @@ class System {
                 // soma as demandas no total de execução
                 log[it->getId()].tempoExecucao = it->getCPU() + it->getDisk() + it->getNetwork();
                 if (computers[pc]->getCPU().setProcess(&(*it))) {
-                    log[it->getId()].instanteCPU = timer;  // insere o instante que foi enviado para ser executado na CPU
+                    log[it->getId()].instanteCPU = timer;
                     // logFile->directExecutionCPU(timer, it->getId(), pc);
-                    // insere os tempos de execução na logTable
                 } else {
                     // logFile->loadIntoQueueCPU(timer, it->getId(), pc);
                 }
@@ -198,6 +221,11 @@ class System {
         delete logFile;
     }
 
+    /**
+     * @brief Função que calcula o tempo médio de espera, o tempo médio de execução
+     * e a taxa de processamento do sistema.
+     *
+     */
     void calculate() {
         int qtdProcessos = processos->size();
         unsigned long totalEspera{}, totalExecucao{};

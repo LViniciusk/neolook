@@ -19,6 +19,10 @@
 #include "Network.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa um computador.
+ *
+ */
 class Computer {
    private:
     CPU* cpu;          // CPU do computador
@@ -28,14 +32,16 @@ class Computer {
 
    public:
     /**
-     * @brief Classe que representa um computador.
+     * @brief Construtor padrão da classe Computer.
      *
      */
     Computer() = default;
 
     /**
-     * @brief Classe que representa um computador.
+     * @brief Construtor parametrizado da classe Computer.
      *
+     * @param politica Política de escalonamento da CPU. 0 - FCFS, 1 - SJF
+     * @param net Ponteiro para a rede do computador.
      */
     Computer(bool politica, Network* net) : politica(politica), network(net) {
         cpu = new CPU(politica);
@@ -45,8 +51,7 @@ class Computer {
     /**
      * @brief Destrutor da classe Computer.
      *
-     * Libera a memória alocada para o array de disco e imprime uma mensagem de
-     * destruição do objeto.
+     * Libera a memória alocada para o array de disco.
      *
      */
     ~Computer() { delete[] disk; }
@@ -54,7 +59,7 @@ class Computer {
     /**
      * @brief Retorna a CPU do computador.
      *
-     * @return CPU& Referência para a CPU do computador.
+     * @return Referência para a CPU do computador.
      */
     CPU& getCPU() { return *cpu; }
 

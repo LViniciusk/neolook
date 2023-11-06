@@ -18,19 +18,36 @@
 
 #include "Event.h"
 
+/**
+ * @brief Classe que representa o arquivo de log.
+ *
+ */
 class LogFile {
    private:
-    // Arquivo de log, deve permanecer aberto durante toda a execucao
-    std::ofstream* m_file;
+    std::ofstream* m_file;  // ponteiro para o arquivo de log
 
    public:
+    /**
+     * @brief Construtor padrão da classe LogFile.
+     * Chama a função createLogArchiveName() para criar o nome do arquivo de log.
+     * Cria o arquivo de log.
+     *
+     */
     LogFile() {
-        // abre o arquivo de log
         m_file = new std::ofstream(createLogArchiveName());
     }
 
+    /**
+     * @brief Destrutor da classe LogFile.
+     *
+     */
     ~LogFile() { m_file->close(); }
 
+    /**
+     * @brief Cria o nome do arquivo de log. O nome é composto pela data e hora da criação do arquivo.
+     *
+     * @return Uma string com o nome do arquivo de log.
+     */
     std::string createLogArchiveName() {
         // Criar o nome do arquivo
         time_t now = time(0);
@@ -47,22 +64,48 @@ class LogFile {
         return filename;
     }
 
+    /**
+     * @brief Função que verifica se o arquivo de log está aberto.
+     *
+     * @return True, se o arquivo estiver aberto. False, caso contrário.
+     */
     bool isOpen() { return m_file->is_open(); }
 
     // Messages for CPU --------------------------------------------------------
 
+    /**
+     * @brief Cria uma mensagem de carregamento direto do processo na CPU.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param computerId Identificador do computador.
+     */
     void directExecutionCPU(unsigned long time, int processId, int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " carregado diretamente para execução na CPU do Computador "
                 << computerId << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de carregamento do processo na fila de espera da CPU.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param computerId Identificador do computador.
+     */
     void loadIntoQueueCPU(unsigned long time, int processId, int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " carregado na fila de espera da CPU do Computador "
                 << computerId << std::endl;
     }
 
+    /**
+     * @brief Criar uma mensagem de finalização de execução do processo na CPU.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param computerId Identificador do computador.
+     */
     void executionCompletedCPU(unsigned long time, int processId,
                                int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
@@ -70,6 +113,13 @@ class LogFile {
                 << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de carregamento do processo da fila de espera para execução na CPU.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param computerId Identificador do computador.
+     */
     void loadedFromQueueCPU(unsigned long time, int processId, int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " carregado da fila de espera para execução na CPU do "
@@ -79,6 +129,14 @@ class LogFile {
 
     // Messages for Disk -------------------------------------------------------
 
+    /**
+     * @brief Cria uma mensagem de carregamento direto do processo no disco.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param diskId Identificador do disco.
+     * @param computerId Identificador do computador.
+     */
     void directExecutionDisk(unsigned long time, int processId, int diskId,
                              int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
@@ -86,6 +144,14 @@ class LogFile {
                 << " do Computador " << computerId << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de carregamento do processo na fila de espera do disco.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param diskId Identificador do disco.
+     * @param computerId Identificador do computador.
+     */
     void loadedIntoQueueDisk(unsigned long time, int processId, int diskId,
                              int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
@@ -93,6 +159,14 @@ class LogFile {
                 << " do Computador " << computerId << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de finalização de execução do processo no disco.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param diskId Identificador do disco.
+     * @param computerId Identificador do computador.
+     */
     void executionCompletedDisk(unsigned long time, int processId, int diskId,
                                 int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
@@ -100,6 +174,14 @@ class LogFile {
                 << " do Computador " << computerId << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de carregamento do processo da fila de espera para execução no disco.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     * @param diskId Identificador do disco.
+     * @param computerId Identificador do computador.
+     */
     void loadFromQueueDisk(unsigned long time, int processId, int diskId,
                            int computerId) {
         *m_file << "Time " << time << " - Processo " << processId
@@ -109,21 +191,45 @@ class LogFile {
 
     // Messages for Network ----------------------------------------------------
 
+    /**
+     * @brief Cria uma mensagem de carregamento direto do processo na rede.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     */
     void directExecutionNetwork(unsigned long time, int processId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " carregado diretamente para execução na Rede" << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de carregamento do processo na fila de espera da rede.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     */
     void loadedIntoQueueNetwork(unsigned long time, int processId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " carregado na fila de espera da Rede" << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de finalização de execução do processo na rede.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     */
     void executionCompletedNetwork(unsigned long time, int processId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " finalizou execução na Rede" << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de carregamento do processo da fila de espera para execução na rede.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     */
     void loadFromQueueNetwork(unsigned long time, int processId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " carregado da fila de espera para execução na Rede"
@@ -132,11 +238,23 @@ class LogFile {
 
     // Messages for Process ----------------------------------------------------
 
+    /**
+     * @brief Cria uma mensagem de criação do processo.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     */
     void processCreated(unsigned long time, int processId) {
         *m_file << "Time " << time << " - Processo " << processId << " criado"
                 << std::endl;
     }
 
+    /**
+     * @brief Cria uma mensagem de finalização do processo.
+     *
+     * @param time Tempo atual da simulação.
+     * @param processId Identificador do processo.
+     */
     void processFinished(unsigned long time, int processId) {
         *m_file << "Time " << time << " - Processo " << processId
                 << " finalizado" << std::endl;
@@ -144,6 +262,13 @@ class LogFile {
 
     // Standard messages -----------------------------------------------------
 
+    /**
+     * @brief Cria o cabeçalho do arquivo de log.
+     *
+     * @param qtdProcess Quantidade de processos.
+     * @param politica Política de escalonamento.
+     * @param qtdPcs Quantidade de computadores.
+     */
     void headerMessage(int qtdProcess, bool politica, int qtdPcs) {
         *m_file << "LOG DE EXECUÇÃO -------------------------------------"
                 << std::endl;
@@ -158,11 +283,23 @@ class LogFile {
         *m_file << "-----------------------------------------------------\n\n";
     }
 
+    /**
+     * @brief Cria a mensagem de conclusão da simulação.
+     *
+     */
     void executionCompleted() {
         *m_file << "\nSIMULAÇÃO ENCERRADA COM SUCESSO!\n"
                 << std::endl;
     }
 
+    /**
+     * @brief Cria a mensagem com as estatísticas da simulação.
+     *
+     * @param timer Tempo total de execução da simulação.
+     * @param averageExecution Tempo médio de execução dos processos.
+     * @param averageWaiting Tempo médio de espera dos processos.
+     * @param processingFee Taxa de processamento.
+     */
     void statistics(unsigned long timer, double averageExecution,
                     double averageWaiting, double processingFee) {
         *m_file << "Estatísticas: ---------------------------------------"

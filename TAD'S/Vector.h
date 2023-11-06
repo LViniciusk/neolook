@@ -1,37 +1,94 @@
 /**
  * @file Vector.h
- * @author Júnior Silva (junior.silva@alu.ufc.br)
- * @brief
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
+ * @brief Implementação de um vetor dinâmico
  * @version 0.1
- * @date 02-11-2023
+ * @date 30-10-2023
  *
  *
  */
+
 #ifndef VECTOR_H
 #define VECTOR_H
 #include <stdexcept>
 
+/**
+ * @brief Classe que representa um iterador para o vetor
+ *
+ * @tparam Type
+ */
 template <typename Type>
 class iteratorVector {
    private:
-    Type* m_ptr;
+    Type* m_ptr;  // ponteiro para o elemento atual
 
    public:
-    iteratorVector(Type* ptr) { m_ptr = ptr; }
+    /**
+     * @brief Construtor da classe iteratorVector.
+     * Complexidade: O(1)
+     *
+     * @param ptr Ponteiro para o elemento atual
+     */
+    iteratorVector(Type* ptr) : m_ptr(ptr) {}
+
+    /**
+     * @brief Sobrecarga do operador de pré-incremento.
+     * Complexidade: O(1)
+     *
+     * @return Referência para elemento atual
+     */
     iteratorVector& operator++() {
         m_ptr++;
         return *this;
     }
+
+    /**
+     * @brief Sobrecarga do operador de pós-incremento.
+     * Complexidade: O(1)
+     *
+     * @return Cópia do elemento antes de ser incrementado
+     */
     iteratorVector operator++(int) {
         iteratorVector temp = *this;
         m_ptr++;
         return temp;
     }
+
+    /**
+     * @brief Sobrecarga do operador de indireção.
+     * Complexidade: O(1)
+     *
+     * @return Referência para o elemento atual
+     */
     Type& operator*() { return *m_ptr; }
+
+    /**
+     * @brief Sobrecarga do operador de seta.
+     * Complexidade: O(1)
+     *
+     * @return Ponteiro para o elemento atual
+     */
     Type* operator->() { return m_ptr; }
+
+    /**
+     * @brief Sobrecarga do operador de igualdade.
+     * Complexidade: O(1)
+     *
+     * @param other iterador a ser comparado
+     * @return True se os iteradores apontam para o mesmo elemento, False caso contrário.
+     */
     bool operator==(const iteratorVector& other) {
         return m_ptr == other.m_ptr;
     }
+
+    /**
+     * @brief Sobrecarga do operador de desigualdade.
+     * Complexidade: O(1)
+     *
+     * @param other iterador a ser comparado
+     * @return True se os iteradores apontam para elementos diferentes, False caso contrário.
+     */
     bool operator!=(const iteratorVector& other) {
         return m_ptr != other.m_ptr;
     }
@@ -46,7 +103,8 @@ class Vector {
 
    public:
     /**
-     * @brief Construtor da classe Vector
+     * @brief Construtor padrão da classe Vector.
+     * Um vetor vazio de tamanho 1 é criado.
      * Complexidade: O(1)
      *
      */
@@ -56,12 +114,27 @@ class Vector {
         m_vet = new Type[m_capacity];
     }
 
+    /**
+     * @brief Construtor parametrizado da classe Vector.
+     * Um vetor vazio de tamanho size é criado.
+     * Complexidade: O(1)
+     *
+     * @param size
+     */
     Vector(unsigned int size) {
         m_size = size;
         m_capacity = size;
         m_vet = new Type[m_capacity];
     }
 
+    /**
+     * @brief Construtor parametrizado da classe Vector.
+     * Um vetor de tamanho size é criado, e todos os elementos são inicializados com o valor value.
+     * Complexidade: O(n)
+     *
+     * @param size
+     * @param value
+     */
     Vector(unsigned int size, const Type& value) {
         m_size = size;
         m_capacity = size;
@@ -71,13 +144,19 @@ class Vector {
         }
     }
 
+    /**
+     * @brief Destrutor da classe Vector
+     * Libera a memória alocada para o vetor
+     * Complexidade: O(1)
+     *
+     */
     ~Vector() { delete[] m_vet; }
 
     /**
      * @brief Retorna o tamanho do vetor
      * Complexidade: O(1)
      *
-     * @return unsigned int
+     * @return Quantidade de elementos no vetor
      */
     unsigned int size() const { return m_size; }
 
@@ -85,7 +164,7 @@ class Vector {
      * @brief Retorna a capacidade do vetor
      * Complexidade: O(1)
      *
-     * @return unsigned int
+     * @return Capacidade do vetor
      */
     unsigned int capacity() const { return m_capacity; }
 
@@ -93,8 +172,7 @@ class Vector {
      * @brief Verifica se o vetor está vazio
      * Complexidade: O(1)
      *
-     * @return true se o vetor está vazio
-     * @return false caso contrário
+     * @return True se o vetor está vazio, False caso contrário.
      */
     bool empty() const { return m_size == 0; }
 
@@ -103,49 +181,72 @@ class Vector {
      * Complexidade: O(1)
      *
      * @param index posição do elemento
-     * @return Type&
+     * @return Referência para o elemento na posição index
      */
     Type& at(unsigned int index) {
         if (index >= m_size) throw std::out_of_range("Index out of range");
         return m_vet[index];
     }
 
+    /**
+     * @brief Função constante que retorna uma referência para o elemento na posição index
+     * Complexidade: O(1)
+     *
+     * @param index posição do elemento
+     * @return Referência constante para o elemento na posição index
+     */
     const Type& at(unsigned int index) const {
         if (index >= m_size) throw std::out_of_range("Index out of range");
         return m_vet[index];
     }
 
     /**
-     * @brief Retorna uma referência para o elemento na posição index
+     * @brief Sobrecarga do operador []. Retorna uma referência para o elemento na posição index.
      * Complexidade: O(1)
      *
      * @param index posição do elemento
-     * @return Type&
+     * @return Referência para o elemento na posição index
      */
     Type& operator[](unsigned int index) { return at(index); }
 
     /**
-     * @brief Retorna uma referência para o primeiro elemento do vetor
+     * @brief Retorna uma referência para o primeiro elemento do vetor.
      * Complexidade: O(1)
      *
-     * @return Type&
+     * @return Referência para o primeiro elemento do vetor
      */
     Type& front() { return at(0); }
 
+    /**
+     * @brief Função constante que retorna uma referência para o primeiro elemento do vetor.
+     * Complexidade: O(1)
+     *
+     * @return Referência constante para o primeiro elemento do vetor
+     */
     const Type& front() const { return at(0); }
 
     /**
-     * @brief Retorna uma referência para o último elemento do vetor
+     * @brief Retorna uma referência para o último elemento do vetor.
      * Complexidade: O(1)
      *
-     * @return Type&
+     * @return Referência para o último elemento do vetor
      */
     Type& back() { return at(m_size - 1); }
 
-    Type* backPtr() { return &at(m_size - 1); }
-
+    /**
+     * @brief Função constante que retorna uma referência para o último elemento do vetor.
+     * Complexidade: O(1)
+     *
+     * @return Referência constante para o último elemento do vetor
+     */
     const Type& back() const { return at(m_size - 1); }
 
+    /**
+     * @brief Função que aumenta a capacidade do vetor para new_capacity.
+     * Complexidade: O(n)
+     *
+     * @param new_capacity nova capacidade do vetor
+     */
     void reserve(unsigned int new_capacity) {
         if (new_capacity <= m_capacity) return;
         Type* new_vet = new Type[new_capacity];
@@ -158,10 +259,10 @@ class Vector {
     }
 
     /**
-     * @brief Insere um elemento no final do vetor
-     * Complexidade: O(1)
+     * @brief Função que insere um elemento no final do vetor
+     * Complexidade: O(1) melhor caso, O(n) pior caso.
      *
-     * @param value valor a ser inserido
+     * @param value
      */
     void push_back(const Type& value) {
         if (m_size == m_capacity) {
@@ -172,7 +273,7 @@ class Vector {
     }
 
     /**
-     * @brief Remove o último elemento do vetor
+     * @brief Função que remove o último elemento do vetor.
      * Complexidade: O(1)
      *
      */
@@ -222,25 +323,11 @@ class Vector {
     void clear() { m_size = 0; }
 
     /**
-     * @brief Imprime o vetor
-     * Complexidade: O(n)
-     *
-     */
-    void print() {
-        std::cout << "[";
-        for (unsigned int i = 0; i < m_size; i++) {
-            std::cout << m_vet[i];
-            if (i < m_size - 1) std::cout << ", ";
-        }
-        std::cout << "]" << std::endl;
-    }
-
-    /**
      * @brief Sobrecarga do operador de atribuição
      * Complexidade: O(n)
      *
      * @param other vetor a ser copiado
-     * @return Vector&
+     * @return referência para o vetor copiado
      */
     Vector& operator=(const Vector& other) {
         if (this != &other) {
@@ -260,8 +347,7 @@ class Vector {
      * Complexidade: O(n)
      *
      * @param other vetor a ser comparado
-     * @return true se os vetores são iguais
-     * @return false caso contrário
+     * @return True se os vetores são iguais, False caso contrário.
      */
     bool operator==(const Vector& other) {
         if (m_size != other.m_size) return false;
@@ -276,8 +362,7 @@ class Vector {
      * Complexidade: O(n)
      *
      * @param other vetor a ser comparado
-     * @return true se os vetores são diferentes
-     * @return false caso contrário
+     * @return True se os vetores são diferentes, False caso contrário.
      */
     bool operator!=(const Vector& other) { return !(*this == other); }
 
@@ -287,7 +372,7 @@ class Vector {
      *
      * @param os stream de saída
      * @param v vetor a ser impresso
-     * @return std::ostream&
+     * @return referência para a stream de saída
      */
     friend std::ostream& operator<<(std::ostream& os, const Vector& v) {
         os << "[";

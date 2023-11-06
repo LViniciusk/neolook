@@ -19,6 +19,10 @@
 #include "../TAD'S/Vector.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa a CPU do computador.
+ *
+ */
 class CPU {
    private:
     Process* process;             // processo que está sendo executado na CPU
@@ -30,18 +34,18 @@ class CPU {
 
    public:
     /**
-     * @brief Classe que representa a CPU do sistema.
+     * @brief Construtor padrão da classe CPU.
      *
      */
     CPU() = default;
 
     /**
-     * @brief Classe que representa a CPU do sistema.
+     * @brief Construtor parametrizado da classe CPU.
      *
-     * Essa classe é responsável por gerenciar a execução dos processos no
-     * sistema. Ela possui uma fila de processos e uma fila de prioridades, além
-     * de uma política de escalonamento.
+     * Inicializa a fila de processos e a fila de prioridades, e define a política de escalonamento da CPU.
+     * Por padrão, a CPU é inicializada como ociosa.
      *
+     * @param politica Política de escalonamento do sistema. 0 - FCFS, 1 - SJF
      */
     CPU(bool politica) : politica(politica) {
         queue = new Queue<Process*>();
@@ -52,8 +56,8 @@ class CPU {
     /**
      * @brief Destrutor da classe CPU.
      *
-     * Libera a memória alocada para a fila de processos e a fila de
-     * prioridades. Imprime uma mensagem informando que a CPU foi destruída.
+     * Libera a memória alocada para a fila de processos e para a fila de prioridades.
+     *
      */
     ~CPU() {
         delete queue;
@@ -62,35 +66,60 @@ class CPU {
 
     // getters e setters
 
+    /**
+     * @brief Verifica se a CPU está ocupada.
+     *
+     * @return True, se a CPU estiver ocupada. False, caso contrário.
+     */
     bool isBusy() const { return busy; }
 
+    /**
+     * @brief Define se a CPU está ocupada.
+     *
+     * @param b True, se a CPU estiver ocupada. False, caso contrário.
+     */
     void setBusy(bool b) { busy = b; }
 
+    /**
+     * @brief Retorna o processo que está sendo executado pela CPU.
+     *
+     * @return Ponteiro para o processo que está sendo executado pela CPU.
+     */
     Process* getProcess() const { return process; }
 
-    // /**
-    //  * @brief Define o processo a ser executado pela CPU.
-    //  *
-    //  * @param p Processo a ser executado.
-    //  */
+    /**
+     * @brief Função que recebe um processo e o insere na CPU. Se a CPU estiver ocupada,
+     * o processo é inserido na fila de processos. Caso contrário, o processo é
+     * inserido diretamente.
+     *
+     * @param p Ponteiro para o processo que será inserido.
+     * @return True, se o processo foi inserido diretamente. False, caso o processo
+     * tenha sido inserido na fila de processos.
+     *
+     */
     bool setProcess(Process* p) {
         if (!busy) {
-            process = p;  // insere o processo na CPU
-            time = 0;     // reseta o tempo de execução
-            busy = true;  // indica que a CPU está ocupada
-            return true;  // indica que o processo foi enviado para a execução
-                          // na CPU diretamente
+            process = p;
+            time = 0;
+            busy = true;
+            return true;
         } else {
             if (politica) {
                 pq->push(p->getCPU(), p);
             } else {
                 queue->push(p);
             }
-            return false;  // indica que o processo foi enviado para a fila de
-                           // espera da CPU
+            return false;
         }
     }
 
+    /**
+     * @brief Função que carrega um processo da fila de processos para ser executado.
+     *
+     * @return True, se um processo foi carregado da fila de processos. False, caso
+     * contrário.
+     *
+     */
     bool loadFromQueue() {
         if (politica) {
             if (!pq->empty()) {
@@ -112,14 +141,14 @@ class CPU {
         return false;
     }
 
-    // /**
-    //  * @brief Função que executa o processo na CPU. Se a CPU estiver ocupada,
-    //  * verifica se o processo terminou e o retorna. Caso contrário, verifica
-    //  se
-    //  * há algum processo na fila de processos e o carrega na CPU.
-    //  *
-    //  * @return Process*
-    //  */
+    /**
+     * @brief Função que executa o processo que está na CPU. Se o processo terminar de ser executado,
+     * a CPU é liberada e o processo é retornado. Caso contrário, a CPU continua ocupada e a função
+     * retorna nullptr.
+     *
+     * @return Ponteiro para o processo que terminou de ser executado. nullptr, caso o processo ainda
+     * não tenha terminado de ser executado.
+     */
     Process* execute() {
         if (busy) {
             if (time == process->getCPU()) {

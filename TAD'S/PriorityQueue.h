@@ -27,36 +27,83 @@
 template <typename Type>
 class PriorityQueueIterator {
    private:
-    std::pair<int, Type>* m_ptr;
+    std::pair<int, Type>* m_ptr;  // ponteiro para o par (prioridade, elemento)
 
    public:
-    using iterator_category = std::forward_iterator_tag;
-    using value_type = Type;
-    using difference_type = std::ptrdiff_t;
-    using pointer = Type*;
-    using reference = Type&;
+    using iterator_category = std::forward_iterator_tag;  // tipo do iterador
+    using value_type = Type;                              // tipo do valor armazenado
+    using difference_type = std::ptrdiff_t;               // tipo do resultado da subtração de dois ponteiros
+    using pointer = Type*;                                // tipo do ponteiro
+    using reference = Type&;                              // tipo da referência
 
+    /**
+     * @brief Construtor da classe PriorityQueueIterator
+     *
+     * @param ptr ponteiro para o par (prioridade, elemento)
+     */
     PriorityQueueIterator(std::pair<int, Type>* ptr) : m_ptr(ptr) {}
 
+    /**
+     * @brief Sobrecarga do operador de pré-incremento.
+     * Faz o iterador apontar para o proximo elemento da lista.
+     * Complexidade: O(1)
+     *
+     * @return Retorna uma referencia para o iterador
+     */
     PriorityQueueIterator& operator++() {
         ++m_ptr;
         return *this;
     }
 
+    /**
+     * @brief Sobrecarga do operador de pós-incremento.
+     * Faz o iterador apontar para o proximo elemento da lista.
+     * Complexidade: O(1)
+     *
+     * @return Retorna o iterador antes de ser incrementado
+     */
     PriorityQueueIterator operator++(int) {
         PriorityQueueIterator tmp = *this;
         ++(*this);
         return tmp;
     }
 
+    /**
+     * @brief Sobrecarga do operador de indireção.
+     * Retorna o valor armazenado no Node apontado pelo iterador.
+     * Complexidade: O(1)
+     *
+     * @return Retorna uma referencia para o dado armazenado no Node
+     */
     reference operator*() const { return m_ptr->second; }
 
+    /**
+     * @brief Sobrecarga do operador de seta.
+     * Retorna o endereço do valor armazenado no Node apontado pelo iterador.
+     * Complexidade: O(1)
+     *
+     * @return Retorna o endereço do dado armazenado no Node
+     */
     pointer operator->() const { return &(m_ptr->second); }
 
+    /**
+     * @brief Sobrecarga do operador de igualdade.
+     * Complexidade: O(1)
+     *
+     * @param other iterador a ser comparado
+     * @return True se os iteradores apontam para o mesmo elemento, false caso contrário.
+     */
     bool operator==(const PriorityQueueIterator& other) const {
         return m_ptr == other.m_ptr;
     }
 
+    /**
+     * @brief Sobrecarga do operador de desigualdade.
+     * Complexidade: O(1)
+     *
+     * @param other iterador a ser comparado
+     * @return True se os iteradores apontam para elementos diferentes, false caso contrário.
+     */
     bool operator!=(const PriorityQueueIterator& other) const {
         return !(*this == other);
     }

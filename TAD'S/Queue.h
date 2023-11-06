@@ -146,7 +146,7 @@ class Queue {
     }
 
     /**
-     * @brief Funçãi que verifica se uma lista está vazia.
+     * @brief Função que verifica se uma lista está vazia.
      * Complexidade: O(1)
      *
      * @return true se a lista está vazia,

@@ -19,8 +19,19 @@
 
 using namespace std;
 
-// será usado os argumentos argc e argv para passar a politica de escalonamento,
-// o arquivo de entrada e a quantidade de computadores
+// PARA COMPILAR:
+//     make all
+
+// PARA EXECUTAR:
+//     ./main <politica> <arquivo> <Quant. computadores>
+
+// A política de escalonamento pode ser:
+// 0 - FCFS (First Come, First Served)
+// 1 - SJF (Shortest Job First)
+
+// A saída do programa será impressa no terminal.
+// A saída do programa será gerada na pasta "out".
+
 int main(int argc, char* argv[]) {
     // verifica se a quantidade de argumentos é válida
     if (argc != 4) {
@@ -45,7 +56,8 @@ int main(int argc, char* argv[]) {
 
     int politica = atoi(argv[1]);
     int qtdComputadores = atoi(argv[3]);
-    std::string arquivo = argv[2];
+    std::string arquivo = "testes/";
+    arquivo += argv[2];
 
     // cria o sistema
     System* system = new System(qtdComputadores, politica);

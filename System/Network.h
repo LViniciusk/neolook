@@ -17,6 +17,10 @@
 #include "../TAD'S/Vector.h"
 #include "Process.h"
 
+/**
+ * @brief Classe que representa a rede do sistema.
+ *
+ */
 class Network {
    private:
     Process* process{};           // processo que está sendo executado no disco
@@ -28,11 +32,9 @@ class Network {
 
    public:
     /**
-     * @brief Construct a new Network object
+     * @brief Construtor parametrizado da classe Network.
      *
-     * Essa classe é responsável por gerenciar a rede de processos, mantendo uma
-     * fila de processos a serem executados e uma fila de processos em execução.
-     *
+     * @param politica Política de escalonamento do sistema. 0 - FCFS, 1 - SJF
      */
     Network(bool politica) : politica(politica) {
         queue = new Queue<Process*>();
@@ -41,7 +43,9 @@ class Network {
     }
 
     /**
-     * @brief Destroy the Network object
+     * @brief Destrutor da classe Network.
+     *
+     * Libera a memória alocada para a fila de processos e para a fila de prioridades.
      *
      */
     ~Network() {
@@ -49,28 +53,60 @@ class Network {
         delete pq;
     }
 
+    /**
+     * @brief Verifica se a rede está ocupada.
+     *
+     * @return True, se a rede estiver ocupada. False, caso contrário.
+     */
     bool isBusy() const { return busy; }
 
+    /**
+     * @brief Define o estado da rede.
+     *
+     * @param b True, se a rede estiver ocupada. False, caso contrário.
+     */
     void setBusy(bool b) { busy = b; }
 
+    /**
+     * @brief Retorna o processo que está sendo executado na rede.
+     *
+     * @return Ponteiro para o processo que está sendo executado na rede.
+     */
     Process* getProcess() const { return process; }
 
+    /**
+     * @brief Função que recebe um processo e o insere na rede. Se a rede estiver ocupada,
+     * o processo é inserido na fila de processos. Caso contrário, o processo é
+     * inserido diretamente na rede para ser executado.
+     *
+     * @param p Ponteiro para o processo que será inserido.
+     * @return True, se o processo foi inserido diretamente. False, caso o processo
+     * tenha sido inserido na fila de processos.
+     *
+     */
     bool setProcess(Process* p) {
         if (!busy) {
-            process = p;  // insere o processo na CPU
-            time = 0;     // reseta o tempo de execução
-            busy = true;  // indica que a CPU está ocupada
-            return true;  // indica que o processo foi enviado para a execução na CPU diretamente
+            process = p;
+            time = 0;
+            busy = true;
+            return true;
         } else {
             if (politica) {
                 pq->push(p->getNetwork(), p);
             } else {
                 queue->push(p);
             }
-            return false;  // indica que o processo foi enviado para a fila de espera da CPU
+            return false;
         }
     }
 
+    /**
+     * @brief Função que carrega um processo da fila de processos para ser executado.
+     *
+     * @return True, se um processo foi carregado da fila de processos. False, caso
+     * contrário.
+     *
+     */
     bool loadFromQueue() {
         if (politica) {
             if (!pq->empty()) {
@@ -92,6 +128,14 @@ class Network {
         return false;
     }
 
+    /**
+     * @brief Função que executa o processo que está na rede. Se o processo terminar de ser executado,
+     * a rede é liberada e o processo é retornado. Caso contrário, a rede continua ocupada e a função
+     * retorna nullptr.
+     *
+     * @return Ponteiro para o processo que terminou de ser executado. nullptr, caso o processo ainda
+     * não tenha terminado de ser executado.
+     */
     Process* execute() {
         if (busy) {
             if (time == process->getNetwork()) {
