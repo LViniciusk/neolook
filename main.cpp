@@ -19,54 +19,45 @@
 
 using namespace std;
 
-int main() {
-    std::cout << "\033[2J\033[1;1H";
-
-    // Título estilizado para o projeto Neolook
-    std::cout << "=========================================" << std::endl;
-    std::cout << "            NEOLOOK SIMULATOR           " << std::endl;
-    std::cout << "=========================================" << std::endl;
-
-    std::cout << std::endl;
-    std::cout << "Comandos:" << std::endl;
-    std::cout
-        << "init <qtd pcs> <politica> - Cria o sistema com a quantidade de pcs "
-           "e a politica de escalonamento"
-        << std::endl;
-    std::cout << "load <arq> - Carrega o arquivo trace" << std::endl;
-    std::cout << "print - Imprime o estado atual do sistema" << std::endl;
-    std::cout << "execute - Executa o sistema" << std::endl;
-    std::cout << "exit - Sai do programa" << std::endl;
-    std::cout << std::endl;
-
-    int qPcs;
-    string arq;
-    bool politica;
-    System* sys;
-
-    // comandos:
-    // init <qtd pcs> <politica> - Cria o sistema com a quantidade de pcs e a
-    // politica de escalonamento load <arq> - Carrega o arquivo trace
-
-    while (true) {
-        string cmd;
-        cin >> cmd;
-        if (cmd == "init") {
-            cin >> qPcs >> politica;
-            sys = new System(qPcs, politica);
-        } else if (cmd == "load") {
-            cin >> arq;
-            sys->loadFile(arq);
-        } else if (cmd == "print") {
-            sys->print();
-        } else if (cmd == "execute") {
-            sys->execute();
-        } else if (cmd == "exit") {
-            break;
-        } else {
-            cout << "Comando inválido" << endl;
-        }
+// será usado os argumentos argc e argv para passar a politica de escalonamento,
+// o arquivo de entrada e a quantidade de computadores
+int main(int argc, char* argv[]) {
+    // verifica se a quantidade de argumentos é válida
+    if (argc != 4) {
+        cout << "Quantidade de argumentos inválida" << endl;
+        cout << "Uso: ./main <politica> <arquivo> <Quant. computadores> " << endl;
+        return 1;
     }
+
+    // verifica se a politica de escalonamento é válida
+    if (atoi(argv[1]) != 0 && atoi(argv[1]) != 1) {
+        cout << "Politica de escalonamento inválida" << endl;
+        cout << "0 - FCFS" << endl;
+        cout << "1 - SJF" << endl;
+        return 1;
+    }
+
+    // verifica se a quantidade de computadores é válida
+    if (atoi(argv[3]) <= 0) {
+        cout << "Quantidade de computadores inválida" << endl;
+        return 1;
+    }
+
+    int politica = atoi(argv[1]);
+    int qtdComputadores = atoi(argv[3]);
+    std::string arquivo = argv[2];
+
+    // cria o sistema
+    System* system = new System(qtdComputadores, politica);
+
+    // carrega os processos do arquivo
+    system->loadFile(arquivo);
+
+    // executa o sistema
+    system->execute();
+
+    // deleta o sistema
+    delete system;
 
     return 0;
 }
