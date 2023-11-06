@@ -166,7 +166,7 @@ class PriorityQueue {
 
    public:
     /**
-     * @brief Construtor da classe PriorityQueuePair
+     * @brief Construtor da classe PriorityQueue
      * Complexidade: O(1)
      *
      * @param capacity
@@ -179,7 +179,7 @@ class PriorityQueue {
     }
 
     /**
-     * @brief Construtor default da classe PriorityQueuePair. É aloca um vetor
+     * @brief Construtor default da classe PriorityQueue. É aloca um vetor
      * de 50 posições. Complexidade: O(1)
      *
      */
@@ -190,10 +190,10 @@ class PriorityQueue {
     }
 
     /**
-     * @brief Construtor de cópia da classe PriorityQueuePair.
+     * @brief Construtor de cópia da classe PriorityQueue.
      * Complexidade: O(n)
      *
-     * @param pq PriorityQueuePair a ser copiada
+     * @param pq PriorityQueue a ser copiada
      */
     PriorityQueue(const PriorityQueue& pq) {
         m_capacity = pq.m_capacity;
@@ -205,14 +205,11 @@ class PriorityQueue {
     }
 
     /**
-     * @brief Destrutor da classe PriorityQueuePair
+     * @brief Destrutor da classe PriorityQueue
      * Complexidade: O(1)
      *
      */
-    ~PriorityQueue() {
-        delete[] m_heap;
-        std::cout << "PriorityQueue destruida" << std::endl;
-    }
+    ~PriorityQueue() { delete[] m_heap; }
 
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no
