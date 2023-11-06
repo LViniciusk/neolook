@@ -209,10 +209,7 @@ class PriorityQueuePair {
      * Complexidade: O(1)
      *
      */
-    ~PriorityQueuePair() {
-        delete[] m_heap;
-        std::cout << "PriorityQueuePair destruida" << std::endl;
-    }
+    ~PriorityQueuePair() { delete[] m_heap; }
 
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no

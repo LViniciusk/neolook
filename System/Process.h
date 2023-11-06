@@ -1,3 +1,14 @@
+/**
+ * @file Process.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
+ * @brief Classe que representa um processo.
+ * @version 0.1
+ * @date 06-11-2023
+ *
+ *
+ */
+
 #ifndef PROCESS_H
 #define PROCESS_H
 
@@ -70,6 +81,12 @@ class Process {
      * @return int Tempo de execução do processo na rede.
      */
     int getNetwork() { return network; }
+
+    void print() {
+        std::cout << "Processo " << id << " - Instante: " << instant
+                  << " - CPU: " << cpu << " - Disco: " << disk
+                  << " - Rede: " << network << std::endl;
+    }
 };
 
 #endif

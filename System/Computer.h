@@ -1,3 +1,14 @@
+/**
+ * @file Computer.h
+ * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
+ * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
+ * @brief Classe que representa um computador.
+ * @version 0.1
+ * @date 06-11-2023
+ *
+ *
+ */
+
 #ifndef COMPUTER_H
 #define COMPUTER_H
 
@@ -26,10 +37,9 @@ class Computer {
      * @brief Classe que representa um computador.
      *
      */
-    Computer(bool politica, Network* net, Vector<Event>* events)
-        : politica(politica), network(net) {
-        cpu = new CPU(politica, events);
-        disk = new Disk[2]{Disk(politica, events), Disk(politica, events)};
+    Computer(bool politica, Network* net) : politica(politica), network(net) {
+        cpu = new CPU(politica);
+        disk = new Disk[2]{Disk(politica), Disk(politica)};
     }
 
     /**
@@ -39,10 +49,7 @@ class Computer {
      * destruição do objeto.
      *
      */
-    ~Computer() {
-        delete[] disk;
-        std::cout << "Computador destruido" << std::endl;
-    }
+    ~Computer() { delete[] disk; }
 
     /**
      * @brief Retorna a CPU do computador.
