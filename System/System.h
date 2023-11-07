@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 
 #include "../TAD'S/Vector.h"
@@ -34,17 +35,17 @@
  */
 class System {
    private:
-    int qPcs;                          // quantidade de computadores
-    Vector<Computer*> computers;       // computadores do sistema
-    Network* network;                  // rede do sistema
-    bool politica;                     // politica de escalonamento
-    Vector<Process>* processos{};      // vetor de processos
-    Event* log{};                      // vetor de eventos do sistema
-    unsigned long timer{};             // relógio lógico do sistema
-    long double tempoMedioEspera{};    // tempo médio de espera do sistema
-    long double tempoMedioExecucao{};  // tempo médio de execução do sistema
-    long double taxaProcessamento{};   // taxa de processamento do sistema
-    bool printLog{};                   // flag para imprimir o log do sistema
+    int qPcs;                      // quantidade de computadores
+    Vector<Computer*> computers;   // computadores do sistema
+    Network* network;              // rede do sistema
+    bool politica;                 // politica de escalonamento
+    Vector<Process>* processos{};  // vetor de processos
+    Event* log{};                  // vetor de eventos do sistema
+    unsigned timer{};              // relógio lógico do sistema
+    double tempoMedioEspera{};     // tempo médio de espera do sistema
+    double tempoMedioExecucao{};   // tempo médio de execução do sistema
+    double taxaProcessamento{};    // taxa de processamento do sistema
+    bool printLog{};               // flag para imprimir o log do sistema
 
    public:
     /**
@@ -56,14 +57,13 @@ class System {
      * @param arq Arquivo trace a ser carregado
      * @param politica Política de escalonamento. 0 - FCFS, 1 - SJF
      */
-    System(int qPcs, bool pol) : qPcs(qPcs), politica(pol) {
+    System(int qPcs, bool pol, bool printLog = false) : qPcs(qPcs), politica(pol), printLog(printLog) {
         processos = new Vector<Process>();
         network = new Network(politica);
         computers = Vector<Computer*>();
         for (int i = 0; i < qPcs; i++) {
             computers.push_back(new Computer(politica, network));
         }
-        printLog = true;  // indica se o log do sistema deve ser impresso com detalhes
     }
 
     /**
@@ -125,8 +125,9 @@ class System {
      */
     void execute() {
         LogFile* logFile = new LogFile();
-        int pendentes = processos->size();                  // quantidade de processos pendentes
-        srand(time(NULL));                                  // semente para gerar números aleatórios
+        int pendentes = processos->size();  // quantidade de processos pendentes
+        // std::srand(time(NULL));             // semente para gerar números aleatórios
+        std::srand(123);                                    // semente para gerar números aleatórios
         Vector<Process>::iterator it = processos->begin();  // iterador para percorrer o vetor de processos
         logFile->headerMessage(pendentes, politica, qPcs);  // imprime o cabeçalho do log
 
@@ -138,9 +139,13 @@ class System {
                 log[it->getId()].tempoExecucao = it->getCPU() + it->getDisk() + it->getNetwork();
                 if (computers[pc]->getCPU().setProcess(&(*it))) {
                     log[it->getId()].instanteCPU = timer;
-                    if (printLog) logFile->directExecutionCPU(timer, it->getId(), pc);
+                    if (printLog) {
+                        logFile->directExecutionCPU(timer, it->getId(), pc);
+                    }
                 } else {
-                    if (printLog) logFile->loadIntoQueueCPU(timer, it->getId(), pc);
+                    if (printLog) {
+                        logFile->loadIntoQueueCPU(timer, it->getId(), pc);
+                    }
                 }
                 it++;
             }
@@ -150,20 +155,27 @@ class System {
                 if (!computers[i]->getCPU().isBusy()) {
                     if (computers[i]->getCPU().loadFromQueue()) {
                         int idProcess = computers[i]->getCPU().getProcess()->getId();
-                        if (printLog) logFile->loadedFromQueueCPU(timer, idProcess, i);
+                        if (printLog) {
+                            logFile->loadedFromQueueCPU(timer, idProcess, i);
+                        }
                         log[idProcess].tempoEspera += timer - computers[i]->getCPU().getProcess()->getInstant();
-                        log[idProcess].tempoExecucao += log[idProcess].tempoEspera;
                     }
                 } else {
                     Process* p = computers[i]->getCPU().execute();
                     if (p != nullptr) {  // se o processo terminou na CPU
-                        if (printLog) logFile->executionCompletedCPU(timer, p->getId(), i);
+                        if (printLog) {
+                            logFile->executionCompletedCPU(timer, p->getId(), i);
+                        }
                         // Escolhe um disco aleatório
                         int disk = rand() % 2;
                         if (computers[i]->getDisk(disk).setProcess(p)) {
-                            if (printLog) logFile->directExecutionDisk(timer, p->getId(), disk, i);
+                            if (printLog) {
+                                logFile->directExecutionDisk(timer, p->getId(), disk, i);
+                            }
                         } else {
-                            if (printLog) logFile->loadedIntoQueueDisk(timer, p->getId(), disk, i);
+                            if (printLog) {
+                                logFile->loadedIntoQueueDisk(timer, p->getId(), disk, i);
+                            }
                         }
                     }
                 }
@@ -173,19 +185,26 @@ class System {
                     if (!computers[i]->getDisk(j).isBusy()) {
                         if (computers[i]->getDisk(j).loadFromQueue()) {
                             int idProcess = computers[i]->getDisk(j).getProcess()->getId();
-                            if (printLog) logFile->loadFromQueueDisk(timer, idProcess, j, i);
+                            if (printLog) {
+                                logFile->loadFromQueueDisk(timer, idProcess, j, i);
+                            }
                             log[idProcess].tempoEspera += timer - (computers[i]->getDisk(j).getProcess()->getInstant() +
                                                                    computers[i]->getDisk(j).getProcess()->getCPU());
-                            log[idProcess].tempoExecucao += log[idProcess].tempoEspera;
                         }
                     } else {
                         Process* p = computers[i]->getDisk(j).execute();
                         if (p != nullptr) {
-                            if (printLog) logFile->executionCompletedDisk(timer, p->getId(), j, i);
+                            if (printLog) {
+                                logFile->executionCompletedDisk(timer, p->getId(), j, i);
+                            }
                             if (network->setProcess(p)) {
-                                if (printLog) logFile->directExecutionNetwork(timer, p->getId());
+                                if (printLog) {
+                                    logFile->directExecutionNetwork(timer, p->getId());
+                                }
                             } else {
-                                if (printLog) logFile->loadedIntoQueueNetwork(timer, p->getId());
+                                if (printLog) {
+                                    logFile->loadedIntoQueueNetwork(timer, p->getId());
+                                }
                             }
                         }
                     }
@@ -196,28 +215,39 @@ class System {
             if (!network->isBusy()) {
                 if (network->loadFromQueue()) {
                     int idProcess = network->getProcess()->getId();
-                    if (printLog) logFile->loadFromQueueNetwork(timer, idProcess);
+                    if (printLog) {
+                        logFile->loadFromQueueNetwork(timer, idProcess);
+                    }
                     log[idProcess].tempoEspera += timer - network->getProcess()->getInstant();
-                    log[idProcess].tempoExecucao += log[idProcess].tempoEspera;
                 }
             } else {
                 Process* p = network->execute();
                 if (p != nullptr) {
-                    if (printLog) logFile->executionCompletedNetwork(timer, p->getId());
+                    if (printLog) {
+                        logFile->executionCompletedNetwork(timer, p->getId());
+                    }
                     log->instanteFinal = timer;
-                    if (printLog) logFile->processFinished(timer, p->getId());
+                    int idProcess = p->getId();
+                    log[idProcess].tempoExecucao = log[idProcess].tempoEspera + (processos->at(idProcess).getCPU() +
+                                                                                 processos->at(idProcess).getDisk() +
+                                                                                 processos->at(idProcess).getNetwork());
+                    if (printLog) {
+                        logFile->processFinished(timer, p->getId());
+                    }
                     pendentes--;
                 }
             }
             timer++;  // incrementa o relógio lógico
         }
 
-        std::cout << "Quantidade de processos: " << processos->size() << std::endl;
-        std::cout << "Tempo total de execução: " << timer << std::endl;
+        timer--;
         calculate();
-        std::cout << "Tempo médio de espera: " << tempoMedioEspera << std::endl;
-        std::cout << "Tempo médio de execução: " << tempoMedioExecucao << std::endl;
-        std::cout << "Taxa de processamento: " << taxaProcessamento << std::endl;
+        std::cout << "Política de escalonamento = " << (politica ? "SJF" : "FCFS") << std::endl;
+        std::cout << "Quantidade de processos   = " << processos->size() << std::endl;
+        std::cout << "Tempo total de execução   = " << timer << std::endl;
+        std::cout << "Tempo médio de espera     = " << tempoMedioEspera << std::endl;
+        std::cout << "Tempo médio de execução   = " << tempoMedioExecucao << std::endl;
+        std::cout << "Taxa de processamento     = " << taxaProcessamento << std::endl;
         logFile->executionCompleted();
         logFile->statistics(timer, tempoMedioExecucao, tempoMedioEspera, taxaProcessamento);
         delete logFile;
@@ -235,9 +265,9 @@ class System {
             totalEspera += log[i].tempoEspera;
             totalExecucao += log[i].tempoExecucao;
         }
-        tempoMedioEspera = (long double)totalEspera / qtdProcessos;
-        tempoMedioExecucao = (long double)totalExecucao / qtdProcessos;
-        taxaProcessamento = (long double)qtdProcessos / (timer - processos->front().getInstant());
+        tempoMedioEspera = (double)totalEspera / qtdProcessos;
+        tempoMedioExecucao = (double)totalExecucao / qtdProcessos;
+        taxaProcessamento = (double)qtdProcessos / (timer - processos->front().getInstant());
     }
 };
 

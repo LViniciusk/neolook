@@ -29,12 +29,16 @@ using namespace std;
 // 0 - FCFS (First Come, First Served)
 // 1 - SJF (Shortest Job First)
 
+// Um quinto argumento opcional pode ser passado para ativar o log detalhado.
+// 0 - Log detalhado desativado
+// 1 - Log detalhado ativado
+
 // A saída do programa será impressa no terminal.
 // A saída do programa será gerada na pasta "out".
 
 int main(int argc, char* argv[]) {
     // verifica se a quantidade de argumentos é válida
-    if (argc != 4) {
+    if (argc < 4 || argc > 5) {
         cout << "Quantidade de argumentos inválida" << endl;
         cout << "Uso: ./main <politica> <arquivo> <Quant. computadores> " << endl;
         return 1;
@@ -58,9 +62,10 @@ int main(int argc, char* argv[]) {
     int qtdComputadores = atoi(argv[3]);
     std::string arquivo = "testes/";
     arquivo += argv[2];
+    bool logFileDetalhado = atoi(argv[4]);
 
     // cria o sistema
-    System* system = new System(qtdComputadores, politica);
+    System* system = new System(qtdComputadores, politica, logFileDetalhado);
 
     // carrega os processos do arquivo
     system->loadFile(arquivo);

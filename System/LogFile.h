@@ -270,7 +270,7 @@ class LogFile {
      * @param qtdPcs Quantidade de computadores.
      */
     void headerMessage(int qtdProcess, bool politica, int qtdPcs) {
-        *m_file << "LOG DE EXECUÇÃO -------------------------------------"
+        *m_file << "LOG DE EXECUÇÃO ------------------------------------------"
                 << std::endl;
         *m_file << "Quantidade de processos: " << qtdProcess << std::endl;
         *m_file << "Política de escalonamento: ";
@@ -280,7 +280,7 @@ class LogFile {
             *m_file << "FCFS" << std::endl;
         }
         *m_file << "Quantidade de computadores: " << qtdPcs << std::endl;
-        *m_file << "-----------------------------------------------------\n\n";
+        *m_file << "----------------------------------------------------------\n\n";
     }
 
     /**
@@ -302,13 +302,13 @@ class LogFile {
      */
     void statistics(unsigned long timer, double averageExecution,
                     double averageWaiting, double processingFee) {
-        *m_file << "Estatísticas: ---------------------------------------"
+        *m_file << "Estatísticas: -------------------------------------------------"
                 << std::endl;
-        *m_file << "Tempo total de execução: " << timer << std::endl;
-        *m_file << "Tempo médio de espera: " << averageWaiting << std::endl;
-        *m_file << "Tempo médio de execução: " << averageExecution << std::endl;
-        *m_file << "Taxa de processamento: " << processingFee << std::endl;
-        *m_file << "-----------------------------------------------------";
+        *m_file << "Tempo total de execução   = " << timer << std::endl;
+        *m_file << "Tempo médio de espera     = " << averageWaiting << std::endl;
+        *m_file << "Tempo médio de execução   = " << averageExecution << std::endl;
+        *m_file << "Taxa de processamento     = " << processingFee << std::endl;
+        *m_file << "---------------------------------------------------------------";
     }
 };
 

@@ -100,7 +100,7 @@ class CPU {
     bool setProcess(Process* p) {
         if (!busy) {
             process = p;
-            time = 1;
+            time = 0;
             busy = true;
             return true;
         } else {
