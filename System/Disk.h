@@ -15,6 +15,7 @@
 #include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
 #include "../TAD'S/Vector.h"
+#include "LogFile.h"
 #include "Process.h"
 
 /**
@@ -28,7 +29,9 @@ class Disk {
     PriorityQueue<Process*>* pq;  // fila de processos do disco
     bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;                    // indica se o disco está ocupado
-    unsigned time;                // tempo de execução do processo atual
+    bool concluded{false};        // indica se o processo terminou de ser executado
+    unsigned counter;             // tempo de execução do processo atual
+    LogFile* logFile;             // arquivo de log
 
    public:
     /**
@@ -39,7 +42,7 @@ class Disk {
      *
      * @param politica Política de escalonamento do sistema. 0 - FCFS, 1 - SJF
      */
-    Disk(bool politica) : politica(politica) {
+    Disk(bool politica, LogFile* log) : politica(politica), logFile(log) {
         queue = new Queue<Process*>();
         pq = new PriorityQueue<Process*>();
         busy = false;
@@ -60,6 +63,8 @@ class Disk {
      * @return True, se o disco estiver ocupado. False, caso contrário.
      */
     bool isBusy() const { return busy; }
+
+    unsigned getCounter() const { return counter; }
 
     /**
      * @brief Define se o disco está ocupado.
@@ -88,8 +93,10 @@ class Disk {
     bool setProcess(Process* p) {
         if (!busy) {
             process = p;
-            time = 0;
+            counter = p->getDisk();
             busy = true;
+            logFile->directExecutionDisk(p->getId());
+            concluded = false;
             return true;
         } else {
             if (politica) {
@@ -97,6 +104,7 @@ class Disk {
             } else {
                 queue->push(p);
             }
+            logFile->loadedIntoQueueDisk(p->getId());
             return false;
         }
     }
@@ -114,7 +122,9 @@ class Disk {
                 process = pq->top();
                 pq->pop();
                 busy = true;
-                time = 0;
+                counter = process->getDisk();
+                logFile->loadFromQueueDisk(process->getId());
+                concluded = false;
                 return true;
             }
         } else {
@@ -122,7 +132,9 @@ class Disk {
                 process = queue->front();
                 queue->pop();
                 busy = true;
-                time = 0;
+                counter = process->getDisk();
+                logFile->loadFromQueueDisk(process->getId());
+                concluded = false;
                 return true;
             }
         }
@@ -137,16 +149,17 @@ class Disk {
      * @return Ponteiro para o processo que terminou de ser executado. nullptr, caso o processo ainda
      * não tenha terminado de ser executado.
      */
-    Process* execute() {
-        if (busy) {
-            if (time == process->getDisk()) {
-                busy = false;
-                return process;
-            } else {
-                time++;
-            }
-        }
-        return nullptr;
+    void execute() {
+        counter--;
+        if (!counter) concluded = true;
+    }
+
+    bool isConcluded() const { return concluded; }
+
+    void removeProcess() {
+        process = nullptr;
+        busy = false;
+        concluded = false;
     }
 };
 

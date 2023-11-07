@@ -15,6 +15,7 @@
 #include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
 #include "../TAD'S/Vector.h"
+#include "LogFile.h"
 #include "Process.h"
 
 /**
@@ -27,8 +28,10 @@ class Network {
     Queue<Process*>* queue;       // fila de processos do disco
     PriorityQueue<Process*>* pq;  // fila de processos do disco
     bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
-    bool busy;                    // indica se o disco está ocupado
-    unsigned time;                // tempo de execução do processo atual
+    bool busy{};                  // indica se o disco está ocupado
+    bool concluded{false};        // indica se o processo terminou de ser executado
+    unsigned counter;             // tempo de execução do processo atual
+    LogFile* logFile;             // arquivo de log
 
    public:
     /**
@@ -36,10 +39,9 @@ class Network {
      *
      * @param politica Política de escalonamento do sistema. 0 - FCFS, 1 - SJF
      */
-    Network(bool politica) : politica(politica) {
+    Network(bool politica, LogFile* log) : politica(politica), logFile(log) {
         queue = new Queue<Process*>();
         pq = new PriorityQueue<Process*>();
-        busy = false;
     }
 
     /**
@@ -52,6 +54,8 @@ class Network {
         delete queue;
         delete pq;
     }
+
+    unsigned getCounter() const { return counter; }
 
     /**
      * @brief Verifica se a rede está ocupada.
@@ -87,8 +91,10 @@ class Network {
     bool setProcess(Process* p) {
         if (!busy) {
             process = p;
-            time = 0;
+            counter = p->getNetwork();
             busy = true;
+            logFile->directExecutionNetwork(process->getId());
+            concluded = false;
             return true;
         } else {
             if (politica) {
@@ -96,6 +102,7 @@ class Network {
             } else {
                 queue->push(p);
             }
+            logFile->loadedIntoQueueNetwork(p->getId());
             return false;
         }
     }
@@ -113,7 +120,9 @@ class Network {
                 process = pq->top();
                 pq->pop();
                 busy = true;
-                time = 0;
+                counter = process->getNetwork();
+                logFile->loadFromQueueNetwork(process->getId());
+                concluded = false;
                 return true;
             }
         } else {
@@ -121,7 +130,9 @@ class Network {
                 process = queue->front();
                 queue->pop();
                 busy = true;
-                time = 0;
+                counter = process->getNetwork();
+                logFile->loadFromQueueNetwork(process->getId());
+                concluded = false;
                 return true;
             }
         }
@@ -136,16 +147,17 @@ class Network {
      * @return Ponteiro para o processo que terminou de ser executado. nullptr, caso o processo ainda
      * não tenha terminado de ser executado.
      */
-    Process* execute() {
-        if (busy) {
-            if (time == process->getNetwork()) {
-                busy = false;
-                return process;
-            } else {
-                time++;
-            }
-        }
-        return nullptr;
+    void execute() {
+        counter--;
+        if (!counter) concluded = true;
+    }
+
+    bool isConcluded() const { return concluded; }
+
+    void removeProcess() {
+        process = nullptr;
+        busy = false;
+        concluded = false;
     }
 };
 

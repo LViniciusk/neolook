@@ -35,7 +35,7 @@
  */
 class System {
    private:
-    int qPcs;                      // quantidade de computadores
+    unsigned qPcs;                 // quantidade de computadores
     Vector<Computer*> computers;   // computadores do sistema
     Network* network;              // rede do sistema
     bool politica;                 // politica de escalonamento
@@ -46,6 +46,7 @@ class System {
     double tempoMedioExecucao{};   // tempo médio de execução do sistema
     double taxaProcessamento{};    // taxa de processamento do sistema
     bool printLog{};               // flag para imprimir o log do sistema
+    LogFile* logFile{};            // arquivo de log
 
    public:
     /**
@@ -59,10 +60,11 @@ class System {
      */
     System(int qPcs, bool pol, bool printLog = false) : qPcs(qPcs), politica(pol), printLog(printLog) {
         processos = new Vector<Process>();
-        network = new Network(politica);
+        logFile = new LogFile(&timer, printLog);
+        network = new Network(politica, logFile);
         computers = Vector<Computer*>();
         for (int i = 0; i < qPcs; i++) {
-            computers.push_back(new Computer(politica, network));
+            computers.push_back(new Computer(politica, network, logFile));
         }
     }
 
@@ -72,7 +74,7 @@ class System {
      *
      */
     ~System() {
-        for (int i = 0; i < qPcs; i++) {
+        for (unsigned i = 0; i < qPcs; i++) {
             delete computers[i];
         }
         delete network;
@@ -96,6 +98,36 @@ class System {
 
         // cria o vetor de eventos
         log = new Event[processos->size()];
+    }
+
+    void verifyQueues() {
+        if (!network->isBusy()) {
+            if (network->loadFromQueue()) {
+                Process* p = network->getProcess();
+                log[p->getId()].tempoEspera += timer - (p->getNetwork() + log[p->getId()].instanteRede);
+            }
+        }
+
+        for (unsigned pc = 0; pc < qPcs; ++pc) {
+            // DISCOS --------------------------------------------
+            for (unsigned j = 0; j < 2; ++j) {
+                Disk& d = computers[pc]->getDisk(j);
+                if (!d.isBusy()) {
+                    if (d.loadFromQueue()) {
+                        Process* p = d.getProcess();
+                        log[p->getId()].tempoEspera += timer - (p->getDisk() + log[p->getId()].instanteDisco);
+                    }
+                }
+            }
+            // CPU -----------------------------------------------
+            CPU& cpu = computers[pc]->getCPU();
+            if (!cpu.isBusy()) {
+                if (computers[pc]->getCPU().loadFromQueue()) {
+                    Process* p = cpu.getProcess();
+                    log[p->getId()].tempoEspera += timer - p->getInstant();
+                }
+            }
+        }
     }
 
     /**
@@ -124,14 +156,17 @@ class System {
      *
      */
     void execute() {
-        LogFile* logFile = new LogFile();
         int pendentes = processos->size();  // quantidade de processos pendentes
         // std::srand(time(NULL));             // semente para gerar números aleatórios
         std::srand(123);                                    // semente para gerar números aleatórios
         Vector<Process>::iterator it = processos->begin();  // iterador para percorrer o vetor de processos
         logFile->headerMessage(pendentes, politica, qPcs);  // imprime o cabeçalho do log
 
-        while (pendentes) {
+        while (true) {
+            // CARREGA O PROCESSO NO COMPUTADOR.
+            // Como o primeiro recurso é a CPU, o processo é enviado para a CPU.
+            // Se a CPU estiver ocupada, o processo é enviado para a fila de espera.
+
             while (it != processos->end() && it->getInstant() == timer) {
                 // escolhe um computador aleatório
                 int pc = rand() % qPcs;
@@ -139,108 +174,78 @@ class System {
                 log[it->getId()].tempoExecucao = it->getCPU() + it->getDisk() + it->getNetwork();
                 if (computers[pc]->getCPU().setProcess(&(*it))) {
                     log[it->getId()].instanteCPU = timer;
-                    if (printLog) {
-                        logFile->directExecutionCPU(timer, it->getId(), pc);
-                    }
-                } else {
-                    if (printLog) {
-                        logFile->loadIntoQueueCPU(timer, it->getId(), pc);
-                    }
                 }
                 it++;
             }
 
-            for (int i = 0; i < qPcs; i++) {
-                // CPU ------------------------------------------------
-                if (!computers[i]->getCPU().isBusy()) {
-                    if (computers[i]->getCPU().loadFromQueue()) {
-                        int idProcess = computers[i]->getCPU().getProcess()->getId();
-                        if (printLog) {
-                            logFile->loadedFromQueueCPU(timer, idProcess, i);
-                        }
-                        log[idProcess].tempoEspera += timer - computers[i]->getCPU().getProcess()->getInstant();
-                    }
-                } else {
-                    Process* p = computers[i]->getCPU().execute();
-                    if (p != nullptr) {  // se o processo terminou na CPU
-                        if (printLog) {
-                            logFile->executionCompletedCPU(timer, p->getId(), i);
-                        }
-                        // Escolhe um disco aleatório
-                        int disk = rand() % 2;
-                        if (computers[i]->getDisk(disk).setProcess(p)) {
-                            if (printLog) {
-                                logFile->directExecutionDisk(timer, p->getId(), disk, i);
-                            }
-                        } else {
-                            if (printLog) {
-                                logFile->loadedIntoQueueDisk(timer, p->getId(), disk, i);
-                            }
-                        }
+            // Se o recurso está vazio, resgata da fila de espera
+
+            // verifyQueues();
+
+            // Verifica se os processos na CPU e nos discos foram finalizados e enviam para o próximo recurso.
+            // Se o processo na rede foi finalizado, termina o processo.
+
+            // REDE --------------------------------------------------
+
+            if (network->isConcluded()) {
+                Process* p = network->getProcess();
+                logFile->executionCompletedNetwork(p->getId());
+                logFile->processFinished(p->getId());
+                Event& event = log[p->getId()];
+                event.instanteFinal = timer;
+                event.tempoExecucao = event.tempoEspera + (p->getCPU() + p->getDisk() + p->getNetwork());
+                event.concluded = true;
+                network->removeProcess();
+                pendentes--;
+                if (!pendentes) break;
+            }
+
+            for (unsigned pc = 0; pc < qPcs; ++pc) {
+                // DISCOS --------------------------------------------
+                for (unsigned j = 0; j < 2; ++j) {
+                    Disk& d = computers[pc]->getDisk(j);
+                    if (d.isConcluded()) {
+                        logFile->executionCompletedDisk(d.getProcess()->getId());
+                        network->setProcess(d.getProcess());
+                        d.removeProcess();
                     }
                 }
-
-                // DISCOS  ----------------------------------------------
-                for (int j = 0; j < 2; j++) {
-                    if (!computers[i]->getDisk(j).isBusy()) {
-                        if (computers[i]->getDisk(j).loadFromQueue()) {
-                            int idProcess = computers[i]->getDisk(j).getProcess()->getId();
-                            if (printLog) {
-                                logFile->loadFromQueueDisk(timer, idProcess, j, i);
-                            }
-                            log[idProcess].tempoEspera += timer - (computers[i]->getDisk(j).getProcess()->getInstant() +
-                                                                   computers[i]->getDisk(j).getProcess()->getCPU());
-                        }
-                    } else {
-                        Process* p = computers[i]->getDisk(j).execute();
-                        if (p != nullptr) {
-                            if (printLog) {
-                                logFile->executionCompletedDisk(timer, p->getId(), j, i);
-                            }
-                            if (network->setProcess(p)) {
-                                if (printLog) {
-                                    logFile->directExecutionNetwork(timer, p->getId());
-                                }
-                            } else {
-                                if (printLog) {
-                                    logFile->loadedIntoQueueNetwork(timer, p->getId());
-                                }
-                            }
-                        }
-                    }
+                // CPU -----------------------------------------------
+                CPU& cpu = computers[pc]->getCPU();
+                if (cpu.isConcluded()) {
+                    logFile->executionCompletedCPU(cpu.getProcess()->getId());
+                    short disk = rand() % 2;
+                    computers[pc]->getDisk(disk).setProcess(cpu.getProcess());
+                    cpu.removeProcess();
                 }
             }
 
-            // REDE ------------------------------------------------
-            if (!network->isBusy()) {
-                if (network->loadFromQueue()) {
-                    int idProcess = network->getProcess()->getId();
-                    if (printLog) {
-                        logFile->loadFromQueueNetwork(timer, idProcess);
+            verifyQueues();
+
+            // Executa os processos nos recursos
+
+            // REDE --------------------------------------------------
+            if (network->isBusy()) {
+                network->execute();
+            }
+            for (unsigned pc = 0; pc < qPcs; ++pc) {
+                // DISCOS --------------------------------------------
+                for (unsigned disk = 0; disk < 2; ++disk) {
+                    Disk& d = computers[pc]->getDisk(disk);
+                    if (d.isBusy()) {
+                        d.execute();
                     }
-                    log[idProcess].tempoEspera += timer - network->getProcess()->getInstant();
                 }
-            } else {
-                Process* p = network->execute();
-                if (p != nullptr) {
-                    if (printLog) {
-                        logFile->executionCompletedNetwork(timer, p->getId());
-                    }
-                    log->instanteFinal = timer;
-                    int idProcess = p->getId();
-                    log[idProcess].tempoExecucao = log[idProcess].tempoEspera + (processos->at(idProcess).getCPU() +
-                                                                                 processos->at(idProcess).getDisk() +
-                                                                                 processos->at(idProcess).getNetwork());
-                    if (printLog) {
-                        logFile->processFinished(timer, p->getId());
-                    }
-                    pendentes--;
+                // CPU -----------------------------------------------
+                CPU& cpu = computers[pc]->getCPU();
+                if (cpu.isBusy()) {
+                    computers[pc]->getCPU().execute();
                 }
             }
+
             timer++;  // incrementa o relógio lógico
         }
 
-        timer--;
         calculate();
         std::cout << "Política de escalonamento = " << (politica ? "SJF" : "FCFS") << std::endl;
         std::cout << "Quantidade de processos   = " << processos->size() << std::endl;

@@ -9,6 +9,7 @@
  *
  */
 
+#include <ctime>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -37,6 +38,8 @@ using namespace std;
 // A saída do programa será gerada na pasta "out".
 
 int main(int argc, char* argv[]) {
+    clock_t tStart = clock();
+
     // verifica se a quantidade de argumentos é válida
     if (argc < 4 || argc > 5) {
         cout << "Quantidade de argumentos inválida" << endl;
@@ -76,5 +79,18 @@ int main(int argc, char* argv[]) {
     // deleta o sistema
     delete system;
 
+    clock_t tEnd = clock();
+
+    // calcula o tempo de execução
+    double time = (double)(tEnd - tStart) / CLOCKS_PER_SEC;
+
+    cout << "Tempo de execução: " << fixed << setprecision(3) << time << "s" << endl;
+
     return 0;
 }
+
+// int main() {
+//     System* system = new System(1, 1, 1);
+//     system->loadFile("testes/trace.txt");
+//     system->execute();
+// }

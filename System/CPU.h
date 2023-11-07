@@ -17,6 +17,7 @@
 #include "../TAD'S/PriorityQueue.h"
 #include "../TAD'S/Queue.h"
 #include "../TAD'S/Vector.h"
+#include "LogFile.h"
 #include "Process.h"
 
 /**
@@ -30,7 +31,9 @@ class CPU {
     PriorityQueue<Process*>* pq;  // fila de processos da CPU
     bool politica;                // politica de escalonamento. 0 - FCFS, 1 - SJF
     bool busy;                    // indica se a CPU está ocupada
-    unsigned time;                // tempo de execução do processo atual
+    bool concluded{false};        // indica se o processo terminou de ser executado
+    unsigned counter;             // tempo de execução do processo atual
+    LogFile* logFile;             // arquivo de log
 
    public:
     /**
@@ -47,7 +50,7 @@ class CPU {
      *
      * @param politica Política de escalonamento do sistema. 0 - FCFS, 1 - SJF
      */
-    CPU(bool politica) : politica(politica) {
+    CPU(bool politica, LogFile* log) : politica(politica), logFile(log) {
         queue = new Queue<Process*>();
         pq = new PriorityQueue<Process*>();
         busy = false;
@@ -65,6 +68,8 @@ class CPU {
     }
 
     // getters e setters
+
+    unsigned getCounter() const { return counter; }
 
     /**
      * @brief Verifica se a CPU está ocupada.
@@ -100,8 +105,10 @@ class CPU {
     bool setProcess(Process* p) {
         if (!busy) {
             process = p;
-            time = 0;
+            counter = p->getCPU();
             busy = true;
+            logFile->directExecutionCPU(process->getId());
+            concluded = false;
             return true;
         } else {
             if (politica) {
@@ -109,6 +116,7 @@ class CPU {
             } else {
                 queue->push(p);
             }
+            logFile->loadIntoQueueCPU(p->getId());
             return false;
         }
     }
@@ -126,7 +134,9 @@ class CPU {
                 process = pq->top();
                 pq->pop();
                 busy = true;
-                time = 0;
+                counter = process->getCPU();
+                logFile->loadedFromQueueCPU(process->getId());
+                concluded = false;
                 return true;
             }
         } else {
@@ -134,7 +144,9 @@ class CPU {
                 process = queue->front();
                 queue->pop();
                 busy = true;
-                time = 0;
+                counter = process->getCPU();
+                logFile->loadedFromQueueCPU(process->getId());
+                concluded = false;
                 return true;
             }
         }
@@ -149,16 +161,17 @@ class CPU {
      * @return Ponteiro para o processo que terminou de ser executado. nullptr, caso o processo ainda
      * não tenha terminado de ser executado.
      */
-    Process* execute() {
-        if (busy) {
-            if (time == process->getCPU()) {
-                busy = false;
-                return process;
-            } else {
-                time++;
-            }
-        }
-        return nullptr;
+    void execute() {
+        counter--;
+        if (!counter) concluded = true;
+    }
+
+    bool isConcluded() const { return concluded; }
+
+    void removeProcess() {
+        process = nullptr;
+        busy = false;
+        concluded = false;
     }
 };
 

@@ -16,6 +16,7 @@
 
 #include "CPU.h"
 #include "Disk.h"
+#include "LogFile.h"
 #include "Network.h"
 #include "Process.h"
 
@@ -43,9 +44,9 @@ class Computer {
      * @param politica Política de escalonamento da CPU. 0 - FCFS, 1 - SJF
      * @param net Ponteiro para a rede do computador.
      */
-    Computer(bool politica, Network* net) : politica(politica), network(net) {
-        cpu = new CPU(politica);
-        disk = new Disk[2]{Disk(politica), Disk(politica)};
+    Computer(bool politica, Network* net, LogFile* log) : politica(politica), network(net) {
+        cpu = new CPU(politica, log);
+        disk = new Disk[2]{Disk(politica, log), Disk(politica, log)};
     }
 
     /**
