@@ -40,9 +40,31 @@ using namespace std;
 int main(int argc, char* argv[]) {
     clock_t tStart = clock();
 
+    // verifica se a quantidade de argumentos é válida
+    if (argc < 4 || argc > 5) {
+        cout << "Quantidade de argumentos inválida" << endl;
+        cout << "Uso: ./main <politica> <arquivo> <Quant. computadores> " << endl;
+        return 1;
+    }
+
+    // verifica se a politica de escalonamento é válida
+    if (atoi(argv[1]) != 0 && atoi(argv[1]) != 1) {
+        cout << "Politica de escalonamento inválida" << endl;
+        cout << "0 - FCFS" << endl;
+        cout << "1 - SJF" << endl;
+        return 1;
+    }
+
+    // verifica se a quantidade de computadores é válida
+    if (atoi(argv[3]) <= 0) {
+        cout << "Quantidade de computadores inválida" << endl;
+        return 1;
+    }
+
     int politica = atoi(argv[1]);
     int qtdComputadores = atoi(argv[3]);
-    std::string arquivo = argv[2];
+    std::string arquivo = "testes/";
+    arquivo += argv[2];
     bool logFileDetalhado = atoi(argv[4]);
 
     // cria o sistema
@@ -62,9 +84,13 @@ int main(int argc, char* argv[]) {
     // calcula o tempo de execução
     double time = (double)(tEnd - tStart) / CLOCKS_PER_SEC;
 
-    // imprime o tempo de execução
-    cout << "Tempo de execução: " << fixed << setprecision(2) << time << "s"
-         << endl;
+    cout << "Tempo de execução: " << fixed << setprecision(3) << time << "s" << endl;
 
     return 0;
 }
+
+// int main() {
+//     System* system = new System(1, 1, 1);
+//     system->loadFile("testes/trace.txt");
+//     system->execute();
+// }
