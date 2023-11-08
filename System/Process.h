@@ -2,7 +2,7 @@
  * @file Process.h
  * @author Júnior Silva (junior.silva@alu.ufc.br) - 554222
  * @author Linyker Vinicius (botlink2030@alu.ufc.br) - 556280
- * @brief Classe que representa um processo.
+ * @brief Struct que representa um processo.
  * @version 0.1
  * @date 06-11-2023
  *
@@ -12,15 +12,13 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-class Process {
-   private:
-    unsigned id{};       // identificador do processo
-    unsigned instant{};  // instante de chegada do processo
-    unsigned cpu{};      // demanda de execução na CPU
-    unsigned disk{};     // demanda de execução no disco
-    unsigned network{};  // demanda de execução na rede
+struct Process {
+    unsigned id{};         // identificador do processo
+    unsigned instant{};    // instante de chegada do processo
+    unsigned d_cpu{};      // demanda de execução na CPU
+    unsigned d_disk{};     // demanda de execução no disco
+    unsigned d_network{};  // demanda de execução na rede
 
-   public:
     /**
      * @brief Construtor padrão da classe Process.
      *
@@ -32,56 +30,12 @@ class Process {
      *
      * @param id Identificador do processo.
      * @param instant Instante de chegada do processo.
-     * @param cpu Demanda de tempo de execução do processo na CPU.
-     * @param disk Demanda de tempo de execução do processo no disco.
-     * @param network Demanda de tempo de execução do processo na rede.
+     * @param d_cpu Demanda de execução na CPU.
+     * @param d_disk Demanda de execução no disco.
+     * @param d_network Demanda de execução na rede.
      */
-    Process(unsigned id, unsigned instant, unsigned cpu, unsigned disk, unsigned network)
-        : id(id), instant(instant), cpu(cpu), disk(disk), network(network) {}
-
-    /**
-     * @brief Destrutor da classe Process.
-     *
-     */
-    ~Process() = default;
-
-    // getters e setters
-
-    /**
-     * @brief Retorna o identificador do processo. Este índice é único para cada processo, e
-     * representa o índice do processo no vetor de processos do sistema.
-     *
-     * @return Identificador do processo.
-     */
-    const unsigned& getId() const { return id; }
-
-    /**
-     * @brief Retorna o instante de chegada do processo.
-     *
-     * @return Instante de chegada do processo.
-     */
-    const unsigned& getInstant() const { return instant; }
-
-    /**
-     * @brief Retorna a demanda de execução do processo na CPU.
-     *
-     * @return Demanda de execução do processo na CPU.
-     */
-    const unsigned& getCPU() const { return cpu; }
-
-    /**
-     * @brief Retorna a demanda de execução do processo no disco.
-     *
-     * @return Demanda de execução do processo no disco.
-     */
-    const unsigned& getDisk() const { return disk; }
-
-    /**
-     * @brief Retorna a demanda de execução do processo na rede.
-     *
-     * @return Demanda de execução do processo na rede.
-     */
-    const unsigned& getNetwork() const { return network; }
+    Process(unsigned id, unsigned instant, unsigned d_cpu, unsigned d_disk, unsigned d_network)
+        : id(id), instant(instant), d_cpu(d_cpu), d_disk(d_disk), d_network(d_network) {}
 };
 
 #endif
