@@ -25,6 +25,8 @@
 class LogFile {
    private:
     std::ofstream* m_file;  // ponteiro para o arquivo de log
+    bool detailed;          // indica se o log é detalhado
+    unsigned* timer;        // ponteiro para o timer do sistema
 
    public:
     /**
@@ -33,7 +35,7 @@ class LogFile {
      * Cria o arquivo de log.
      *
      */
-    LogFile() {
+    LogFile(unsigned* timer, bool detailed) : detailed(detailed), timer(timer) {
         m_file = new std::ofstream(createLogArchiveName());
     }
 
@@ -69,7 +71,7 @@ class LogFile {
      *
      * @return True, se o arquivo estiver aberto. False, caso contrário.
      */
-    bool isOpen() const { return m_file->is_open(); }
+    bool isOpen() { return m_file->is_open(); }
 
     // Messages for CPU --------------------------------------------------------
 
@@ -80,10 +82,10 @@ class LogFile {
      * @param processId Identificador do processo.
      * @param computerId Identificador do computador.
      */
-    void directExecutionCPU(unsigned long time, int processId, int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " carregado diretamente para execução na CPU do Computador "
-                << computerId << std::endl;
+    void directExecutionCPU(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " carregado diretamente para execução na CPU" << std::endl;
     }
 
     /**
@@ -93,10 +95,10 @@ class LogFile {
      * @param processId Identificador do processo.
      * @param computerId Identificador do computador.
      */
-    void loadIntoQueueCPU(unsigned long time, int processId, int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " carregado na fila de espera da CPU do Computador "
-                << computerId << std::endl;
+    void loadIntoQueueCPU(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " carregado na fila de espera da CPU" << std::endl;
     }
 
     /**
@@ -106,11 +108,10 @@ class LogFile {
      * @param processId Identificador do processo.
      * @param computerId Identificador do computador.
      */
-    void executionCompletedCPU(unsigned long time, int processId,
-                               int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " finalizou execução na CPU do Computador " << computerId
-                << std::endl;
+    void executionCompletedCPU(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " finalizou execução na CPU" << std::endl;
     }
 
     /**
@@ -120,11 +121,10 @@ class LogFile {
      * @param processId Identificador do processo.
      * @param computerId Identificador do computador.
      */
-    void loadedFromQueueCPU(unsigned long time, int processId, int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " carregado da fila de espera para execução na CPU do "
-                   "Computador "
-                << computerId << std::endl;
+    void loadedFromQueueCPU(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " carregado da fila de espera para execução na CPU" << std::endl;
     }
 
     // Messages for Disk -------------------------------------------------------
@@ -137,11 +137,10 @@ class LogFile {
      * @param diskId Identificador do disco.
      * @param computerId Identificador do computador.
      */
-    void directExecutionDisk(unsigned long time, int processId, int diskId,
-                             int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " carregado diretamente para execução no Disco " << diskId
-                << " do Computador " << computerId << std::endl;
+    void directExecutionDisk(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " carregado diretamente para execução no Disco" << std::endl;
     }
 
     /**
@@ -152,11 +151,10 @@ class LogFile {
      * @param diskId Identificador do disco.
      * @param computerId Identificador do computador.
      */
-    void loadedIntoQueueDisk(unsigned long time, int processId, int diskId,
-                             int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " carregado na fila de espera do Disco " << diskId
-                << " do Computador " << computerId << std::endl;
+    void loadedIntoQueueDisk(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " carregado na fila de espera do Disco" << std::endl;
     }
 
     /**
@@ -167,11 +165,10 @@ class LogFile {
      * @param diskId Identificador do disco.
      * @param computerId Identificador do computador.
      */
-    void executionCompletedDisk(unsigned long time, int processId, int diskId,
-                                int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " finalizou execução no Disco " << diskId
-                << " do Computador " << computerId << std::endl;
+    void executionCompletedDisk(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " finalizou execução no Disco" << std::endl;
     }
 
     /**
@@ -182,11 +179,10 @@ class LogFile {
      * @param diskId Identificador do disco.
      * @param computerId Identificador do computador.
      */
-    void loadFromQueueDisk(unsigned long time, int processId, int diskId,
-                           int computerId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " carregado da fila de espera do Disco " << diskId
-                << " para execução no Computador " << computerId << std::endl;
+    void loadFromQueueDisk(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
+                << " carregado da fila de espera do Disco" << std::endl;
     }
 
     // Messages for Network ----------------------------------------------------
@@ -197,8 +193,9 @@ class LogFile {
      * @param time Tempo atual da simulação.
      * @param processId Identificador do processo.
      */
-    void directExecutionNetwork(unsigned long time, int processId) {
-        *m_file << "Time " << time << " - Processo " << processId
+    void directExecutionNetwork(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
                 << " carregado diretamente para execução na Rede" << std::endl;
     }
 
@@ -208,8 +205,9 @@ class LogFile {
      * @param time Tempo atual da simulação.
      * @param processId Identificador do processo.
      */
-    void loadedIntoQueueNetwork(unsigned long time, int processId) {
-        *m_file << "Time " << time << " - Processo " << processId
+    void loadedIntoQueueNetwork(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
                 << " carregado na fila de espera da Rede" << std::endl;
     }
 
@@ -219,8 +217,9 @@ class LogFile {
      * @param time Tempo atual da simulação.
      * @param processId Identificador do processo.
      */
-    void executionCompletedNetwork(unsigned long time, int processId) {
-        *m_file << "Time " << time << " - Processo " << processId
+    void executionCompletedNetwork(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
                 << " finalizou execução na Rede" << std::endl;
     }
 
@@ -230,8 +229,9 @@ class LogFile {
      * @param time Tempo atual da simulação.
      * @param processId Identificador do processo.
      */
-    void loadFromQueueNetwork(unsigned long time, int processId) {
-        *m_file << "Time " << time << " - Processo " << processId
+    void loadFromQueueNetwork(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId
                 << " carregado da fila de espera para execução na Rede"
                 << std::endl;
     }
@@ -244,9 +244,9 @@ class LogFile {
      * @param time Tempo atual da simulação.
      * @param processId Identificador do processo.
      */
-    void processCreated(unsigned long time, int processId) {
-        *m_file << "Time " << time << " - Processo " << processId << " criado"
-                << std::endl;
+    void processCreated(const unsigned& processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId << " criado" << std::endl;
     }
 
     /**
@@ -255,9 +255,9 @@ class LogFile {
      * @param time Tempo atual da simulação.
      * @param processId Identificador do processo.
      */
-    void processFinished(unsigned long time, int processId) {
-        *m_file << "Time " << time << " - Processo " << processId
-                << " finalizado" << std::endl;
+    void processFinished(const unsigned processId) {
+        if (!detailed) return;
+        *m_file << "Time " << *timer << " - Processo " << processId << " finalizado" << std::endl;
     }
 
     // Standard messages -----------------------------------------------------
@@ -269,7 +269,7 @@ class LogFile {
      * @param politica Política de escalonamento.
      * @param qtdPcs Quantidade de computadores.
      */
-    void headerMessage(int qtdProcess, bool politica, int qtdPcs) {
+    void headerMessage(unsigned qtdProcess, bool politica, unsigned qtdPcs) {
         *m_file << "LOG DE EXECUÇÃO ------------------------------------------"
                 << std::endl;
         *m_file << "Quantidade de processos: " << qtdProcess << std::endl;
@@ -300,7 +300,7 @@ class LogFile {
      * @param averageWaiting Tempo médio de espera dos processos.
      * @param processingFee Taxa de processamento.
      */
-    void statistics(unsigned long timer, double averageExecution,
+    void statistics(unsigned timer, double averageExecution,
                     double averageWaiting, double processingFee) {
         *m_file << "Estatísticas: -------------------------------------------------"
                 << std::endl;
@@ -309,6 +309,15 @@ class LogFile {
         *m_file << "Tempo médio de execução   = " << averageExecution << std::endl;
         *m_file << "Taxa de processamento     = " << processingFee << std::endl;
         *m_file << "---------------------------------------------------------------";
+    }
+
+    /**
+     * @brief Cria uma mensagem personalizada no arquivo de log.
+     *
+     * @param message Mensagem a ser criada.
+     */
+    void createMessage(std::string message) {
+        *m_file << message << std::endl;
     }
 };
 
