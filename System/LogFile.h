@@ -69,7 +69,7 @@ class LogFile {
      *
      * @return True, se o arquivo estiver aberto. False, caso contrário.
      */
-    bool isOpen() { return m_file->is_open(); }
+    bool isOpen() const { return m_file->is_open(); }
 
     // Messages for CPU --------------------------------------------------------
 
