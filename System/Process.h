@@ -53,35 +53,35 @@ class Process {
      *
      * @return Identificador do processo.
      */
-    const unsigned& getId() const { return id; }
+    unsigned getId() { return id; }
 
     /**
      * @brief Retorna o instante de chegada do processo.
      *
      * @return Instante de chegada do processo.
      */
-    const unsigned& getInstant() const { return instant; }
+    unsigned getInstant() { return instant; }
 
     /**
      * @brief Retorna a demanda de execução do processo na CPU.
      *
      * @return Demanda de execução do processo na CPU.
      */
-    const unsigned& getCPU() const { return cpu; }
+    unsigned getCPU() { return cpu; }
 
     /**
      * @brief Retorna a demanda de execução do processo no disco.
      *
      * @return Demanda de execução do processo no disco.
      */
-    const unsigned& getDisk() const { return disk; }
+    unsigned getDisk() { return disk; }
 
     /**
      * @brief Retorna a demanda de execução do processo na rede.
      *
      * @return Demanda de execução do processo na rede.
      */
-    const unsigned& getNetwork() const { return network; }
+    unsigned getNetwork() { return network; }
 };
 
 #endif

@@ -58,7 +58,7 @@ class Network {
      *
      * @return True, se a rede estiver ocupada. False, caso contrário.
      */
-    const bool& isBusy() const { return busy; }
+    bool isBusy() const { return busy; }
 
     /**
      * @brief Define o estado da rede.

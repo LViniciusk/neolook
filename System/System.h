@@ -35,7 +35,7 @@
  */
 class System {
    private:
-    unsigned short qPcs;           // quantidade de computadores
+    int qPcs;                      // quantidade de computadores
     Vector<Computer*> computers;   // computadores do sistema
     Network* network;              // rede do sistema
     bool politica;                 // politica de escalonamento
@@ -72,7 +72,7 @@ class System {
      *
      */
     ~System() {
-        for (unsigned short i = 0; i < qPcs; i++) {
+        for (int i = 0; i < qPcs; i++) {
             delete computers[i];
         }
         delete network;
@@ -150,7 +150,7 @@ class System {
                 it++;
             }
 
-            for (unsigned short i = 0; i < qPcs; i++) {
+            for (int i = 0; i < qPcs; i++) {
                 // CPU ------------------------------------------------
                 if (!computers[i]->getCPU().isBusy()) {
                     if (computers[i]->getCPU().loadFromQueue()) {
@@ -167,7 +167,7 @@ class System {
                             logFile->executionCompletedCPU(timer, p->getId(), i);
                         }
                         // Escolhe um disco aleatório
-                        unsigned short disk = rand() % 2;
+                        int disk = rand() % 2;
                         if (computers[i]->getDisk(disk).setProcess(p)) {
                             if (printLog) {
                                 logFile->directExecutionDisk(timer, p->getId(), disk, i);

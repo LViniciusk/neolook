@@ -71,7 +71,7 @@ class CPU {
      *
      * @return True, se a CPU estiver ocupada. False, caso contrário.
      */
-    const bool& isBusy() const { return busy; }
+    bool isBusy() const { return busy; }
 
     /**
      * @brief Define se a CPU está ocupada.

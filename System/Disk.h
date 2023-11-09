@@ -59,7 +59,7 @@ class Disk {
      *
      * @return True, se o disco estiver ocupado. False, caso contrário.
      */
-    const bool& isBusy() const { return busy; }
+    bool isBusy() const { return busy; }
 
     /**
      * @brief Define se o disco está ocupado.
