@@ -26,8 +26,10 @@
  */
 template <typename Type>
 class PriorityQueueIterator {
+    using typeOfKey = unsigned;
+
    private:
-    std::pair<int, Type>* m_ptr;  // ponteiro para o par (prioridade, elemento)
+    std::pair<typeOfKey, Type>* m_ptr;  // ponteiro para o par (prioridade, elemento)
 
    public:
     using iterator_category = std::forward_iterator_tag;  // tipo do iterador
@@ -41,7 +43,7 @@ class PriorityQueueIterator {
      *
      * @param ptr ponteiro para o par (prioridade, elemento)
      */
-    PriorityQueueIterator(std::pair<int, Type>* ptr) : m_ptr(ptr) {}
+    PriorityQueueIterator(std::pair<typeOfKey, Type>* ptr) : m_ptr(ptr) {}
 
     /**
      * @brief Sobrecarga do operador de pré-incremento.
@@ -122,10 +124,12 @@ class PriorityQueueIterator {
  */
 template <typename Type>
 class PriorityQueue {
+    using typeOfKey = unsigned;
+
    private:
     // vetor que armazena os elementos da fila. O par consiste em um inteiro e
     // um Type, sendo o inteiro a prioridade do elemento
-    std::pair<int, Type>* m_heap;
+    std::pair<typeOfKey, Type>* m_heap;
     unsigned m_size;
     unsigned m_capacity;
 
@@ -163,8 +167,8 @@ class PriorityQueue {
      * @param a
      * @param b
      */
-    void swap(std::pair<int, Type>* a, std::pair<int, Type>* b) {
-        std::pair<int, Type> aux = *a;
+    void swap(std::pair<typeOfKey, Type>* a, std::pair<typeOfKey, Type>* b) {
+        std::pair<typeOfKey, Type> aux = *a;
         *a = *b;
         *b = aux;
     }
@@ -201,7 +205,7 @@ class PriorityQueue {
      */
     void reserve(unsigned new_capacity) {
         if (m_capacity < new_capacity) {
-            std::pair<int, Type>* aux = new std::pair<int, Type>[new_capacity];
+            std::pair<typeOfKey, Type>* aux = new std::pair<typeOfKey, Type>[new_capacity];
             for (unsigned i = 0; i < m_size; ++i) {  // copia os elementos
                 aux[i] = m_heap[i];
             }
@@ -222,7 +226,7 @@ class PriorityQueue {
         m_capacity = capacity;
         m_size = 0;
         // cria um vetor de pares (prioridade, elemento)
-        m_heap = new std::pair<int, Type>[m_capacity];
+        m_heap = new std::pair<typeOfKey, Type>[m_capacity];
     }
 
     /**
@@ -233,7 +237,7 @@ class PriorityQueue {
     PriorityQueue() {
         m_capacity = 1;
         m_size = 0;
-        m_heap = new std::pair<int, Type>[m_capacity];
+        m_heap = new std::pair<typeOfKey, Type>[m_capacity];
     }
 
     /**
@@ -245,7 +249,7 @@ class PriorityQueue {
     PriorityQueue(const PriorityQueue& pq) {
         m_capacity = pq.m_capacity;
         m_size = pq.m_size;
-        m_heap = new std::pair<int, Type>[m_capacity];
+        m_heap = new std::pair<typeOfKey, Type>[m_capacity];
         for (unsigned i = 0; i < m_size; ++i) {
             m_heap[i] = pq.m_heap[i];
         }
@@ -256,7 +260,9 @@ class PriorityQueue {
      * Complexidade: O(1)
      *
      */
-    ~PriorityQueue() { delete[] m_heap; }
+    ~PriorityQueue() {
+        delete[] m_heap;
+    }
 
     /**
      * @brief Função que insere um elemento na fila. O elemento é inserido no
@@ -265,7 +271,7 @@ class PriorityQueue {
      *
      * @param key
      */
-    void push(int key, const Type& value) {
+    void push(const typeOfKey& key, const Type& value) {
         if (m_size == m_capacity) {
             reserve(2 * m_capacity);
         }
@@ -306,20 +312,6 @@ class PriorityQueue {
         // se a heap estiver vazia, lança uma exceção
         if (m_size == 0) throw std::runtime_error("Empty queue");
         return m_heap[0].second;
-    }
-
-    /**
-     * @brief Função que imprime os elementos da fila na ordem em que estão no
-     * vetor
-     * Complexidade: O(n)
-     *
-     */
-    void print() {
-        if (m_size == 0) throw std::runtime_error("Empty queue");
-        for (unsigned i = 0; i < m_size; ++i) {
-            std::cout << (Type)m_heap[i].second << " ";
-        }
-        std::cout << std::endl;
     }
 
     /**

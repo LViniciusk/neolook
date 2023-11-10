@@ -1,0 +1,4 @@
+LOG DE EXECUÇÃO ------------------------------------------
+Quantidade de processos: 1
+Política de escalonamento: SJF
+Quantidade de computadores: 2

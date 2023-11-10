@@ -14,10 +14,8 @@
 
 #include <iostream>
 
-#include "CPU.h"
-#include "Disk.h"
-#include "Network.h"
 #include "Process.h"
+#include "Resource.h"
 
 /**
  * @brief Classe que representa um computador.
@@ -35,7 +33,7 @@ class Computer {
      * @brief Construtor padrão da classe Computer.
      *
      */
-    Computer() = default;
+    Computer();
 
     /**
      * @brief Construtor parametrizado da classe Computer.
@@ -43,10 +41,7 @@ class Computer {
      * @param politica Política de escalonamento da CPU. 0 - FCFS, 1 - SJF
      * @param net Ponteiro para a rede do computador.
      */
-    Computer(bool politica, Network* net) : politica(politica), network(net) {
-        cpu = new CPU(politica);
-        disk = new Disk[2]{Disk(politica), Disk(politica)};
-    }
+    Computer(bool politica, Network* net, LogFile* logFile);
 
     /**
      * @brief Destrutor da classe Computer.
@@ -54,14 +49,14 @@ class Computer {
      * Libera a memória alocada para o array de disco.
      *
      */
-    ~Computer() { delete[] disk; }
+    ~Computer();
 
     /**
      * @brief Retorna a CPU do computador.
      *
      * @return Referência para a CPU do computador.
      */
-    CPU& getCPU() { return *cpu; }
+    CPU& getCPU();
 
     /**
      * @brief Retorna uma referência para o objeto Disk no índice especificado.
@@ -69,7 +64,7 @@ class Computer {
      * @param i O índice do objeto Disk desejado.
      * @return Uma referência para o objeto Disk no índice especificado.
      */
-    Disk& getDisk(int i) { return disk[i]; }
+    Disk& getDisk(int i);
 };
 
 #endif

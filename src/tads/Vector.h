@@ -150,7 +150,11 @@ class Vector {
      * Complexidade: O(1)
      *
      */
-    ~Vector() { delete[] m_vet; }
+    ~Vector() {
+        if (m_vet != nullptr) {
+            delete[] m_vet;
+        }
+    }
 
     /**
      * @brief Retorna o tamanho do vetor
