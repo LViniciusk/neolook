@@ -30,12 +30,12 @@ void System::loadFile(std::string arq) {
 }
 
 void System::execute() {
-    unsigned pendentes = qtdProcessos;  // quantidade de processos pendentes
-    // std::srand(time(NULL));             // semente para gerar números aleatórios
-    std::srand(123);                                    // semente para gerar números aleatórios
-    Vector<Process>::iterator it = processos->begin();  // iterador para percorrer o vetor de processos
-    Vector<Process>::iterator end = processos->end();   // iterador para percorrer o vetor de processos
-    logFile->headerMessage(pendentes, politica, qPcs);  // imprime o cabeçalho do log
+    unsigned pendentes = qtdProcessos;
+    // std::srand(time(NULL));
+    std::srand(123);
+    Vector<Process>::iterator it = processos->begin();
+    Vector<Process>::iterator end = processos->end();
+    logFile->headerMessage(pendentes, politica, qPcs);
 
     while (true) {
         // CARREGA OS PROCESSOS NA CPU ----------------------------

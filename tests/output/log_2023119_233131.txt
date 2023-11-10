@@ -1,0 +1,15 @@
+LOG DE EXECUÇÃO ------------------------------------------
+Quantidade de processos: 51
+Política de escalonamento: SJF
+Quantidade de computadores: 1
+----------------------------------------------------------
+
+
+SIMULAÇÃO ENCERRADA COM SUCESSO!
+
+Estatísticas: -------------------------------------------------
+Tempo total de execução   = 1591
+Tempo médio de espera     = 610.45
+Tempo médio de execução   = 698.76
+Taxa de processamento     = 0.032055
+---------------------------------------------------------------

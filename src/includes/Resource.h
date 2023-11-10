@@ -20,24 +20,72 @@ class Resource {
 
    private:
    public:
+    /**
+     * @brief Construct a new Resource object
+     *
+     */
     Resource();
 
+    /**
+     * @brief Construct a new Resource object
+     *
+     * @param politica
+     * @param logFile
+     */
     Resource(bool politica, LogFile* logFile);
 
+    /**
+     * @brief Destroy the Resource object
+     *
+     */
     virtual ~Resource();
 
+    /**
+     * @brief Verifica se a CPU está ocupada
+     *
+     * @return true
+     * @return false
+     */
     bool isBusy() const;
 
+    /**
+     * @brief Retorna o processo que está sendo executado na CPU
+     *
+     * @return Process*
+     */
     Process* getProcess() const;
 
+    /**
+     * @brief Carrega um processo na CPU da fila de processos
+     *
+     */
     virtual void loadFromQueue();
 
+    /**
+     * @brief Executa o processo que está na CPU em um ciclo
+     *
+     */
     virtual void execute();
 
+    /**
+     * @brief Verifica se o processo que está na CPU terminou sua execução
+     *
+     * @return true
+     * @return false
+     */
     virtual bool isFinished();
 
+    /**
+     * @brief Remove o processo que está na CPU
+     *
+     */
     virtual void finishProcess();
 
+    /**
+     * @brief Escolhe se o processo será executado na CPU ou inserido na fila de processos
+     *
+     * @param p
+     */
     virtual void setProcess(Process* p) = 0;
 };
 

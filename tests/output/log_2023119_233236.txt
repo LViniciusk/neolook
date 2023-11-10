@@ -1,0 +1,15 @@
+LOG DE EXECUÇÃO ------------------------------------------
+Quantidade de processos: 1001
+Política de escalonamento: FCFS
+Quantidade de computadores: 1
+----------------------------------------------------------
+
+
+SIMULAÇÃO ENCERRADA COM SUCESSO!
+
+Estatísticas: -------------------------------------------------
+Tempo total de execução   = 25251
+Tempo médio de espera     = 12528.32
+Tempo médio de execução   = 12611.94
+Taxa de processamento     = 0.039642
+---------------------------------------------------------------

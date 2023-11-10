@@ -10,15 +10,15 @@ O Simulador do Sistema NeoLook é uma ferramenta para avaliar o desempenho de di
 ## Execução
 
 // PARA EXECUTAR:
-//     `./main <politica> <arquivo> <Quant. computadores>`
+//     `make run`
+
+//     `<politica> <Quant. computadores> <arquivo>`
 
 // A política de escalonamento pode ser:
 // 0 - FCFS (First Come, First Served)
 // 1 - SJF (Shortest Job First)
 
-// Um quinto argumento opcional pode ser passado para ativar o log detalhado.
-// 0 - Log detalhado desativado
-// 1 - Log detalhado ativado
+// No arquivo main.cpp, um parâmetro do construtor do System pode ser alterado para impressão de log detalhado.
 
 // A saída do programa será impressa no terminal.
-// A saída do programa será gerada na pasta "out".
+// A saída do programa será gerada na pasta "tests/output/"
