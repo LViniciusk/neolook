@@ -1,5 +1,5 @@
 CC=g++
-FLAGS=-Wall -Wextra -pedantic-errors -std=c++17
+FLAGS=-g -Wall -Wextra -pedantic-errors -std=c++17
 
 SRC_DIR=src
 INCLUDE_DIR=$(SRC_DIR)/includes

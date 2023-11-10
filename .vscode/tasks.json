@@ -4,7 +4,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "./main 1 trace.txt 1",
+            "command": "./bin/system.exe",
             "group": {
                 "kind": "build",
                 "isDefault": true

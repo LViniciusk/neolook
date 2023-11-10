@@ -18,8 +18,8 @@
 using namespace std;
 
 int main() {
-    bool politica;
-    unsigned short qtdComputadores;
+    int politica;
+    int qtdComputadores;
     string arquivo;
     cout << "\n--- NEOLOOK SCALING SIMULATOR ---\n";
     cout << "\n<politica> <Quant. computadores> <arquivo>\n\n";
