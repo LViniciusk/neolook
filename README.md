@@ -1,6 +1,6 @@
 # NeoLook
 
-![Project Status](https://img.shields.io/badge/status-in%20progress-yellow)
+![Project Status](https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen)
 ![GitHub License](https://img.shields.io/github/license/LViniciusk/neolook)
 
 ## Project Description
